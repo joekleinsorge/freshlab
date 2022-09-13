@@ -1,0 +1,26 @@
+- name: Teardown Kubernetes cluster
+  hosts: metal
+  tasks:
+  - name: Disable k3s
+    shell: |
+        systemctl disable k3s.service
+        systemctl reset-failed k3s.service
+        systemctl daemon-reload
+        
+  - name: rm -rf /var files
+    shell: |      
+        sudo rm -rf /var/lib/rancher
+        sudo rm -rf /var/lib/longhorn
+
+  - name: rm -rf /etc files
+    shell: |
+        sudo rm -rf /etc/systemd/system/k3s.service
+        sudo rm -rf /etc/rancher
+
+  - name: rm -rf bin
+    shell: |
+        sudo rm -rf /usr/local/bin/k3s
+
+  - name: reboot
+    shell: |
+        reboot 
