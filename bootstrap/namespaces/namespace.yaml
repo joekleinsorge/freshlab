@@ -1,0 +1,12 @@
+{{- range $namespace := .Values.namespaces }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: {{ $namespace.name }}
+    {{- if $namespace.externalSecret }}
+    external-secret: "true"
+    {{- end }}
+  name: {{ $namespace.name }}
+{{- end }}
