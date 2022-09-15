@@ -23,7 +23,7 @@ spec:
     namespace: platform
   source:
     path: 'bootstrap/root'
-    repoURL: https://github.com/locmai/humble.git
+    repoURL: https://github.com/joeykleinsorge/freshlab.git
     targetRevision: main
     helm:
       valueFiles:

@@ -1,0 +1,19 @@
+kube-ops-view:
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        ombi.io/enable: 'true'
+        hajimari.io/appName: kube-ops-view
+        hajimari.io/icon: magnify
+      hosts:
+        - host: &host kube-ops-view.kleinsorge.us
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: kube-ops-view-tls-certificate
+          hosts:
+            - *host

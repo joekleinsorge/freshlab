@@ -1,0 +1,19 @@
+uptime-kuma:
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        uptime-kuma.io/enable: 'true'
+        hajimari.io/appName: uptime-kuma
+        hajimari.io/icon: arrow-up-bold-box
+      hosts:
+        - host: &host uptime-kuma.kleinsorge.us
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: uptime-kuma-tls-certificate
+          hosts:
+            - *host

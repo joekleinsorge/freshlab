@@ -53,10 +53,10 @@ argo-cd:
       ingressClassName: nginx
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: "humble-tunnel.maibaloc.com"
+        external-dns.alpha.kubernetes.io/target: "freshlab-tunnel.kleinsorge.dev"
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
       hosts:
-        - &host argocd.maibaloc.com
+        - &host argocd.kleinsorge.dev
       tls:
         - secretName: argocd-tls-certificate
           hosts:

@@ -2,8 +2,8 @@ env: "prod"
 
 global:
   enabled: true
-  domain: "maibaloc.com"
-  repoUrl: https://github.com/locmai/humble.git
+  domain: "kleinsorge.dev"
+  repoUrl: https://github.com/joeykleinsorge/freshlab.git
 
 bootstrap:
   enabled: true

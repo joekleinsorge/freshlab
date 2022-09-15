@@ -1,0 +1,49 @@
+plex:
+  env:
+    TZ: 'America/New_York'
+    PLEX_CLAIM: 'claim-1PdLtsPwWzzJjx5LpVtu'
+    ADVERTISE_IP: 'http://192.168.1.105:32400'
+    # ADVERTISE_IP: 'http://192.168.1.105:32400/,https://plex.kleinsorge.us:32400'
+    PLEX_PREFERENCE_1: 'FriendlyName=k8splex'
+    PLEX_PREFERENCE_2: 'LanNetworksBandwidth=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_3: 'allowedNetworks=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_4: 'customConnections=https://plex.kleinsorge.us'
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/enable: 'true'
+        hajimari.io/appName: 'plex'
+        hajimari.io/icon: 'plex'
+      hosts:
+        - host: &host plex.kleinsorge.us
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: plex-tls-certificate
+          hosts:
+            - *host
+  persistence:
+    config:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/kube/plex
+    transcode:
+      enabled: true
+      type: emptyDir
+      mountPath: /transcode
+      size: 100Gi
+    nfs:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/Media
+  hostNetwork: true
+podSecurityContext:
+  supplementalGroups:
+    - 39
+    - 998

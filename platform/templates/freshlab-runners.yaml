@@ -1,0 +1,10 @@
+{{- if .Values.runnerController.enabled }}
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: kleinsorge-runners
+spec:
+  template:
+    spec:
+      repository: joeykleinsorge/freshlab
+{{- end }}

@@ -1,0 +1,50 @@
+# Default
+argocd:
+ project: system
+ namespace: argocd
+
+global:
+  domain: "kleinsorge.dev"
+
+# Storage
+longhorn:
+  enabled: true
+  namespace: longhorn-system
+
+# Observability
+monitoring:
+  enabled: true
+  namespace: observability
+  remoteWrite:
+    enabled: false
+
+tracing:
+  enabled: false
+  namespace: observability
+
+logging:
+  enabled: true
+  namespace: observability
+
+dashboard:
+  enabled: true
+  namespace: observability
+  targetRevision: main
+
+opentelemetry:
+  enabled: true
+  namespace: observability
+  logLevel: info
+
+# Ingress / Load balancer
+metallb:
+  enabled: true
+  namespace: metallb-system
+
+ingress_nginx:
+  enabled: true
+
+certmanager:
+  enabled: true
+  namespace: cert-manager
+

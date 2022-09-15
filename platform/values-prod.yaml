@@ -1,0 +1,18 @@
+vault:
+  enabled: true
+
+externalSecrets:
+  enabled: true
+
+secretGenerator:
+  enabled: true
+
+argo_workflow:
+  enabled: true
+
+argo_events:
+  enabled: true
+
+runnerController:
+  enabled: true
+

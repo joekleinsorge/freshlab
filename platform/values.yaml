@@ -1,0 +1,40 @@
+argocd:
+  namespace: argocd
+  project: platform
+  targetRevision: main
+
+global:
+  domain: "placeholder.com"
+
+# Secret management
+vault:
+  enabled: true
+  installOperator: true
+  size: 1
+  ingress:
+    enabled: true
+  namespace: platform
+  storageClass: "longhorn"
+
+externalSecrets:
+  enabled: true
+  namespace: platform
+
+secretGenerator:
+  enabled: true
+  namespace: platform
+  targetRevision: master
+
+argo_workflow:
+  enabled: false
+  namespace: argoworkflow
+
+argo_events:
+  enabled: false
+  namespace: argoworkflow
+
+runnerController:
+  # Required to add the GITHUB_TOKEN manually
+  enabled: false
+  namespace: platform
+

@@ -1,0 +1,26 @@
+{{- if .Values.dashboard.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.argocd.project }}-dashboard
+  namespace: {{ .Values.argocd.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.argocd.project }}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    name: in-cluster
+    namespace: {{ .Values.dashboard.namespace }}
+  source:
+    repoURL: 'https://github.com/joeykleinsorge/freshlab-grafana-dashboards.git'
+    path: ./
+    targetRevision: {{ .Values.dashboard.targetRevision }}
+{{- end }}
