@@ -2,6 +2,6 @@ metal:
   children:
     masters:
       hosts:
-        rocky01: {ansible_host: 192.168.2.1, disk: sda, network_interface: ens18}
-        rocky02: {ansible_host: 192.168.2.2, disk: sda, network_interface: ens18}
-        rocky03: {ansible_host: 192.168.2.3, disk: sda, network_interface: ens18}
+        vm1: {ansible_host: 192.168.2.1, disk: sda, network_interface: ens18}
+        vm2: {ansible_host: 192.168.2.2, disk: sda, network_interface: ens18}
+        vm3: {ansible_host: 192.168.2.3, disk: sda, network_interface: ens18}

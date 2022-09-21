@@ -1,3 +1,8 @@
+- name: Setup Operating system
+  hosts: metal
+  roles:
+    - os_setup
+
 - name: Create Kubernetes cluster
   hosts: metal
   roles:
