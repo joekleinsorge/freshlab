@@ -1,7 +1,7 @@
 - name: Setup Operating system
   hosts: metal
   roles:
-    - os_setup
+    - automatic_upgrade
 
 - name: Create Kubernetes cluster
   hosts: metal
