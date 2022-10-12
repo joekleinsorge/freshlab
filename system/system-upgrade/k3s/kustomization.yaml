@@ -6,5 +6,4 @@ resources:
   - agent.yaml
 
 commonAnnotations:
-  # TODO https://github.com/rancher/system-upgrade-controller/issues/172
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true

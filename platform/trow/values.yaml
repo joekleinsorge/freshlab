@@ -1,6 +1,6 @@
 trow:
   trow:
-    domain: registry.khuedoan.com
+    domain: registry.kleinsorge.dev
     # user: user
     # password: password
     validation:
@@ -14,13 +14,13 @@ trow:
       proxyDockerHub: false
 
   ingress:
-    enabled: false  # TODO https://github.com/ContainerSolutions/trow/issues/282
+    enabled: false
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       nginx.ingress.kubernetes.io/proxy-body-size: '0'
       hajimari.io/enable: 'false'
     hosts:
-      - host: &host registry.khuedoan.com
+      - host: &host registry.kleinsorge.dev
         paths:
           - /
     tls:
