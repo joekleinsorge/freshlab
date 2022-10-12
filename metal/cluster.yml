@@ -2,6 +2,8 @@
   hosts: metal
   roles:
     - automatic_upgrade
+    - disable_selinux
+    - disable_firewalld
 
 - name: Create Kubernetes cluster
   hosts: metal
