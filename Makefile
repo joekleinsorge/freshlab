@@ -5,8 +5,7 @@
 KUBECONFIG=~/git/freshlab/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH=$(KUBECONFIG)
 
-default: metal
-
+default: metal bootstrap qpost-install
 metal:
 	make -C metal
 
