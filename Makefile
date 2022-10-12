@@ -2,8 +2,8 @@
 .PHONY: *
 .EXPORT_ALL_VARIABLES:
 
-KUBECONFIG=~/git/freshlab/metal/kubeconfig.yaml
-KUBE_CONFIG_PATH=$(KUBECONFIG)
+KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
+KUBE_CONFIG_PATH = $(KUBECONFIG)
 
 default: metal bootstrap post-install
 metal:
