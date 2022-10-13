@@ -4,6 +4,7 @@
     - automatic_upgrade
     - disable_selinux
     - disable_firewalld
+    - disable_swap
 
 - name: Create Kubernetes cluster
   hosts: metal
