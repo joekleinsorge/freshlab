@@ -18,6 +18,5 @@ repos:
     rev: v0.1.17
     hooks:
       - id: helmlint
-      - id: shellcheck
       - id: terraform-fmt
       - id: terraform-validate
