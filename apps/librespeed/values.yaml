@@ -9,7 +9,7 @@ librespeed:
         hajimari.io/appName: librespeed
         hajimari.io/icon: speedometer
       hosts:
-        - host: &host librespeed.kleinsorge.us
+        - host: &host librespeed.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

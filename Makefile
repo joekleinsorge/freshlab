@@ -14,7 +14,7 @@ bootstrap:
 	make -C bootstrap
 
 post-install:
-	@./scripts/hacks
+	python3 ./scripts/hacks
 
 tools:
 	@docker run \

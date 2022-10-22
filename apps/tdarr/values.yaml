@@ -9,7 +9,7 @@ tdarr:
         hajimari.io/appName: tdarr
         hajimari.io/icon: swap-horizontal
       hosts:
-        - host: &host tdarr.kleinsorge.us
+        - host: &host tdarr.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

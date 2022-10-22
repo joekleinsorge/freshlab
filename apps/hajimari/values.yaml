@@ -15,7 +15,7 @@ hajimari:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/enable: 'false'
       hosts:
-        - host: &host home.kleinsorge.us
+        - host: &host home.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

@@ -9,7 +9,7 @@ ombi:
         hajimari.io/appName: Ombi
         hajimari.io/icon: basket-fill
       hosts:
-        - host: &host ombi.kleinsorge.us
+        - host: &host ombi.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
@@ -26,4 +26,3 @@ ombi:
   env:
     PUID: "1030"
     PGID: "101"
-

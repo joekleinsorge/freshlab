@@ -9,7 +9,7 @@ uptime-kuma:
         hajimari.io/appName: uptime-kuma
         hajimari.io/icon: arrow-up-bold-box
       hosts:
-        - host: &host uptime-kuma.kleinsorge.us
+        - host: &host status.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

@@ -18,7 +18,7 @@ plex:
         hajimari.io/appName: 'plex'
         hajimari.io/icon: 'plex'
       hosts:
-        - host: &host plex.kleinsorge.us
+        - host: &host plex.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

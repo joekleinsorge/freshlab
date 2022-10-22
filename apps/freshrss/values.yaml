@@ -9,7 +9,7 @@ freshrss:
         hajimari.io/appName: freshrss
         hajimari.io/icon: rss
       hosts:
-        - host: &host freshrss.kleinsorge.us
+        - host: &host freshrss.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
@@ -23,4 +23,3 @@ freshrss:
       type: nfs
       server: 192.168.1.208
       path: /volume1/kube/freshrss
-
