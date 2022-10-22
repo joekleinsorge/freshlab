@@ -1,5 +1,8 @@
 # Freshlab
 
+> **Warning**
+> This is a WIP
+
 ```shell
 ┌───────────────────────────┐
 │      L3. Applications     ◄──────────────────┐
