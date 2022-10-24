@@ -5,7 +5,10 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal bootstrap post-install
+default: metal bootstrap wait post-install
+
+git-hooks:
+	pre-commit install
 
 metal:
 	make -C metal
@@ -43,3 +46,5 @@ docs:
 
 git-hooks:
 	pre-commit install
+wait:
+	./scripts/wait-main-apps

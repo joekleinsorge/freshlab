@@ -1,3 +1,7 @@
 - name: Disable Swap
+<<<<<<< HEAD
   shell: swapoff -a
+=======
+  ansible.builtin.shell: swapoff -a
+>>>>>>> b4d4d90 (ci:commit)
   become: true

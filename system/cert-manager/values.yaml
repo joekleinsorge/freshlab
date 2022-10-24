@@ -4,3 +4,6 @@ cert-manager:
     enabled: true
     servicemonitor:
       enabled: true
+
+issuer:
+  email: josephkleinsorge@gmail.com
