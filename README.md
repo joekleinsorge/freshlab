@@ -3,6 +3,9 @@
 > **Warning**
 > This is a WIP
 
+Sometime you just have to start fresh. 
+
+
 ```shell
 ┌───────────────────────────┐
 │      L3. Applications     ◄──────────────────┐

@@ -5,6 +5,6 @@ VALUES="values.yaml"
 helm template \
     --include-crds \
     --namespace argocd \
-    --values "${VALUES}" \
+    ${extra_args} \
     argocd . \
     | kubectl apply -n argocd -f -

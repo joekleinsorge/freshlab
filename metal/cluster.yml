@@ -5,6 +5,7 @@
     - disable_selinux
     - disable_firewalld
     - disable_swap
+    - mount_nfs
 
 - name: Create Kubernetes cluster
   hosts: metal
