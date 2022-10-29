@@ -9,7 +9,7 @@ photoprism:
         hajimari.io/appName: photoprism
         hajimari.io/icon: film
       hosts:
-        - host: &host photoprism.kleinsorge.us
+        - host: &host photoprism.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

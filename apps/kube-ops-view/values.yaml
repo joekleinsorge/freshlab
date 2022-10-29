@@ -9,7 +9,7 @@ kube-ops-view:
         hajimari.io/appName: kube-ops-view
         hajimari.io/icon: magnify
       hosts:
-        - host: &host kube-ops-view.kleinsorge.us
+        - host: &host kube-ops-view.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
