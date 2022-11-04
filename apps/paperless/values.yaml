@@ -16,8 +16,8 @@ paperless:
         - secretName: paperless-tls-certificate
           hosts:
             - *host
-  postgresql:
-    enabled: true
+  # postgresql:
+  #   enabled: true
   # persistence:
   #   data:
   #     enabled: true
