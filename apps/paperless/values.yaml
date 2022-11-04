@@ -18,14 +18,14 @@ paperless:
             - *host
   postgresql:
     enabled: true
-  persistence:
-    data:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/kube/paperless/data
-    media:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/kube/paperless/media
+  # persistence:
+  #   data:
+  #     enabled: true
+  #     type: nfs
+  #     server: 192.168.1.208
+  #     path: /volume1/kube/paperless/data
+  #   media:
+  #     enabled: true
+  #     type: nfs
+  #     server: 192.168.1.208
+  #     path: /volume1/kube/paperless/media
