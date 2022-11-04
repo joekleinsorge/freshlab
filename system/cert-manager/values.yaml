@@ -6,4 +6,4 @@ cert-manager:
       enabled: true
 
 issuer:
-  email: josephkleinsorge@gmail.com
+  email: lab@kleinsorge.dev
