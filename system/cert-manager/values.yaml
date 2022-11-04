@@ -4,6 +4,5 @@ cert-manager:
     enabled: true
     servicemonitor:
       enabled: true
-
 issuer:
   email: lab@kleinsorge.dev
