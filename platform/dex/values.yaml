@@ -7,6 +7,15 @@ dex:
         inCluster: true
     oauth2:
       skipApprovalScreen: true
+    connectors:
+      - type: gitea
+        id: gitea
+        name: Gitea
+        config:
+          clientID: $GITEA_CLIENT_ID
+          clientSecret: $GITEA_CLIENT_SECRET
+          redirectURI: https://dex.kleinsorge.dev/callback
+          baseURL: https://git.kleinsorge.dev
     staticClients:
       - id: grafana-sso
         name: Grafana
