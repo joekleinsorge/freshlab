@@ -29,7 +29,7 @@ hajimari:
       any: true
     name: "Joey"
     groups:
-      - name: Homelab
+      - name: Freshlab
         links:
           - name: GitHub repository
-            url: https://github.com/joeykleinsorge/homelab
+            url: https://github.com/joeykleinsorge/freshlab
