@@ -1,0 +1,24 @@
+organizations:
+  - name: ops
+    description: Operations
+    teams:
+      - name: Owners
+        members:
+          - renovate
+repositories:
+  - name: homelab
+    owner: ops
+    private: false
+    migrate:
+      source: https://github.com/joeykleinsorge/homelab
+      mirror: false
+  - name: blog
+    owner: joeykleinsorge
+    migrate:
+      source: https://github.com/joeykleinsorge/joeykleinsorge.com
+      mirror: true
+  - name: backstage
+    owner: joeykleinsorge
+    migrate:
+      source: https://github.com/joeykleinsorge/backstage
+      mirror: true
