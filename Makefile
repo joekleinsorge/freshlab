@@ -46,5 +46,6 @@ docs:
 
 git-hooks:
 	pre-commit install
+
 wait:
-	./scripts/wait-main-apps
+	python3 ./scripts/wait-main-apps
