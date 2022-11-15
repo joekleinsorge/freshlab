@@ -1,7 +1,6 @@
 dashy:
       ingress:
         enabled: true
-        
         className: nginx
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -16,7 +15,6 @@ dashy:
           - secretName: dashy-landscape-tls-certificate
             hosts:
               - *host
-
       config:
         appConfig:
           layout: auto
@@ -24,20 +22,19 @@ dashy:
           theme: dashy-docs
           language: en
         pageInfo:
-          title: Humble Technology Landscape
+          title: Freshlab Technology Landscape
           description: ''
           navLinks:
             - title: Back to Home
-              path: https://humble.maibaloc.com
-          footerText: © 2022 Loc Mai.
+              path: https://github.com/joekleinsorge/freshlab
         sections:
           - name: Global
             icon: far fa-globe
             items:
               - title: GitHub
-                description: Humble source code and docs
+                description: Freshlab source code
                 icon: fab fa-github
-                url: https://github.com/locmai/humble
+                url: https://github.com/joekleinsorge/freshlab
                 id: 0_593_github
               - title: Cloudflare
                 description: ''
@@ -52,10 +49,6 @@ dashy:
               hideForGuests: false
           - name: Apps
             items:
-              - title: Dendrite
-                icon: https://avatars.githubusercontent.com/u/8418310?s=200&v=4
-                url: chat.maibaloc.com
-                id: 0_404_dendrite
               - title: Element web
                 icon: https://element.io/images/logo-mark-primary.svg
                 url: ''
@@ -79,10 +72,6 @@ dashy:
               collapsed: false
               hideForGuests: false
             items:
-              - title: Argo Workflow
-                icon: >-
-                  https://camo.githubusercontent.com/42ecb0e82021bf95ed3bc09ccab58ab03a4c6b8b8d22f6c628c14c38244e641d/68747470733a2f2f636e63662d6272616e64696e672e6e65746c6966792e6170702f696d672f70726f6a656374732f6172676f2f69636f6e2f636f6c6f722f6172676f2d69636f6e2d636f6c6f722e737667
-                id: 0_837_argoworkflow
               - title: Vault
                 icon: >-
                   https://camo.githubusercontent.com/8e1a25105159fcd0f93e3c2a7bd7efba51d7779bf5bf2ee3a3730a2ab252f556/68747470733a2f2f73696d706c6569636f6e732e6f72672f69636f6e732f7661756c742e737667
@@ -117,10 +106,10 @@ dashy:
               - title: Grafana
                 icon: >-
                   https://camo.githubusercontent.com/efb8796fba36bad6533fd66a3a0c359a7f482762e7880a9af35f7cb7898783cc/68747470733a2f2f67726166616e612e636f6d2f7374617469632f696d672f6d656e752f67726166616e61322e737667
-                url: https://grafana.maibaloc.com
+                url: https://grafana.kleinsorge.dev
                 target: newtab
                 statusCheck: true
-                statusCheckUrl: https://grafana.maibaloc.com/login
+                statusCheckUrl: https://grafana.kleinsorge.dev/login
                 id: 1_645_grafana
               - title: Cert-manager
                 icon: https://github.com/jetstack/cert-manager/raw/master/logo/logo.png
@@ -134,9 +123,9 @@ dashy:
                 id: 4_645_jaeger
               - title: Docz
                 icon: far fa-book
-                url: https://humble.maibaloc.com
+                url: https://freshlab.kleinsorge.dev
                 statusCheck: true
-                statusCheckUrl: https://humble.maibaloc.com
+                statusCheckUrl: https://freshlab.kleinsorge.dev
                 id: 5_645_docz
               - title: ElasticSearch
                 icon: >-
