@@ -16,24 +16,11 @@ metal:
 bootstrap:
 	make -C bootstrap
 
+wait:
+	python3 ./scripts/wait-main-apps
+
 post-install:
 	python3 ./scripts/hacks
-
-tools:
-	@docker run \
-		--rm \
-		--interactive \
-		--tty \
-		--network host \
-		--env "KUBECONFIG=${KUBECONFIG}" \
-		--volume "/var/run/docker.sock:/var/run/docker.sock" \
-		--volume $(shell pwd):$(shell pwd) \
-		--volume ${HOME}/.ssh:/root/.ssh \
-		--volume ${HOME}/.terraform.d:/root/.terraform.d \
-		--volume homelab-tools-cache:/root/.cache \
-		--volume homelab-tools-nix:/nix \
-		--workdir $(shell pwd) \
-		nixos/nix nix-shell
 
 docs:
 	docker run \
@@ -44,8 +31,5 @@ docs:
 		--volume $(shell pwd):/docs \
 		squidfunk/mkdocs-material
 
-git-hooks:
-	pre-commit install
-
-wait:
-	python3 ./scripts/wait-main-apps
+clean:
+	make -C metal teardown

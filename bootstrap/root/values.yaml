@@ -1,5 +1,5 @@
 gitops:
-    repo: https://github.com/JoeyKleinsorge/freshlab
+    repo: https://github.com/JoeKleinsorge/freshlab
     revision: main
 stacks:
   - name: bootstrap
