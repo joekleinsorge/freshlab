@@ -2,14 +2,14 @@
   kubernetes.core.k8s:
     api_version: v1
     kind: Namespace
-    name: "metallb-system"
+    name: 'metallb-system'
     state: present
 
 - name: Add labels to MetalLB namespace
   kubernetes.core.k8s:
     state: patched
     kind: Namespace
-    name: "metallb-system"
+    name: 'metallb-system'
     definition:
       metadata:
         labels:
@@ -19,5 +19,4 @@
 
 - name: Create MetalLB IPAddressPool
   kubernetes.core.k8s:
-    state: present
-    src: "{{ role_path }}/files/ipaddresspool.yaml"
+    definition: '{{ role_path }}/files/ipaddresspool.yaml'
