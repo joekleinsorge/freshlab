@@ -8,4 +8,14 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+key.txt
 kubeconfig.yaml
+.decrypted~secret.yaml
+.venv/
+*.iso
+*.log
+*.png
+*.tgz
+*kubeconfig.yaml
+Chart.lock
+.vscode
