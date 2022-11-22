@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ssh root@$1
+while test $? -gt 0
+do
+   sleep 5
+   echo "Waiting 5 seconds..."
+   ssh $1
+done

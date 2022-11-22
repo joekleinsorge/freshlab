@@ -19,9 +19,6 @@ bootstrap:
 wait:
 	python3 ./scripts/wait-main-apps
 
-post-install:
-	python3 ./scripts/hacks
-
 docs:
 	docker run \
 		--rm \
@@ -33,3 +30,4 @@ docs:
 
 clean:
 	make -C metal teardown
+	./scripts/waitforssh metal1
