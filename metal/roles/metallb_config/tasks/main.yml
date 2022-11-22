@@ -17,6 +17,6 @@
           pod-security.kubernetes.io/audit: privileged
           pod-security.kubernetes.io/warn: privileged
 
-- name: Create MetalLB IPAddressPool
+- name: Create MetalLB configmap
   kubernetes.core.k8s:
-    definition: '{{ role_path }}/files/ipaddresspool.yaml'
+    definition: "{{ lookup('file', 'configmap.yaml') | from_yaml }}"
