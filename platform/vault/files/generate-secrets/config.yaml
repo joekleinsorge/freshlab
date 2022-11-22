@@ -1,6 +1,0 @@
-# Dex
-- path: dex/grafana
-  data:
-    - key: client_secret
-      length: 32
-      special: false
