@@ -20,3 +20,16 @@
 - name: Create MetalLB configmap
   kubernetes.core.k8s:
     definition: "{{ lookup('file', 'configmap.yaml') | from_yaml }}"
+
+# - name: Create MetalLB ip pool
+#   shell: |
+#     cat <<EOF | kubectl apply -n metallb-system -f - 
+#     apiVersion: metallb.io/v1beta1
+#     kind: IPAddressPool
+#     metadata:
+#       name: production
+#       namespace: metallb-system
+#     spec:
+#       addresses:
+#         - 192.168.2.100-192.168.2.200
+#     EOF
