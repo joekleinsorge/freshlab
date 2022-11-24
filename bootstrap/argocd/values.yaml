@@ -1,7 +1,4 @@
 argo-cd:
-  configs:
-    params:
-      server.insecure: true
   server:  
     ingress:
       enabled: true
@@ -16,3 +13,5 @@ argo-cd:
         - secretName: argocd-tls-certificate
           hosts:
             - *host
+    extraArgs: 
+      - --insecure
