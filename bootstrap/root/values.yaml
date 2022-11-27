@@ -1,10 +1,20 @@
-gitops:
-    repo: https://github.com/joekleinsorge/freshlab
-    revision: main
-stacks:
-  - name: bootstrap
-    namespace: argocd
-  - name: system
-  - name: global    
-  - name: platform
-  - name: apps
+global:
+  enabled: true
+  domain: "kleinsorge.dev"
+  repoUrl: https://github.com/joekleinsorge/freshlab.git
+
+bootstrap:
+  enabled: true
+  targetRevision: main
+
+system:
+  enabled: true
+  targetRevision: main
+
+platform:
+  enabled: true
+  targetRevision: main
+
+apps:
+  enabled: true
+  targetRevision: main
