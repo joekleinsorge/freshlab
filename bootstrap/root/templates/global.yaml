@@ -1,0 +1,43 @@
+{{- if .Values.global.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: global
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: global
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      jsonPointers:
+        - /spec/syncPolicy/automated
+  destination:
+    name: in-cluster
+    namespace: global
+  source:
+    path: 'global'
+    repoURL: {{ .Values.global.repoURL }}
+    targetRevision: "{{ .Values.global.targetRevision }}"
+    helm:
+      valueFiles:
+      - values-{{ .Values.global.env }}.yaml
+      values: |
+        argocd:
+          targetRevision: {{ .Values.global.targetRevision }}
+        
+        global:
+          domain: {{ .Values.global.domain }}
+          repoURL: {{ .Values.global.repoURL }}
+          env: {{ .Values.global.env }}
+{{- end }}
