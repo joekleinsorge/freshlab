@@ -5,7 +5,7 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal bootstrap wait post-install
+default: metal bootstrap wait
 
 git-hooks:
 	pre-commit install
@@ -18,15 +18,6 @@ bootstrap:
 
 wait:
 	python3 ./scripts/wait-main-apps
-
-docs:
-	docker run \
-		--rm \
-		--interactive \
-		--tty \
-		--publish 8000:8000 \
-		--volume $(shell pwd):/docs \
-		squidfunk/mkdocs-material
 
 clean:
 	make -C metal teardown

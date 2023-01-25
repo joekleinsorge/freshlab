@@ -1,6 +1,0 @@
-ingress-nginx:
-  controller:
-    hostNetwork: true
-    hostPort:
-      enabled: true
-    kind: DaemonSet
