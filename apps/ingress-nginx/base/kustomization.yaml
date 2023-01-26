@@ -5,4 +5,4 @@ helmCharts:
 - name: ingress-nginx
   includeCRDs: true
   version: 4.0.18
-  repository: https://kubernetes.github.io/ingress-nginx
+  repo: https://kubernetes.github.io/ingress-nginx
