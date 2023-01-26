@@ -27,7 +27,7 @@ hajimari:
     defaultEnable: true
     namespaceSelector:
       any: true
-    name: "Joey"
+    name: "Joe"
     groups:
       - name: Freshlab
         links:
