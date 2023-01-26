@@ -1,0 +1,11 @@
+{
+  "appName": "demoapp",
+  "userGivenName": "demoapp",
+  "destNamespace": "default",
+  "destServer": "https://kubernetes.default.svc",
+  "srcPath": "apps/demoapp/overlays/prod",
+  "srcRepoURL": "https://github.com/JoeKleinsorge/freshlab.git",
+  "srcTargetRevision": "",
+  "labels": null,
+  "annotations": null
+}
