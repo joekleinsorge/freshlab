@@ -1,7 +1,7 @@
 {
   "appName": "prometheus",
   "userGivenName": "prometheus",
-  "destNamespace": "default",
+  "destNamespace": "observability",
   "destServer": "https://kubernetes.default.svc",
   "srcPath": "apps/prometheus/overlays/testing",
   "srcRepoURL": "https://github.com/joekleinsorge/freshlab.git",
