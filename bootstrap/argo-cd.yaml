@@ -36,3 +36,16 @@ status:
       source:
         repoURL: ""
     status: ""
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/target: "argocd.kleinsorge.dev"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+  hosts:
+    - &host argocd.kleinsorge.dev
+  tls:
+    - secretName: argocd-tls-certificate
+      hosts:
+        - *host
