@@ -1,0 +1,36 @@
+hajimari:
+  env:
+    TZ: America/New_York
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/enable: 'false'
+      hosts:
+        - host: &host home.kleinsorge.dev
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: hajimari-tls-certificate
+          hosts:
+            - *host
+  hajimari:
+    defaultEnable: true
+    namespaceSelector:
+      any: true
+    globalBookmarks:
+      - group: Homelab
+        bookmarks:
+          - name: Documentation
+            url: https://homelab.kleinsorge.dev
+          - name: Public GitHub repository
+            url: https://github.com/joekleinsorge/freshlab
+      - group: Managed services
+        bookmarks:
+          - name: Terraform Cloud
+            url: https://app.terraform.io
+          - name: Cloudflare
+            url: https://dash.cloudflare.com
