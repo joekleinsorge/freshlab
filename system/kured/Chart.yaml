@@ -4,4 +4,4 @@ version: 0.0.0
 dependencies:
   - name: kured
     version: 4.3.0
-    repository:  https://kubereboot.github.io/charts
+    repository: https://kubereboot.github.io/charts/
