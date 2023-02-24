@@ -9,7 +9,7 @@ ombi:
         hajimari.io/appName: Ombi
         hajimari.io/icon: basket-fill
       hosts:
-        - host: &host ombi.kleinsorge.dev
+        - host: &host requests.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

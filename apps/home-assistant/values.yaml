@@ -9,7 +9,7 @@ home-assistant:
         hajimari.io/appName: home-assistant
         hajimari.io/icon: lightbulb-on
       hosts:
-        - host: &host home-assistant.kleinsorge.dev
+        - host: &host ha.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
