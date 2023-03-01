@@ -1,8 +1,8 @@
 ingress-nginx:
   controller:
-    # service:
-    #   annotations:
-    #     metallb.universe.tf/address-pool: default
+    service:
+      annotations:
+          metallb.universe.tf/loadBalancerIPs: 192.168.1.200
     ingressClassResource:
       name: nginx
       enabled: true
@@ -28,5 +28,5 @@ ingress-nginx:
     extraEnvs:
     - name: TEMPLATE_NAME
       value: shuffle
-    - name: SHOW_DETAILS # Optional: enables the output of additional information on error pages
+    - name: SHOW_DETAILS
       value: 'true'
