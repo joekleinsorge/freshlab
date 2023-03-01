@@ -24,9 +24,9 @@ ingress-nginx:
     enabled: true
     image:
       repository: ghcr.io/tarampampam/error-pages
-      tag: 2.16.0
+      tag: 2.21.0
     extraEnvs:
     - name: TEMPLATE_NAME
-      value: ghost
+      value: shuffle
     - name: SHOW_DETAILS # Optional: enables the output of additional information on error pages
       value: 'true'
