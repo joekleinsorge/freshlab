@@ -6,7 +6,7 @@ plex:
     PLEX_PREFERENCE_1: 'FriendlyName=k8splex'
     PLEX_PREFERENCE_2: 'LanNetworksBandwidth=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
     PLEX_PREFERENCE_3: 'allowedNetworks=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_4: 'customConnections=https://plex.kleinsorge.dev'
+    PLEX_PREFERENCE_4: "logDebug=1"
   ingress:
     main:
       enabled: true
