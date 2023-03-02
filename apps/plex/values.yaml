@@ -25,22 +25,22 @@ plex:
         - secretName: plex-tls-certificate
           hosts:
             - *host
-  persistence:
-    config:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/kube/plex
-    transcode:
-      enabled: true
-      type: emptyDir
-      mountPath: /transcode
-      size: 100Gi
-    nfs:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/Media
+  # persistence:
+  #   config:
+  #     enabled: true
+  #     type: nfs
+  #     server: 192.168.1.208
+  #     path: /volume1/kube/plex
+  #   transcode:
+  #     enabled: true
+  #     type: emptyDir
+  #     mountPath: /transcode
+  #     size: 100Gi
+  #   nfs:
+  #     enabled: true
+  #     type: nfs
+  #     server: 192.168.1.208
+  #     path: /volume1/Media
   hostNetwork: true
 podSecurityContext:
   supplementalGroups:
