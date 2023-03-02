@@ -18,17 +18,24 @@ hajimari:
           hosts:
             - *host
   hajimari:
+    title: Home
+    darkTheme: chalk
     defaultEnable: true
+    showGreeting: false
+    showAppGroups: true
+    showAppUrls: true
+    showAppInfo: true
+    showAppStatus: true
     namespaceSelector:
       any: true
     globalBookmarks:
       - group: Homelab
         bookmarks:
           - name: Documentation
-            url: https://homelab.kleinsorge.dev
+            url: https://home.kleinsorge.dev
           - name: Public GitHub repository
             url: https://github.com/joekleinsorge/freshlab
-      - group: Managed services
+      - group: External services
         bookmarks:
           - name: Terraform Cloud
             url: https://app.terraform.io

@@ -6,7 +6,7 @@ kube-ops-view:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         ombi.io/enable: 'true'
-        hajimari.io/appName: kube-ops-view
+        hajimari.io/appName: view
         hajimari.io/icon: magnify
       hosts:
         - host: &host view.kleinsorge.dev
