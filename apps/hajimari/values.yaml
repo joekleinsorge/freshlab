@@ -19,7 +19,7 @@ hajimari:
             - *host
   hajimari:
     title: Home
-    darkTheme: chalk
+    lightTheme: chalk
     defaultEnable: true
     showGreeting: false
     showAppGroups: true
