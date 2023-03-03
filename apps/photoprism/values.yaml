@@ -35,3 +35,8 @@ photoprism:
       type: nfs
       server: 192.168.1.208
       path: /volume1/Media/Memories
+    import:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/photo

@@ -3,10 +3,10 @@ plex:
     TZ: 'America/New_York'
     PLEX_CLAIM: 'claim-VK2CzUs-y7LdDHvb4czd'
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
-    PLEX_PREFERENCE_1: 'FriendlyName=k8splex'
-    PLEX_PREFERENCE_2: 'LanNetworksBandwidth=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_3: 'allowedNetworks=172.16.0.0/16,192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_4: "logDebug=1"
+    ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
+    PLEX_PREFERENCE_2: 'LanNetworksBandwidth=192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_3: "logDebug=0"
   ingress:
     main:
       enabled: true
@@ -25,6 +25,7 @@ plex:
         - secretName: plex-tls-certificate
           hosts:
             - *host
+  hostNetwork: true
   # persistence:
   #   config:
   #     enabled: true
@@ -41,7 +42,6 @@ plex:
   #     type: nfs
   #     server: 192.168.1.208
   #     path: /volume1/Media
-  hostNetwork: true
 podSecurityContext:
   supplementalGroups:
     - 39
