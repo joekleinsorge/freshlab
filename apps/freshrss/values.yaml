@@ -6,10 +6,10 @@ freshrss:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         freshrss.io/enable: 'true'
-        hajimari.io/appName: freshrss
+        hajimari.io/appName: rss
         hajimari.io/icon: rss
       hosts:
-        - host: &host freshrss.kleinsorge.dev
+        - host: &host rss.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
