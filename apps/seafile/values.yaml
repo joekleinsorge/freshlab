@@ -8,7 +8,7 @@ seafile:
         hajimari.io/appName: Seafile
         hajimari.io/icon: google-drive
       hosts:
-        - host: &host file.kleinsorge.dev
+        - host: &host files.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix

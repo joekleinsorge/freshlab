@@ -8,6 +8,7 @@ photoprism:
         photoprism.io/enable: 'true'
         hajimari.io/appName: photo
         hajimari.io/icon: film
+        nginx.ingress.kubernetes.io/proxy-body-size: "512M"
       hosts:
         - host: &host photo.kleinsorge.dev
           paths:
@@ -40,3 +41,4 @@ photoprism:
       type: nfs
       server: 192.168.1.208
       path: /volume1/photo
+  
