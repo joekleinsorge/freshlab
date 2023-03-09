@@ -17,33 +17,34 @@ hajimari:
         - secretName: hajimari-tls-certificate
           hosts:
             - *host
-  name: Joe
-  title: Home
-  lightTheme: chalk
-  darkTheme: horizon
-  customThemes:
-    - name: danger
-      backgroundColor: '#0c0e0c'
-      primaryColor: '#eaebea'
-      accentColor: '#d8323c'
-  defaultEnable: true
-  showGreeting: false
-  showAppGroups: true
-  showAppUrls: true
-  showAppInfo: true
-  showAppStatus: true
-  namespaceSelector:
-    any: true
-  globalBookmarks:
-    - group: Homelab
-      bookmarks:
-        - name: Documentation
-          url: https://home.kleinsorge.dev
-        - name: Public GitHub repository
-          url: https://github.com/joekleinsorge/freshlab
-    - group: External services
-      bookmarks:
-        - name: Terraform Cloud
-          url: https://app.terraform.io
-        - name: Cloudflare
-          url: https://dash.cloudflare.com
+  hajimari:
+    name: Joe
+    title: Home
+    lightTheme: chalk
+    darkTheme: horizon
+    customThemes:
+      - name: danger
+        backgroundColor: '#0c0e0c'
+        primaryColor: '#eaebea'
+        accentColor: '#d8323c'
+    defaultEnable: true
+    showGreeting: false
+    showAppGroups: true
+    showAppUrls: true
+    showAppInfo: true
+    showAppStatus: true
+    namespaceSelector:
+      any: true
+    globalBookmarks:
+      - group: Homelab
+        bookmarks:
+          - name: Documentation
+            url: https://home.kleinsorge.dev
+          - name: Public GitHub repository
+            url: https://github.com/joekleinsorge/freshlab
+      - group: External services
+        bookmarks:
+          - name: Terraform Cloud
+            url: https://app.terraform.io
+          - name: Cloudflare
+            url: https://dash.cloudflare.com
