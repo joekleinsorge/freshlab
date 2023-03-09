@@ -8,22 +8,12 @@ frigate:
   config: |
     mqtt:
       # Required: host name
-      host: mqtt.server.com
-      # Optional: port (default: shown below)
+      host: mqtt.kleisorge.dev
       port: 1883
-      # Optional: topic prefix (default: shown below)
-      # WARNING: must be unique if you are running multiple instances
       topic_prefix: frigate
-      # Optional: client id (default: shown below)
-      # WARNING: must be unique if you are running multiple instances
       client_id: frigate
-      # Optional: user
       user: mqtt_user
-      # Optional: password
-      # NOTE: Environment variables that begin with 'FRIGATE_' may be referenced in {}.
-      #       eg. password: '{FRIGATE_MQTT_PASSWORD}'
       password: password
-      # Optional: interval in seconds for publishing stats (default: shown below)
       stats_interval: 60
 
     detectors:
@@ -51,7 +41,6 @@ ingress:
   enabled: true
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    ombi.io/enable: 'true'
     hajimari.io/appName: frigate
     hajimari.io/icon: Videocam
   hosts:

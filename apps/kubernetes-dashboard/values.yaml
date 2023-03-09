@@ -1,0 +1,17 @@
+kubernetes-dashboard:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/appName: kubernetes-dashboard
+      hajimari.io/icon: Videocam
+    hosts:
+      - host: &host k8dash.kleinsorge.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: kubernetes-dashboard-tls-certificate
+        hosts:
+          - *host
+  
