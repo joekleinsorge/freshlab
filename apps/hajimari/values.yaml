@@ -28,11 +28,6 @@ hajimari:
         primaryColor: '#eaebea'
         accentColor: '#d8323c'
     defaultEnable: true
-    showGreeting: false
-    showAppGroups: true
-    showAppUrls: true
-    showAppInfo: true
-    showAppStatus: true
     namespaceSelector:
       any: true
     globalBookmarks:
