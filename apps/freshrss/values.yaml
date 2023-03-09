@@ -17,9 +17,3 @@ freshrss:
         - secretName: freshrss-tls-certificate
           hosts:
             - *host
-  persistence:
-    config:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/kube/freshrss
