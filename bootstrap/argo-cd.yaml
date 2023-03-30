@@ -8,19 +8,6 @@ metadata:
   name: argo-cd
   namespace: argocd
 spec:
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      external-dns.alpha.kubernetes.io/target: "argocd.kleinsorge.dev"
-      external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-    hosts:
-      - &host argocd.kleinsorge.dev
-    tls:
-      - secretName: argocd-tls-certificate
-        hosts:
-          - *host
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
