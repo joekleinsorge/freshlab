@@ -5,7 +5,6 @@ freshrss:
       ingressClassName: nginx
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        freshrss.io/enable: 'true'
         hajimari.io/appName: rss
         hajimari.io/icon: rss
       hosts:

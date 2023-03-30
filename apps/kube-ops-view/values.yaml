@@ -5,7 +5,6 @@ kube-ops-view:
       ingressClassName: nginx
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        ombi.io/enable: 'true'
         hajimari.io/appName: view
         hajimari.io/icon: magnify
       hosts:
