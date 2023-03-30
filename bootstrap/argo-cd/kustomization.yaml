@@ -3,7 +3,6 @@ configMapGenerator:
 - behavior: merge
   literals:
   - kustomize.buildOptions="--enable-alpha-plugins --enable-helm"
-  - ./ingress.yaml
   - |
     repository.credentials=- passwordSecret:
         key: git_token
@@ -17,3 +16,5 @@ kind: Kustomization
 namespace: argocd
 resources:
 - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.11
+- ./ingress.yaml
+
