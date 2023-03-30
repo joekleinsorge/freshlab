@@ -3,6 +3,7 @@ configMapGenerator:
 - behavior: merge
   literals:
   - kustomize.buildOptions="--enable-alpha-plugins --enable-helm"
+  - ./ingress.yaml
   - |
     repository.credentials=- passwordSecret:
         key: git_token
