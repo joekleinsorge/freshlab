@@ -10,7 +10,7 @@ photoprism:
         hajimari.io/icon: film
         nginx.ingress.kubernetes.io/proxy-body-size: "512M"
       hosts:
-        - host: &host photo.kleinsorge.dev
+        - host: &host photos.kleinsorge.dev
           paths:
             - path: /
               pathType: Prefix
