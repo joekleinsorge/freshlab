@@ -5,12 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/target: "argocd.kleinsorge.dev"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    hajimari.io/appName: ArgoCD
+    hajimari.io/icon: pencil
+    # external-dns.alpha.kubernetes.io/target: "argocd.kleinsorge.dev"
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   rules:
-  - host: "argocd.kleinsorge.dev"
+  - host: &host argocd.kleinsorge.dev
     http:
       paths:
       - path: /
@@ -21,6 +23,6 @@ spec:
             port:
               name: https
   tls:
-  - hosts:
-    - "argocd.kleinsorge.dev"
-    secretName: argocd-tls-certificate
+    - secretName: argocd-tls-certificate
+      hosts:
+        - *host
