@@ -17,4 +17,5 @@ namespace: argocd
 resources:
 - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.11
 - ./ingress.yaml
+- ./argogrpc.service.yaml
 
