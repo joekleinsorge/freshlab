@@ -24,6 +24,6 @@ spec:
             port:
               name: https
   tls:
-    - secretName: argocd-tls-certificate
+    - secretName: argocd-secret
       hosts:
         - *host
