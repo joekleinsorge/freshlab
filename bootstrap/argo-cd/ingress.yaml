@@ -5,28 +5,25 @@ metadata:
   namespace: argocd
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     hajimari.io/appName: ArgoCD
     hajimari.io/icon: pencil
 spec:
-rules:
-- host: &host argocd.kleinsorge.dev
-  http:
-    paths:
-    - path: /
-      pathType: Prefix
-      backend:
-        service:
-          name: argocd-server
-          port:
-          number: 443
-    - path: /
-      pathType: Prefix
-      backend:
-        service:
-          name: argogrpc
-          port:
-          number: 443
-tls:
-  - secretName: argocd-tls-certificate
-    hosts:
-      - *host
+  rules:
+  - host: &host argocd.kleinsorge.dev
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
+  tls:
+    - secretName: argocd-tls-certificate
+      hosts:
+        - *host
