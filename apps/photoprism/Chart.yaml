@@ -5,4 +5,4 @@ dependencies:
   - name: photoprism
     version: 7.1.2
     # repository: https://k8s-at-home.com/charts/
-    repository: https://djjudas21.github.io/charts/
+    repository: https://p80n.github.io/photoprism-helm/
