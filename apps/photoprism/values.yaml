@@ -1,6 +1,9 @@
 photoprism:
   env:
     TZ: America/New_York
+    PHOTOPRISM_DATABASE_DRIVER: mysql
+    UID: 1000
+    GID: 1000
   ingress:
     main:
       enabled: true
@@ -33,14 +36,17 @@ photoprism:
       type: nfs
       server: 192.168.1.208
       path: /volume1/kube/photoprism
+      mountPath: /photoprism/storage
     originals:
       enabled: true
       type: nfs
       server: 192.168.1.208
       path: /volume1/Media/Memories
+      mountPath: /photoprism/originals
     import:
       enabled: true
       type: nfs
       server: 192.168.1.208
       path: /volume1/photo
+      mountPath: /photoprism/import
   
