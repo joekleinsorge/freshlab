@@ -2,8 +2,8 @@ photoprism:
   env:
     TZ: America/New_York
     PHOTOPRISM_DATABASE_DRIVER: mysql
-    UID: 1000
-    GID: 1000
+    # UID: 1000
+    # GID: 1000
   ingress:
     main:
       enabled: true
