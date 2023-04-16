@@ -17,3 +17,10 @@ uptime-kuma:
         - secretName: uptime-kuma-tls-certificate
           hosts:
             - *host
+  persistence:
+    data:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/kube/uptime-kuma
+      mountPath: /app/data
