@@ -30,6 +30,10 @@ photoprism:
       username: photoprism
       password: photoprism
       rootPassword: photoprism
+    primary:
+      persistence:
+        enabled: true
+        storageClass: "nfs-client"
   persistence:
     config:
       enabled: true
