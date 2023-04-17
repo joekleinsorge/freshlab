@@ -1,54 +1,86 @@
 frigate:
-  coral:
-    # -- enables the use of a Coral device
+  env:
+  TZ: America/New_York
+  FRIGATE_RTSP_PASSWORD: "password"
+
+
+  ingress:
+    main:
+      enabled: true
+
+
+securityContext:
+  # -- (bool) Privileged securityContext may be required if USB devices are accessed directly through the host machine
+  privileged: false
+
+
+persistence:
+  data:
     enabled: false
-    # -- path on the host to which to mount the Coral device
+    mountPath: /data
+  media:
+    enabled: false
+    mountPath: /media
+  # -- Configure a hostPathMount to mount a USB device in the container.
+  # @default -- See values.yaml
+  usb:
+    enabled: false
+    type: hostPath
     hostPath: /dev/bus/usb
+  # -- Configure a temporary cache. See [docs](https://blakeblackshear.github.io/frigate/) for more details..
+  # @default -- See values.yaml
+  cache:
+    enabled: true
+    type: emptyDir
+    medium: Memory
+    sizeLimit: 1Gi
+    mountPath: /dev/shm
 
-  config: |
-    mqtt:
-      # Required: host name
-      host: mqtt.kleisorge.dev
-      port: 1883
-      topic_prefix: frigate
-      client_id: frigate
-      user: mqtt_user
-      password: password
-      stats_interval: 60
+# -- Affinity constraint rules to place the Pod on a specific node.
+# [[ref]](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+affinity: {}
+#   nodeAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: app
+#           operator: In
+#           values:
+#           - coral-tpu
 
-    detectors:
-      # coral:
-      #   type: edgetpu
-      #   device: usb
-      cpu1:
-        type: cpu
+# -- Configure the resource requests and/or limits for the Pod
+resources: {}
+  # requests:
+  #   # Hardware acceleration using an Intel iGPU w/ QuickSync and
+  #   # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+  #   gpu.intel.com/i915: 1
+  #   cpu: 200m
+  #   memory: 256Mi
+  # limits:
+  #   # Hardware acceleration using an Intel iGPU w/ QuickSync and
+  #   # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+  #   gpu.intel.com/i915: 1
+  #   memory: 4096Mi
 
-    # cameras:
-    #   # Name of your camera
-    #   front_door:
-    #     ffmpeg:
-    #       inputs:
-    #         - path: rtsp://{FRIGATE_RSTP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@10.0.10.10:554/cam/realmonitor?channel=1&subtype=2
-    #           roles:
-    #             - detect
-    #             - rtmp
-    #     width: 1280
-    #     height: 720
-    #     fps: 5
+configmap:
+  config:
+    # -- Store frigate configuration as a ConfigMap
+    enabled: true
 
-
-ingress:
-  enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: frigate
-    hajimari.io/icon: Videocam
-  hosts:
-    - host: &host frigate.kleinsorge.dev
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: frigate-tls-certificate
-      hosts:
-        - *host
+    # -- See [docs](https://blakeblackshear.github.io/frigate/) for more details.
+    # @default -- see URL to default config
+    data:
+      config.yml: |
+        mqtt:
+          host: mqtt.server.com
+        cameras:
+          back:
+            ffmpeg:
+              inputs:
+                - path: rtsp://demo:demo@ipvmdemo.dyndns.org:5541/onvif-media/media.amp?profile=profile_1_h264&sessiontimeout=60&streamtype=unicast
+                  roles:
+                    - detect
+                    - rtmp
+            detect:
+              width: 1280
+              height: 720
