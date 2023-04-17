@@ -1,0 +1,7 @@
+apiVersion: v2
+name: firefly-ii
+version: 0.0.0
+dependencies:
+  - name: firefly-iii
+    version: 0.2.2
+    repository: https://k8s-at-home.com/charts/
