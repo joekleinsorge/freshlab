@@ -33,4 +33,7 @@ firefly-iii:
       path: /volume1/kube/firefly-iii
   mariadb:
    enabled: true
-   password: "secret_firefly_password"
+   username: firefly
+   rootPassword: secret_firefly_password
+   password: secret_firefly_password
+   database: firefly
