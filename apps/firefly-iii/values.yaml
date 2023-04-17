@@ -6,7 +6,7 @@ firefly-iii:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: firefly-iii
-        hajimari.io/icon: savings
+        hajimari.io/icon: tabler:pig-money
       hosts:
         - host: &host money.kleinsorge.dev
           paths:

@@ -6,7 +6,7 @@ haste-server:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: paste
-        hajimari.io/icon: file-copy
+        hajimari.io/icon: material-symbols:content-copy
       hosts:
         - host: &host paste.kleinsorge.dev
           paths:
