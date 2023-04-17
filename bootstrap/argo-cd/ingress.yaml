@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
     hajimari.io/appName: ArgoCD
-    hajimari.io/icon: pencil
+    hajimari.io/icon: simple-icons:argo
 spec:
   rules:
   - host: &host argocd.kleinsorge.dev
