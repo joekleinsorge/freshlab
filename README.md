@@ -1,4 +1,4 @@
-# GitOps Homelab Project aka "Freshlab"
+# Freshlab: My GitOps Homelab Project
 
 This is my GitOps homelab, or "Freshlab" because it's the latest version that I haven't burned down yet.
 
@@ -6,20 +6,18 @@ This is my GitOps homelab, or "Freshlab" because it's the latest version that I 
 
 This project is my homelab in a repo, utilizing some IaC and GitOps to manage the infrastructure and automate the provisioning, operating and updating of my self-hosted services.
 
-Like every homelab, it's a work in progress, and I'm always looking for ways to improve it. If you have any suggestions, please feel free to open an issue or PR.
-
-P.S. Don't rely on this for anything important, as it's not ready for production use.
+Please note that Freshlab is a personal project and not intended for production use. It's a continuously evolving work-in-progress, and feedback, suggestions, and contributions from the community are welcome to further enhance its capabilities.
 
 ## Features
 
-- Re-deployment with a single command
-- Automated k3s cluster provisioning and management
-- GitOps managed cluster configuration
-- Automatic rolling updates for OS and Kubernetes
-- Automatic application updates
-- Automatic TLS certificate provisioning and renewal
-- Automatic DNS provisioning and management
-- Automated monitoring configuration
+- One-command re-deployment for seamless updates
+- Automated k3s cluster provisioning and management for efficient operations
+- GitOps managed cluster configuration for declarative and version-controlled infrastructure management
+- Automatic rolling updates for the operating system and Kubernetes for improved security and stability
+- Automatic application updates for self-hosted services, ensuring the latest features and bug fixes
+- Automatic TLS certificate provisioning and renewal for secure communication over HTTPS
+- Automatic DNS provisioning and management for easy domain configuration
+- Automated monitoring configuration for enhanced observability and insights into the environment
 
 ## Core Components
 
@@ -52,7 +50,7 @@ See the docs for detailed information on the architecture, installation and use 
 
 ## Acknowledgements
 
-This design was heavily inspired by the following projects:
+This design was inspired by the following projects:
 
 - [K8s-at-home](https://github.com/k8s-at-home)
 - [Khuedon's homelab](https://github.com/khuedoan/homelab)
