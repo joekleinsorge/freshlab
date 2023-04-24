@@ -1,0 +1,11 @@
+appVersion: v1
+kind: Pod
+metadata:
+  name: kubia-manual
+spec:
+  containers:
+  - image: kleinsorge/kubia
+    name: kubia
+    ports:
+    - containerPort: 8080
+      protocol: TCP
