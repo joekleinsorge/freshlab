@@ -20,6 +20,11 @@ freshrss:
     template:
       spec:
         containers:
+          ports:
+            - containerPort: 53
+              protocol: TCP
+            - containerPort: 53
+              protocol: udp
           volumeMounts:
             - name: nfs-pvc
               mountPath: /
