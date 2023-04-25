@@ -22,7 +22,7 @@ freshrss:
         containers:
           volumeMounts:
             - name: nfs-pvc
-              mountPath: /config
+              mountPath: /
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
