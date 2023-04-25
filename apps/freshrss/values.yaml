@@ -16,9 +16,22 @@ freshrss:
         - secretName: freshrss-tls-certificate
           hosts:
             - *host
-  persistence:
-    config:
-      enabled: true
-      type: nfs
-      server: 192.168.1.208
-      path: /volume1/kube/freshrss
+  spec:
+    template:
+      spec:
+        containers:
+          volumeMounts:
+            - name: nfs-pvc
+              mountPath: /config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: nfs-client
