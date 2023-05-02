@@ -33,7 +33,7 @@ photoprism:
     primary:
       persistence:
         enabled: true
-        storageClass: "nfs-client"
+        # storageClass: "nfs-client"
   persistence:
     config:
       enabled: true
