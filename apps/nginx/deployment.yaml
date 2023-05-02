@@ -20,16 +20,3 @@ spec:
           volumeMounts:
             - name: nfs-pvc
               mountPath: /usr/share/nginx/html
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Mi
-  storageClassName: nfs-client
-
