@@ -35,13 +35,12 @@ Main layers are structured in the following directories:
 ├── global    # L4.0 - external or public-facing services
 ```
 
-
 Supporting components:
 
 ``` shell
 ├── .github   # GitHub Actions workflows for CI
 ├── scripts   # Supporting scripts for managing the cluster
-└── docs      # Documentation lives here```
+└── docs      # Documentation lives here
 ```
 
 ## Documentation
