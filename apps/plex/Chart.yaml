@@ -1,6 +1,6 @@
 name: kube-plex
 apiVersion: v2
-version: 1.0.0
+version: 0.0.0
 dependencies:
   - name: kube-plex
     version: 0.3.4
