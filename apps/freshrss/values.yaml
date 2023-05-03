@@ -25,18 +25,10 @@ freshrss:
               protocol: TCP
             - containerPort: 53
               protocol: udp
-          volumeMounts:
-            - name: nfs-pvc
-              mountPath: /
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Mi
-  storageClassName: nfs-client
+  persistence:
+    config:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/kube/freshrss
+      # mountPath: /

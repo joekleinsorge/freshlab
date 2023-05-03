@@ -2,8 +2,10 @@ photoprism:
   env:
     TZ: America/New_York
     PHOTOPRISM_DATABASE_DRIVER: mysql
+    PHOTOPRISM_ADMIN_PASSWORD: "please-change"
     UID: 1030
     GID: 101
+    # UMASK: 0002
   ingress:
     main:
       enabled: true
