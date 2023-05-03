@@ -1,5 +1,4 @@
 nfs:
-  nfs:
-    server: 192.168.1.208
-    path: /volume1/kube
-    volumeName: synology-nfs
+  server: 192.168.1.208
+  path: "/volume1/kube"
+  volumeName: "synology-nfs"
