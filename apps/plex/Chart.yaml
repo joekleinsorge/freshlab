@@ -1,7 +1,7 @@
-name: plex
+name: kube-plex
 apiVersion: v2
 version: 1.0.0
 dependencies:
-  - name: plex
+  - name: kube-plex
     version: 0.3.4
     repository: https://ressu.github.io/kube-plex
