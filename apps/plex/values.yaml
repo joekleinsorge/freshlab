@@ -1,36 +1,35 @@
 kubePlex:
-  kubePlex:
-    timezone: 'America/New_York'
-    claimToken: 'Un-YKkYDYfu2tZPjNMwb'
-    extraEnv: {
-      puid: 1030,
-      pgid: 101
-    }
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      hajimari.io/enable: 'true'
-      hajimari.io/appName: 'plex'
-      hajimari.io/icon: 'plex'
-    hosts:
-      - host: &host plex.kleinsorge.dev
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: plex-tls-certificate
-        hosts:
-          - *host
-  persistence:
-    transcode:
-      size: 20Gi
-      accessMode: ReadWriteMany
-    data:
-      claimName: "plex-data-pvc"
-      accessMode: ReadWriteMany
-    config:
-      storageClass: "nfs-client"
-      size: 20Gi
-      accessMode: ReadWriteMany
+  timezone: 'America/New_York'
+  claimToken: 'Un-YKkYDYfu2tZPjNMwb'
+  extraEnv: {
+    puid: 1030,
+    pgid: 101
+  }
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/enable: 'true'
+    hajimari.io/appName: 'plex'
+    hajimari.io/icon: 'plex'
+  hosts:
+    - host: &host plex.kleinsorge.dev
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: plex-tls-certificate
+      hosts:
+        - *host
+persistence:
+  transcode:
+    size: 20Gi
+    accessMode: ReadWriteMany
+  data:
+    claimName: "plex-data-pvc"
+    accessMode: ReadWriteMany
+  config:
+    storageClass: "nfs-client"
+    size: 20Gi
+    accessMode: ReadWriteMany
