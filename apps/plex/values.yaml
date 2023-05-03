@@ -1,7 +1,7 @@
 kubePlex:
   kubelex:
     timezone: 'America/New_York'
-    claimToken: 'claim-VK2CzUs-y7LdDHvb4czd'
+    claimToken: 'Un-YKkYDYfu2tZPjNMwb'
     extraEnv: {
       puid: 1030,
       pgid: 101
@@ -25,7 +25,6 @@ kubePlex:
           - *host
   persistence:
     transcode:
-      storageClass: ""
       size: 20Gi
       accessMode: ReadWriteMany
     data:
