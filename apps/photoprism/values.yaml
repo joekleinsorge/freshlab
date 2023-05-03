@@ -3,6 +3,9 @@ photoprism:
     TZ: America/New_York
     PHOTOPRISM_DATABASE_DRIVER: mysql
     PHOTOPRISM_ADMIN_PASSWORD: "please-change"
+    PHOTOPRISM_ORIGINALS_LIMIT: -1
+    PHOTOPRISM_RESOLUTION_LIMIT: -1
+    PHOTOPRISM_WORKERS: 6
     UID: 1030
     GID: 101
     # UMASK: 0002
@@ -14,7 +17,7 @@ photoprism:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         photoprism.io/enable: 'true'
         hajimari.io/appName: photo
-        hajimari.io/icon: film
+        hajimari.io/icon: camera
         nginx.ingress.kubernetes.io/proxy-body-size: "512M"
       hosts:
         - host: &host photos.kleinsorge.dev
