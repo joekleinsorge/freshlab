@@ -1,4 +1,8 @@
 freshrss:
+  env:
+    TZ: America/New_York
+    UID: 1030
+    GID: 101
   ingress:
     main:
       enabled: true
