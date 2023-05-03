@@ -16,7 +16,7 @@ photoprism:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         photoprism.io/enable: 'true'
-        hajimari.io/appName: photo
+        hajimari.io/appName: photos
         hajimari.io/icon: camera
         nginx.ingress.kubernetes.io/proxy-body-size: "512M"
       hosts:
