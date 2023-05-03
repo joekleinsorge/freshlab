@@ -1,5 +1,5 @@
 kubePlex:
-  kubelex:
+  kubePlex:
     timezone: 'America/New_York'
     claimToken: 'Un-YKkYDYfu2tZPjNMwb'
     extraEnv: {
