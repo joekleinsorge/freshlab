@@ -4,8 +4,8 @@ metadata:
   name: nginx-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: nginx
-    hajimari.io/icon: simple-icons:nginx
+    hajimari.io/appName: web
+    hajimari.io/icon: web
 spec:
   ingressClassName: nginx
   rules:
