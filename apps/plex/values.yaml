@@ -1,7 +1,7 @@
 plex:
   env:
     TZ: 'America/New_York'
-    PLEX_CLAIM: 'claim-VK2CzUs-y7LdDHvb4czd'
+    PLEX_CLAIM: 'claim-JNmG2vB7oj1246zuHca6'
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
     ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
     PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
