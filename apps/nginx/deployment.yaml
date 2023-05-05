@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -23,6 +23,13 @@ spec:
           volumeMounts:
             - name: nfs-pvc
               mountPath: /usr/share/nginx/html
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500Mi"
       volumes:
         - name: nfs-pvc
           persistentVolumeClaim:

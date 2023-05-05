@@ -16,3 +16,10 @@ spec:
       containers:
         - name: excalidraw
           image: excalidraw/excalidraw:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500Mi"
