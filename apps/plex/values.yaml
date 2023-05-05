@@ -1,35 +1,35 @@
-# kubePlex:
-#   timezone: 'America/New_York'
-#   claimToken: 'Un-YKkYDYfu2tZPjNMwb'
-#   extraEnv: {
-#     puid: 1030,
-#     pgid: 101
-#   }
-# # ingress:
-# #   enabled: true
-# #   ingressClassName: nginx
-# #   annotations:
-# #     cert-manager.io/cluster-issuer: letsencrypt-prod
-# #     hajimari.io/enable: 'true'
-# #     hajimari.io/appName: 'plex'
-# #     hajimari.io/icon: 'plex'
-# #   hosts:
-# #     - host: &host plex.kleinsorge.dev
-# #       paths:
-# #         - path: /
-# #           pathType: Prefix
-# #   tls:
-# #     - secretName: plex-tls-certificate
-# #       hosts:
-# #         - *host
-# persistence:
-#   transcode:
-#     size: 20Gi
-#     accessMode: ReadWriteMany
-#   data:
-#     claimName: "plex-data-pvc"
-#     accessMode: ReadWriteMany
-#   config:
-#     storageClass: "nfs-client"
-#     size: 20Gi
-#     accessMode: ReadWriteMany
+plex:
+  env:
+    TZ: 'America/New_York'
+    PLEX_CLAIM: 'claim-VK2CzUs-y7LdDHvb4czd'
+    ADVERTISE_IP: 'https://plex.kleinsorge.dev'
+    ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
+    PLEX_PREFERENCE_2: 'LanNetworksBandwidth=192.168.0.0/16,10.0.0.0/8'
+    PLEX_PREFERENCE_3: "logDebug=0"
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/enable: 'true'
+        hajimari.io/appName: 'plex'
+        hajimari.io/icon: 'plex'
+      hosts:
+        - host: &host plex.kleinsorge.dev
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: plex-tls-certificate
+          hosts:
+            - *host
+  persistence:
+    data:
+      enabled: true
+      existingClaim: "plex-data-pvc"
+    config:
+      enabled: true
+      existingClaim: "plex-config-pvc"
+  hostNetwork: true
