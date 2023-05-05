@@ -34,3 +34,10 @@ spec:
         - name: nfs-pvc
           persistentVolumeClaim:
             claimName: nfs-claim
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: nginx
