@@ -50,8 +50,8 @@ spec:
         imagePullPolicy: Always
         name: plexserver
         ports:
-        - containerPort: 32400     # < required network portnumber. See https://hub.docker.com/r/linuxserver/plex
-          name: pms-web            # < reference name from the port in the service yaml
+        - containerPort: 32400
+          name: pms-web
           protocol: TCP
         - containerPort: 32469
           name: dlna-tcp
@@ -88,4 +88,3 @@ spec:
           name: plex-config
         - mountPath: /data
           name: plex-data
-        restartPolicy: Always
