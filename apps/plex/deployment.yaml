@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: plex
+  labels:
+    app: plexserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: plexserver
+  template:
+    metadata:
+      labels:
+        app: plexserver
+    spec:
+      volumes:
+      - name: plex-config
+        persistentVolumeClaim:
+          claimName: plex-config-pvc
+      - name: plex-data
+        persistentVolumeClaim:
+          claimName: plex-data-pvc
+      containers:
+      - name: plex
+        image: plexinc/pms-docker
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 32400 #PMS
+          name: plex
+        - containerPort: 32400
+          name: plex-udp
+          protocol: UDP
+        - containerPort: 32469 #Plex DLNA
+          name: plex-dlna
+        - containerPort: 5353
+          name: plex-discovery
+          protocol: UDP
+        - containerPort: 1900 #Plex DLNA
+          name: plex-dlna-udp
+          protocol: UDP
+        env:
+        - name: UID
+          value: "\x49\x48\x51\x48"
+        - name: GID
+          value: "\x49\x48\x49"
+        - name: PLEX_CLAIM
+          value: claim-pbxkYuTC26s519XxagWG
+        - name: ADVERTISE_IP
+          value: https://plex.kleinsorge.dev
+        - name: HOSTNAME
+          value: plex.kleinsorge.dev
+        - name: ALLOWED_NETWORKS
+          value: 192.168.0.0/16
+        - name: TZ
+          value: America/New_York
+        volumeMounts:
+        - mountPath: /config
+          name: plex-config
+        - mountPath: /data
+          name: plex-data

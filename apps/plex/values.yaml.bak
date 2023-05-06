@@ -29,13 +29,6 @@ plex:
   #       - secretName: plex-tls-certificate
   #         hosts:
   #           - *host
-  service:
-    type: LoadBalancer
-    annotations:
-      metallb.universe.tf/allow-shared-ip: plex-svc
-    port:
-      port: 32400
-      targetPort: 32400
   persistence:
     data:
       enabled: true
