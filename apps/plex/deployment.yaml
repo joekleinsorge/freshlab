@@ -46,7 +46,7 @@ spec:
         - name: GID
           value: "\x49\x48\x49"
         - name: PLEX_CLAIM
-          value: claim-pbxkYuTC26s519XxagWG
+          value: claim-52oKNNimp9uE-E8Rzz8v
         - name: ADVERTISE_IP
           value: https://plex.kleinsorge.dev
         - name: HOSTNAME
