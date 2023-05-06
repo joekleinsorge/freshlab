@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plex
+  name: plexserver
   namespace: plex
   labels:
     app: plexserver
