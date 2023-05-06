@@ -1,30 +1,34 @@
 plex:
+ image:
+  repository: linuxserver/plex
+  tag: latest
+  pullPolicy: IfNotPresent  
   env:
     TZ: 'America/New_York'
     PLEX_CLAIM: 'claim-JNmG2vB7oj1246zuHca6'
-    ADVERTISE_IP: 'https://plex.kleinsorge.dev'
-    ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
-    PLEX_PREFERENCE_2: 'LanNetworksBandwidth=192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_3: "logDebug=0"
-  ingress:
-    main:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        hajimari.io/enable: 'true'
-        hajimari.io/appName: 'plex'
-        hajimari.io/icon: 'plex'
-      hosts:
-        - host: &host plex.kleinsorge.dev
-          paths:
-            - path: /
-              pathType: Prefix
-      tls:
-        - secretName: plex-tls-certificate
-          hosts:
-            - *host
+    # ADVERTISE_IP: 'https://plex.kleinsorge.dev'
+    # ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
+    # PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
+    # PLEX_PREFERENCE_2: 'LanNetworksBandwidth=192.168.0.0/16,10.0.0.0/8'
+    # PLEX_PREFERENCE_3: "logDebug=0"
+  # ingress:
+  #   main:
+  #     enabled: true
+  #     ingressClassName: nginx
+  #     annotations:
+  #       cert-manager.io/cluster-issuer: letsencrypt-prod
+  #       hajimari.io/enable: 'true'
+  #       hajimari.io/appName: 'plex'
+  #       hajimari.io/icon: 'plex'
+  #     hosts:
+  #       - host: &host plex.kleinsorge.dev
+  #         paths:
+  #           - path: /
+  #             pathType: Prefix
+  #     tls:
+  #       - secretName: plex-tls-certificate
+  #         hosts:
+  #           - *host
   service:
     type: LoadBalancer
     annotations:
@@ -40,3 +44,7 @@ plex:
       enabled: true
       existingClaim: "plex-config-pvc"
   hostNetwork: true
+  resources: {}
+  podAnnotations: {}
+  proxy:
+    enable: false
