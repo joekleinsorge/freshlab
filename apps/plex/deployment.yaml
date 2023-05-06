@@ -6,10 +6,16 @@ metadata:
   labels:
     app: plexserver
 spec:
-  replicas: 2
+  replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       app: plexserver
+  strategy:
+    rollingUpdate:
+      maxSurge: 0 
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -23,30 +29,13 @@ spec:
         persistentVolumeClaim:
           claimName: plex-data-pvc
       containers:
-      - name: plex
-        image: plexinc/pms-docker
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 32400 #PMS
-          name: plex
-        - containerPort: 32400
-          name: plex-udp
-          protocol: UDP
-        - containerPort: 32469 #Plex DLNA
-          name: plex-dlna
-        - containerPort: 5353
-          name: plex-discovery
-          protocol: UDP
-        - containerPort: 1900 #Plex DLNA
-          name: plex-dlna-udp
-          protocol: UDP
-        env:
-        - name: UID
+      - env:
+        - name: PUID
           value: "\x49\x48\x51\x48"
-        - name: GID
+        - name: PGID
           value: "\x49\x48\x49"
         - name: PLEX_CLAIM
-          value: claim-52oKNNimp9uE-E8Rzz8v
+          value: claim-CYxbDeJd-GFZTHKYFrex
         - name: ADVERTISE_IP
           value: https://plex.kleinsorge.dev
         - name: HOSTNAME
@@ -55,8 +44,48 @@ spec:
           value: 192.168.0.0/16
         - name: TZ
           value: America/New_York
+        - name: VERSION
+          value: latest
+        image: ghcr.io/linuxserver/plex 
+        imagePullPolicy: Always
+        name: plexserver
+        ports:
+        - containerPort: 32400     # < required network portnumber. See https://hub.docker.com/r/linuxserver/plex
+          name: pms-web            # < reference name from the port in the service yaml
+          protocol: TCP
+        - containerPort: 32469
+          name: dlna-tcp
+          protocol: TCP
+        - containerPort: 1900
+          name: dlna-udp
+          protocol: UDP
+        - containerPort: 3005
+          name: plex-companion
+          protocol: TCP  
+        - containerPort: 5353
+          name: discovery-udp
+          protocol: UDP  
+        - containerPort: 8324
+          name: plex-roku
+          protocol: TCP  
+        - containerPort: 32410
+          name: gdm-32410
+          protocol: UDP
+        - containerPort: 32412
+          name: gdm-32412
+          protocol: UDP
+        - containerPort: 32413
+          name: gdm-32413
+          protocol: UDP
+        - containerPort: 32414
+          name: gdm-32414
+          protocol: UDP
+        resources: {}
+        stdin: true
+        tty: true
         volumeMounts:
         - mountPath: /config
           name: plex-config
         - mountPath: /data
           name: plex-data
+        restartPolicy: Always
