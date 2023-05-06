@@ -13,10 +13,13 @@ spec:
     - host: &host plex.kleinsorge.dev
       http:
         paths:
-        - path: /
+        - pathType: Prefix
+          path: /
           backend:
-            serviceName: plex-tcp
-            servicePort: pms-web
+            service:
+              name: plex-tcp
+              port:
+                name: pms-web
   tls:
     - secretName: plex-tls-certificate
       hosts:
