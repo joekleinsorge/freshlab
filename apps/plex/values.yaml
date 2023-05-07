@@ -3,7 +3,7 @@ plex:
     tag: latest
   env:
     TZ: 'America/New_York'
-    PLEX_CLAIM: 'claim-QEba1QUVxgpxq1VnCjyM'
+    PLEX_CLAIM: 'claim-sUynyXu7oqtPTeLmwk6q'
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
     ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
     PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
