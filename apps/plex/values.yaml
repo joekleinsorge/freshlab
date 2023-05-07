@@ -1,0 +1,60 @@
+image:
+  tag: latest
+env:
+  TZ: 'America/New_York'
+  PLEX_CLAIM: 'claim-8MWt4rxhx1_8qV9xyifA'
+    # ADVERTISE_IP: 'https://plex.kleinsorge.dev'
+    # ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
+    # PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
+    # PLEX_PREFERENCE_2: 'LanNetworksBandwidth=192.168.0.0/16,10.0.0.0/8'
+    # PLEX_PREFERENCE_3: "logDebug=0"
+# service:
+#   type: LoadBalancer
+#   annotations:
+#     # if multiple ports are used, all of them will be used on one ip-address that to that
+#     metallb.universe.tf/allow-shared-ip: plex-svc
+#   port:
+#     port: 80
+#     targetPort: 32400
+ingress:
+  main:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/enable: 'true'
+      hajimari.io/appName: 'plex'
+      hajimari.io/icon: 'plex'
+    hosts:
+      - host: &host plex.kleinsorge.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: plex-tls-certificate
+        hosts:
+          - *host
+hostNetwork: true
+persistence:
+  data:
+    enabled: true
+    existingClaim: "plex-data-pvc"
+  config:
+    enabled: true
+    existingClaim: "plex-config-pvc"
+# podSecurityContext:
+#   video:x:39:
+#   render:x:105:
+# resources:
+#   requests:
+#     # Hardware acceleration using an Intel iGPU w/ QuickSync and
+#     # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+#     gpu.intel.com/i915: 1
+#     cpu: 200m
+#     memory: 256Mi
+#   limits:
+#     # Hardware acceleration using an Intel iGPU w/ QuickSync and
+#     # using intel-gpu-plugin (https://github.com/intel/intel-device-plugins-for-kubernetes)
+#     gpu.intel.com/i915: 1
+#     memory: 4096Mi
+

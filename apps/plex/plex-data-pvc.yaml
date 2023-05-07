@@ -9,5 +9,5 @@ spec:
   volumeName: plex-data-pv
   resources:
     requests:
-      storage: 20Ti
+      storage: 10Ti
   storageClassName: ""  
