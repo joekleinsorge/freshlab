@@ -27,14 +27,17 @@ plex:
         - secretName: plex-tls-certificate
           hosts:
             - *host
-  # hostNetwork: true
-  # persistence:
-  #   data:
-  #     enabled: true
-  #     existingClaim: "plex-data-pvc"
-  #   config:
-  #     enabled: true
-  #     existingClaim: "plex-config-pvc"
+  hostNetwork: true
+  persistence:
+    data:
+      enabled: true
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/Media
+      mountPath: /mnt/media
+    config:
+      enabled: true
+      existingClaim: "plex-config-pvc"
   # podSecurityContext:
   #   video:x:39:
   #   render:x:105:
