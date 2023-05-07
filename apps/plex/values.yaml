@@ -2,7 +2,7 @@ image:
   tag: latest
 env:
   TZ: 'America/New_York'
-  PLEX_CLAIM: 'claim-8MWt4rxhx1_8qV9xyifA'
+  PLEX_CLAIM: 'claim-8Axz_GpL-HdGVonUcvFr'
     # ADVERTISE_IP: 'https://plex.kleinsorge.dev'
     # ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
     # PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
