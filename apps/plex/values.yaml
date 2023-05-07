@@ -2,7 +2,7 @@ image:
   tag: latest
 env:
   TZ: 'America/New_York'
-  PLEX_CLAIM: 'claim-8Axz_GpL-HdGVonUcvFr'
+  PLEX_CLAIM: 'claim-RVhU6tUyWvbdETH3zMEs'
     # ADVERTISE_IP: 'https://plex.kleinsorge.dev'
     # ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
     # PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
@@ -16,32 +16,32 @@ env:
 #   port:
 #     port: 80
 #     targetPort: 32400
-ingress:
-  main:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      hajimari.io/enable: 'true'
-      hajimari.io/appName: 'plex'
-      hajimari.io/icon: 'plex'
-    hosts:
-      - host: &host plex.kleinsorge.dev
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: plex-tls-certificate
-        hosts:
-          - *host
-hostNetwork: true
-persistence:
-  data:
-    enabled: true
-    existingClaim: "plex-data-pvc"
-  config:
-    enabled: true
-    existingClaim: "plex-config-pvc"
+# ingress:
+#   main:
+#     enabled: true
+#     ingressClassName: nginx
+#     annotations:
+#       cert-manager.io/cluster-issuer: letsencrypt-prod
+#       hajimari.io/enable: 'true'
+#       hajimari.io/appName: 'plex'
+#       hajimari.io/icon: 'plex'
+#     hosts:
+#       - host: &host plex.kleinsorge.dev
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#     tls:
+#       - secretName: plex-tls-certificate
+#         hosts:
+#           - *host
+# hostNetwork: true
+# persistence:
+#   data:
+#     enabled: true
+#     existingClaim: "plex-data-pvc"
+#   config:
+#     enabled: true
+#     existingClaim: "plex-config-pvc"
 # podSecurityContext:
 #   video:x:39:
 #   render:x:105:
