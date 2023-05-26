@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  selector:
+    matchLabels:
+      app: photoprism
+  serviceName: photoprism
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: photoprism
+    spec:
+      containers:
+      - name: photoprism
+        image: photoprism/photoprism:latest
+        env:
+        - name: PHOTOPRISM_DEBUG
+          value: "true"
+        - name: PHOTOPRISM_CACHE_PATH
+          value: /assets/cache
+        - name: PHOTOPRISM_IMPORT_PATH
+          value: /assets/photos/import
+        - name: PHOTOPRISM_EXPORT_PATH
+          value: /assets/photos/export
+        - name: PHOTOPRISM_ORIGINALS_PATH
+          value: /assets/photos/originals
+        - name: PHOTOPRISM_DATABASE_DRIVER
+          value: mysql
+        - name: PHOTOPRISM_DATABASE_NAME
+          value: photoprism
+        - name: PHOTOPRISM_DATABASE_PASSWORD
+          value: CHANGEMEIMAPASSWORD
+        - name: PHOTOPRISM_DATABASE_SERVER
+          value: photoprism-db-service.photoprism.svc.cluster.local:3306
+        - name: PHOTOPRISM_DATABASE_USER
+          value: photoprism
+        - name: PHOTOPRISM_WORKERS
+          value: "6"          
+        - name: "PHOTOPRISM_ORIGINALS_LIMIT"
+          value: "-1"
+        - name: "PHOTOPRISM_RESOLUTION_LIMIT"
+          value: "-1"
+        - name: "PHOTOPRISM_ADMIN_PASSWORD"
+          value: "please-change"          
+        # envFrom:
+        # - secretRef:
+        #     name: photoprism-secrets
+        #     optional: false
+        ports:
+        - containerPort: 2342
+          name: http
+        volumeMounts:
+        - mountPath: /assets/photos/originals
+          name: originals
+          subPath: media/photos
+        - mountPath: /assets/photos/import
+          name: photoprism
+          subPath: import
+        - mountPath: /photoprism/storage
+              name: photoprism-pvc
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: http
+      volumes:
+        - name: photoprism-originals-pvc
+          persistentVolumeClaim:
+            claimName: photoprism-originals-pvc
+        - name: photoprism-pvc
+          persistentVolumeClaim:
+            claimName: photoprism-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: photoprism
+  namespace: photoprism
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: photoprism
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "512M"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+    photoprism.io/enable: 'true'
+    hajimari.io/appName: photos
+    hajimari.io/icon: camera
+  name: photoprism
+  namespace: photoprism
+spec:
+  rules:
+    hosts:
+      - host: &host photos.kleinsorge.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: photoprism-tls-certificate
+        hosts:
+          - *host
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: photoprism-config-pvc
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100G
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: photoprism
+  name: photoprism-data-pvc
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeName: photoprism-data-pv
+  resources:
+    requests:
+      storage: 10Ti
+  storageClassName: ""  
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: photoprism-data-pv
+spec:
+  capacity:
+    storage: 10Ti
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    server: 192.168.1.208
+    path: /volume1/Media/Memories
