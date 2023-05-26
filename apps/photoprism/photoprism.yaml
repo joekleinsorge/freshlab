@@ -102,17 +102,21 @@ metadata:
     hajimari.io/icon: camera
     nginx.ingress.kubernetes.io/proxy-body-size: "512M"
 spec:
-  ingressClassName: nginx
   rules:
-   - hosts:
-        - host: &host photos.kleinsorge.dev
-          paths:
-            - path: /
-              pathType: Prefix
+    - host: photos.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+              backend:
+                service:
+                  name: photoprism-service
+                  port:
+                    number: 80
   tls:
     - secretName: photoprism-tls-certificate
       hosts:
-        - *host
+        - photos.kleinsorge.dev
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
