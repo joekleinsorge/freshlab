@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: D
+kind: Deployment
 metadata:
   name: photoprism
   namespace: photoprism
@@ -7,7 +7,6 @@ spec:
   selector:
     matchLabels:
       app: photoprism
-  serviceName: photoprism
   replicas: 1
   template:
     metadata:
@@ -40,16 +39,12 @@ spec:
               value: photoprism
             - name: PHOTOPRISM_WORKERS
               value: '6'
-            - name: 'PHOTOPRISM_ORIGINALS_LIMIT'
+            - name: PHOTOPRISM_ORIGINALS_LIMIT
               value: '-1'
-            - name: 'PHOTOPRISM_RESOLUTION_LIMIT'
+            - name: PHOTOPRISM_RESOLUTION_LIMIT
               value: '-1'
-            - name: 'PHOTOPRISM_ADMIN_PASSWORD'
+            - name: PHOTOPRISM_ADMIN_PASSWORD
               value: 'please-change'
-          # envFrom:
-          # - secretRef:
-          #     name: photoprism-secrets
-          #     optional: false
           ports:
             - containerPort: 2342
               name: http
@@ -73,11 +68,13 @@ spec:
         - name: photoprism-pvc
           persistentVolumeClaim:
             claimName: photoprism-pvc
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: photoprism
+  name: photoprism-service
   namespace: photoprism
 spec:
   ports:
@@ -88,7 +85,9 @@ spec:
   selector:
     app: photoprism
   type: ClusterIP
+
 ---
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -100,7 +99,7 @@ metadata:
     photoprism.io/enable: 'true'
     hajimari.io/appName: photos
     hajimari.io/icon: camera
-  name: photoprism
+  name: photoprism-ingress
   namespace: photoprism
 spec:
   rules:

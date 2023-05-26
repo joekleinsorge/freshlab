@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,7 +44,9 @@ spec:
         - name: photoprism-db-pvc
           persistentVolumeClaim:
             claimName: photoprism-db-pvc
+
 ---
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -58,7 +59,9 @@ spec:
   resources:
     requests:
       storage: 10Gi
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
