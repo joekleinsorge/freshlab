@@ -14,77 +14,79 @@ spec:
         app: photoprism
     spec:
       containers:
-        - name: photoprism
-          image: photoprism/photoprism:latest
-          env:
-            - name: PHOTOPRISM_DEBUG
-              value: 'true'
-            - name: PHOTOPRISM_CACHE_PATH
-              value: /assets/cache
-            - name: PHOTOPRISM_IMPORT_PATH
-              value: /assets/photos/import
-            - name: PHOTOPRISM_EXPORT_PATH
-              value: /assets/photos/export
-            - name: PHOTOPRISM_ORIGINALS_PATH
-              value: /assets/photos/originals
-            - name: PHOTOPRISM_DATABASE_DRIVER
-              value: mysql
-            - name: PHOTOPRISM_DATABASE_NAME
-              value: photoprism
-            - name: PHOTOPRISM_DATABASE_PASSWORD
-              value: CHANGEMEIMAPASSWORD
-            - name: PHOTOPRISM_DATABASE_SERVER
-              value: photoprism-db-service.photoprism.svc.cluster.local:3306
-            - name: PHOTOPRISM_DATABASE_USER
-              value: photoprism
-            - name: PHOTOPRISM_WORKERS
-              value: '6'
-            - name: PHOTOPRISM_ORIGINALS_LIMIT
-              value: '-1'
-            - name: PHOTOPRISM_RESOLUTION_LIMIT
-              value: '-1'
-            - name: PHOTOPRISM_ADMIN_PASSWORD
-              value: 'please-change'
-          ports:
-            - containerPort: 2342
-              name: http
-          volumeMounts:
-            - mountPath: /assets/photos/originals
-              name: photoprism-originals-pvc
-              subPath: media/photos
-            - mountPath: /assets/photos/import
-              name: photoprism-import-pvc
-              subPath: import
-            - mountPath: /photoprism/storage
-              name: photoprism-config-pvc
-          readinessProbe:
-            httpGet:
-              path: /api/v1/status
-              port: http
+      - name: photoprism
+        image: photoprism/photoprism:latest
+        env:
+          - name: PHOTOPRISM_DEBUG
+            value: 'true'
+          - name: PHOTOPRISM_CACHE_PATH
+            value: /assets/cache
+          - name: PHOTOPRISM_IMPORT_PATH
+            value: /assets/photos/import
+          - name: PHOTOPRISM_EXPORT_PATH
+            value: /assets/photos/export
+          - name: PHOTOPRISM_ORIGINALS_PATH
+            value: /assets/photos/originals
+          - name: PHOTOPRISM_DATABASE_DRIVER
+            value: mysql
+          - name: PHOTOPRISM_DATABASE_NAME
+            value: photoprism
+          - name: PHOTOPRISM_DATABASE_PASSWORD
+            value: CHANGEMEIMAPASSWORD
+          - name: PHOTOPRISM_DATABASE_SERVER
+            value: photoprism-db-service.photoprism.svc.cluster.local:3306
+          - name: PHOTOPRISM_DATABASE_USER
+            value: photoprism
+          - name: PHOTOPRISM_WORKERS
+            value: '6'
+          - name: PHOTOPRISM_ORIGINALS_LIMIT
+            value: '-1'
+          - name: PHOTOPRISM_RESOLUTION_LIMIT
+            value: '-1'
+          - name: PHOTOPRISM_ADMIN_PASSWORD
+            value: 'please-change'
+        ports:
+        - containerPort: 2342
+          name: http
+        volumeMounts:
+        - mountPath: /assets/photos/originals
+          name: originals
+          subPath: media/photos
+        - mountPath: /assets/photos/import
+          name: photoprism
+          subPath: import
+        - mountPath: /photoprism/storage
+          name: photoprism-config-pvc
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: http
       volumes:
-        - name: photoprism-originals-pvc
-          persistentVolumeClaim:
-            claimName: photoprism-originals-pvc
-        - name: photoprism-config-pvc
-          persistentVolumeClaim:
-            claimName: photoprism-config-pvc
-        - name: photoprism-import-pvc
-          persistentVolumeClaim:
-            claimName: photoprism-import-pvc
-
+      - name: originals
+        nfs:
+          path: /volume1/Media/Memories
+          readOnly: true
+          server: 192.168.1.208
+      - name: import
+        nfs:
+          path: /volume1/Photos
+          server: 192.168.1.208
+      - name: photoprism-config-pvc
+        persistentVolumeClaim:
+          claimName: photoprism-config-pvc
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: photoprism-service
+  name: photoprism
   namespace: photoprism
 spec:
   ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
   selector:
     app: photoprism
   type: ClusterIP
@@ -94,8 +96,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: photoprism-ingress
+  name: photoprism
+  namespace: photoprism
   annotations:
+    kubernetes.io/ingress.class: nginx   
     cert-manager.io/cluster-issuer: letsencrypt-prod
     photoprism.io/enable: 'true'
     hajimari.io/appName: photos
@@ -103,16 +107,16 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "512M"
 spec:
   rules:
-    - host: photos.kleinsorge.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-              backend:
-                service:
-                  name: photoprism-service
-                  port:
-                    number: 80
+  - host: photos.kleinsorge.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: photoprism
+            port:
+              name: http
+        path: /
+        pathType: Prefix
   tls:
     - secretName: photoprism-tls-certificate
       hosts:
@@ -129,69 +133,3 @@ spec:
   resources:
     requests:
       storage: 100G
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: photoprism
-  name: photoprism-originals-pvc
-spec:
-  accessModes:
-    - ReadOnlyMany
-  volumeName: photoprism-originals-pv
-  resources:
-    requests:
-      storage: 10Ti
-  storageClassName: ''
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  namespace: photoprism
-  name: photoprism-import-pvc
-spec:
-  accessModes:
-    - ReadOnlyMany
-  volumeName: photoprism-import-pv
-  resources:
-    requests:
-      storage: 100Gi
-  storageClassName: ''
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: photoprism-originals-pv
-spec:
-  capacity:
-    storage: 10Ti
-  volumeMode: Filesystem
-  accessModes:
-    - ReadOnlyMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs
-  mountOptions:
-    - hard
-    - nfsvers=4.1
-  nfs:
-    server: 192.168.1.208
-    path: /volume1/Media/Memories
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: photoprism-import-pv
-spec:
-  capacity:
-    storage: 100Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadOnlyMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs
-  mountOptions:
-    - hard
-    - nfsvers=4.1
-  nfs:
-    server: 192.168.1.208
-    path: /volume1/Photos
