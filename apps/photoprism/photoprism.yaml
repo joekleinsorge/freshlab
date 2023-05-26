@@ -53,8 +53,7 @@ spec:
           name: originals
           subPath: media/photos
         - mountPath: /assets/photos/import
-          name: photoprism
-          subPath: import
+          name: import
         - mountPath: /photoprism/storage
           name: photoprism-config
         readinessProbe:
