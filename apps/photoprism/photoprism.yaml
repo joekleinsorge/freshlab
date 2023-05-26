@@ -50,10 +50,10 @@ spec:
               name: http
           volumeMounts:
             - mountPath: /assets/photos/originals
-              name: originals
+              name: photoprism-originals-pvc
               subPath: media/photos
             - mountPath: /assets/photos/import
-              name: photoprism
+              name: photoprism-import-pvc
               subPath: import
             - mountPath: /photoprism/storage
               name: photoprism-config-pvc
@@ -71,7 +71,7 @@ spec:
         - name: photoprism-import-pvc
           persistentVolumeClaim:
             claimName: photoprism-import-pvc
-          
+
 ---
 
 apiVersion: v1
