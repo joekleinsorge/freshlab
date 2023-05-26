@@ -106,15 +106,21 @@ metadata:
   namespace: photoprism
 spec:
   rules:
-    hosts:
-      - host: &host photos.kleinsorge.dev
+    - host: photos.kleinsorge.dev
+      http:
         paths:
           - path: /
             pathType: Prefix
-    tls:
-      - secretName: photoprism-tls-certificate
-        hosts:
-          - *host
+              backend:
+                service:
+                  name: photoprism-service
+                  port:
+                    number: 80
+  tls:
+    - secretName: photoprism-tls-certificate
+      hosts:
+        - photos.kleinsorge.dev
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
