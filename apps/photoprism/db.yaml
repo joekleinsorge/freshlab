@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photoprism-db-deployment
+  namespace: photoprism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photoprism-db
+  template:
+    metadata:
+      labels:
+        app: photoprism-db
+    spec:
+      containers:
+        - name: photoprism-db
+          image: mariadb:10.6
+          env:
+            - name: MYSQL_DATABASE
+              value: photoprism
+            - name: MYSQL_PASSWORD
+              value: CHANGEMETOSOMETHINGSECURE
+            - name: MYSQL_ROOT_PASSWORD
+              value: CHANGEMETOSOMETHINGSECURE
+            - name: MYSQL_USER
+              value: photoprism
+          args:
+            - mysqld
+            - --innodb-buffer-pool-size=128M
+            - --transaction-isolation=READ-COMMITTED
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --max-connections=512
+            - --innodb-rollback-on-timeout=OFF
+            - --innodb-lock-wait-timeout=120
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: photoprism-db-pvc
+      restartPolicy: Always
+      volumes:
+        - name: photoprism-db-pvc
+          persistentVolumeClaim:
+            claimName: photoprism-db-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: photoprism-db-pvc
+  namespace: photoprism
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: photoprism-db-service
+  namespace: photoprism
+spec:
+  selector:
+    app: photoprism-db
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
+ 
