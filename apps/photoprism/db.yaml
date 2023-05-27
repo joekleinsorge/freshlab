@@ -44,9 +44,7 @@ spec:
         - name: photoprism-db-pvc
           persistentVolumeClaim:
             claimName: photoprism-db-pvc
-
 ---
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -54,14 +52,12 @@ metadata:
   namespace: photoprism
 spec:
   accessModes:
-    - ReadWriteOnce
-  storageClassName: local-path
+    - ReadWriteMany
+  storageClassName: nfs-client
   resources:
     requests:
-      storage: 10Gi
-
+      storage: 100G
 ---
-
 apiVersion: v1
 kind: Service
 metadata:

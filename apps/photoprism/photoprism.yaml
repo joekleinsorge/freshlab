@@ -68,7 +68,7 @@ spec:
           server: 192.168.1.208
       - name: import
         nfs:
-          path: /volume1/Photos
+          path: /volume1/photo
           server: 192.168.1.208
       - name: photoprism-config
         persistentVolumeClaim:
