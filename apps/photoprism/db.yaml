@@ -39,7 +39,7 @@ spec:
             - --innodb-rollback-on-timeout=OFF
             - --innodb-lock-wait-timeout=120
           ports:
-            - containerPort: 3306
+            - containerPort: 3308
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: photoprism-db
@@ -61,5 +61,5 @@ spec:
   ports:
     - protocol: TCP
       port: 3306
-      targetPort: 3306
+      targetPort: 3308
  
