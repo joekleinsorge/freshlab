@@ -71,7 +71,7 @@ spec:
   selector:
     app: photoprism-db
   ports:
-    - port: 3306
+    - port: 3307
       targetPort: 3306
   type: ClusterIP
  
