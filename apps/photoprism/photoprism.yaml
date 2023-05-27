@@ -60,12 +60,10 @@ spec:
         - containerPort: 2342
           name: http
         volumeMounts:
-        - mountPath: /assets/photos/originals
+        - mountPath: /photoprism/originals
           name: originals
-          subPath: media/photos
-        - mountPath: /assets/photos/import
+        - mountPath: /photoprism/import
           name: import
-          subPath: import
         - mountPath: /photoprism/storage
           name: photoprism-config
         readinessProbe:
