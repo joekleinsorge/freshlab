@@ -58,7 +58,7 @@ spec:
         volumeMounts:
         - mountPath: /assets/photos/originals
           name: originals
-          subPath: originals
+          subPath: media/photos
         - mountPath: /assets/photos/import
           name: import
           subPath: import
