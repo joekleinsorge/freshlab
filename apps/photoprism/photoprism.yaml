@@ -51,7 +51,6 @@ spec:
         volumeMounts:
         - mountPath: /assets/photos/originals
           name: originals
-          subPath: media/photos
         - mountPath: /assets/photos/import
           name: import
         - mountPath: /photoprism/storage
