@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: photoprism-db
-          image: lscr.io/linuxserver/mariadb:latest
+          image: mariadb:10.6
           env:
             - name: MYSQL_DATABASE
               value: photoprism
@@ -59,7 +59,7 @@ spec:
   selector:
     app: photoprism-db
   ports:
-    - protocol: TCP
-      port: 3308
-      targetPort: 3308
- 
+    - name: photoprism-db
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
