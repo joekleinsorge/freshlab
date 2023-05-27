@@ -71,8 +71,9 @@ spec:
           path: /volume1/photo
           server: 192.168.1.208
       - name: photoprism-config
-        persistentVolumeClaim:
-          claimName: photoprism-config-pvc
+        nfs:
+          path: /volume1/kube/photoprism
+          server: 192.168.1.208
 ---
 
 apiVersion: v1
@@ -121,14 +122,14 @@ spec:
       hosts:
         - photos.kleinsorge.dev
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: photoprism-config-pvc
-spec:
-  storageClassName: nfs-client
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 100G
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: photoprism-config-pvc
+# spec:
+#   storageClassName: nfs-client
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 100G
