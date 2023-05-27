@@ -24,6 +24,8 @@ spec:
             cpu: "0.5"
             memory: 500Mi
         env:
+          - name: PHOTOPRISM_DISABLE_CHOWN
+            value: 'false'
           - name: PHOTOPRISM_DEBUG
             value: 'true'
           - name: PHOTOPRISM_CACHE_PATH
