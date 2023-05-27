@@ -54,10 +54,10 @@ spec:
             value: '-1'
           - name: PHOTOPRISM_ADMIN_PASSWORD
             value: 'please-change'
-          - name: PHOTOPRISM_UID
-            value: '1030'
-          - name: PHOTOPRISM_GID
-            value: '100'
+          # - name: PHOTOPRISM_UID
+            # value: '1030'
+          # - name: PHOTOPRISM_GID
+            # value: '100'
         ports:
         - containerPort: 2342
           name: http
