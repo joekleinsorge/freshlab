@@ -42,25 +42,13 @@ spec:
             - containerPort: 3306
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: photoprism-db-pvc
+              name: photoprism-db
       restartPolicy: Always
       volumes:
-        - name: photoprism-db-pvc
-          persistentVolumeClaim:
-            claimName: photoprism-db-pvc
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: photoprism-db-pvc
-  namespace: photoprism
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-client
-  resources:
-    requests:
-      storage: 100G
+       - name: photoprism-db
+         nfs:
+          path: /volume1/kube/photoprism-db
+          server: 192.168.1.208
 ---
 apiVersion: v1
 kind: Service
@@ -71,7 +59,7 @@ spec:
   selector:
     app: photoprism-db
   ports:
-    - port: 3307
+    - protocol: TCP
+      port: 3306
       targetPort: 3306
-  type: ClusterIP
  
