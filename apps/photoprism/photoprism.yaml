@@ -58,8 +58,10 @@ spec:
         volumeMounts:
         - mountPath: /assets/photos/originals
           name: originals
+          subPath: originals
         - mountPath: /assets/photos/import
           name: import
+          subPath: import
         - mountPath: /photoprism/storage
           name: photoprism-config
         readinessProbe:
