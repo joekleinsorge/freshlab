@@ -43,7 +43,7 @@ spec:
           - name: PHOTOPRISM_DATABASE_PASSWORD
             value: CHANGEMEIMAPASSWORD
           - name: PHOTOPRISM_DATABASE_SERVER
-            value: photoprism-db-service.photoprism.svc.cluster.local:3306
+            value: photoprism-db-service.photoprism.svc.cluster.local:3308
           - name: PHOTOPRISM_DATABASE_USER
             value: photoprism
           - name: PHOTOPRISM_WORKERS
