@@ -37,8 +37,9 @@ plex:
       mountPath: /mnt/media
     config:
       enabled: true
-      existingClaim: "plex-config-pvc"
-  # podSecurityContext:
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/kube/plex  # podSecurityContext:
   #   video:x:39:
   #   render:x:105:
   # resources:
