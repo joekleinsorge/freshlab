@@ -3,11 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   namespace: plex
   name: plex-config-pvc
-  annotations:
-    volume.beta.kubernetes.io/storage-class: nfs-client
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
+      storage: 100Gi

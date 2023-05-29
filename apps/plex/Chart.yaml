@@ -3,5 +3,5 @@ apiVersion: v2
 version: 0.0.0
 dependencies:
   - name: plex
-    version: 6.4.3
-    repository: https://k8s-at-home.com/charts/
+    version: 0.3.4
+    repository: https://ressu.github.io/kube-plex
