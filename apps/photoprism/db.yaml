@@ -39,6 +39,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: photoprism-db
+          securityContext:
+            runAsUser: 0
       restartPolicy: Always
       volumes:
        - name: photoprism-db
