@@ -29,7 +29,7 @@ ingress:
     - secretName: plex-tls-certificate
       hosts:
         - *host
-claimToken: ""
+claimToken: "claim-4bKacSxz_EDx6p6xvhAc"
 timezone: "America/New_York"
 extraEnv: 
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
