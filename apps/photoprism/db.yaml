@@ -13,6 +13,13 @@ spec:
       labels:
         app: photoprism-db
     spec:
+      initContainers:
+        - name: volume-permissions
+          image: busybox
+          command: ["sh", "-c", "chown -R 1030:100 /var/lib/mysql"]
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: photoprism-db
       containers:
         - name: photoprism-db
           image: mariadb:10.6
@@ -39,14 +46,12 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: photoprism-db
-          securityContext:
-            runAsUser: 0
       restartPolicy: Always
       volumes:
-       - name: photoprism-db
-         nfs:
-          path: /volume1/kube/photoprism-db
-          server: 192.168.1.208
+        - name: photoprism-db
+          nfs:
+            path: /volume1/kube/photoprism-db
+            server: 192.168.1.208
 ---
 apiVersion: v1
 kind: Service
