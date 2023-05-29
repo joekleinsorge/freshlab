@@ -25,10 +25,6 @@ spec:
               value: CHANGEMETOSOMETHINGSECURE
             - name: MYSQL_USER
               value: photoprism
-            - name: PUID
-              value: "1030"
-            - name: PGID
-              value: "100"
           args:
             - mysqld
             - --innodb-buffer-pool-size=128M
