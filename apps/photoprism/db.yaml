@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: photoprism-mysql
-  namespace: "default"
+  namespace: "photoprism"
   labels:
     app.kubernetes.io/name: mysql
     helm.sh/chart: mysql-9.10.1
@@ -15,28 +15,13 @@ automountServiceAccountToken: true
 secrets:
   - name: photoprism-mysql
 ---
-# Source: mysql/templates/secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: photoprism-mysql
-  namespace: "default"
-  labels:
-    app.kubernetes.io/name: mysql
-    helm.sh/chart: mysql-9.10.1
-    app.kubernetes.io/instance: photoprism
-    app.kubernetes.io/managed-by: Helm
-type: Opaque
-data:
-  mysql-root-password: "YTlEa3FicGo0Qg=="
-  mysql-password: "N2J2MU41RFdmNA=="
----
+
 # Source: mysql/templates/primary/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: photoprism-mysql
-  namespace: "default"
+  namespace: "photoprism"
   labels:
     app.kubernetes.io/name: mysql
     helm.sh/chart: mysql-9.10.1
@@ -46,7 +31,7 @@ metadata:
 data:
   my.cnf: |-
     [mysqld]
-    default_authentication_plugin=mysql_native_password
+    photoprism_authentication_plugin=mysql_native_password
     skip-name-resolve
     explicit_defaults_for_timestamp
     basedir=/opt/bitnami/mysql
@@ -81,7 +66,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: photoprism-mysql-headless
-  namespace: "default"
+  namespace: "photoprism"
   labels:
     app.kubernetes.io/name: mysql
     helm.sh/chart: mysql-9.10.1
@@ -106,7 +91,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: photoprism-mysql
-  namespace: "default"
+  namespace: "photoprism"
   labels:
     app.kubernetes.io/name: mysql
     helm.sh/chart: mysql-9.10.1
@@ -133,7 +118,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: photoprism-mysql
-  namespace: "default"
+  namespace: "photoprism"
   labels:
     app.kubernetes.io/name: mysql
     helm.sh/chart: mysql-9.10.1
