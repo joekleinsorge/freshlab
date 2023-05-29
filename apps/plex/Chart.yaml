@@ -4,4 +4,4 @@ version: 0.0.0
 dependencies:
   - name: plex
     version: 0.3.4
-    repository: https://ressu.github.io/kube-plex
+    repository: https://github.com/ressu/kube-plex
