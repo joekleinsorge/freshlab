@@ -12,7 +12,7 @@ kubePlex:
     #   "gpu.intel.com/i915: 1
 service:
   type: ClusterIP
-  port: 32401
+  port: 32400
 ingress:
   enabled: true
   annotations:
