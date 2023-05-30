@@ -1,7 +1,7 @@
-image:
-  repository: plexinc/pms-docker
-  tag: plexpass
-  pullPolicy: Always
+# image:
+#   repository: plexinc/pms-docker
+#   tag: plexpass
+#   pullPolicy: Always
 kubePlex:
   resources: {}
     # Limits and requests that are applied to the kube-plex transcoding pod. Can
