@@ -13,7 +13,7 @@ kubePlex:
     # limits:
     #   "gpu.intel.com/i915: 1
 ingress:
-  enabled: true
+  enabled: false
   annotations:
     kubernetes.io/ingress.class: nginx    
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -26,7 +26,7 @@ ingress:
     - secretName: plex-tls-certificate
       hosts:
         - plex.kleinsorge.dev
-claimToken: "claim-FfC8xtkWwg1JiwwYqsCZ"
+claimToken: "claim-2RVFtg-jTpbc8W5UTrTj"
 timezone: "America/New_York"
 extraEnv: 
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
