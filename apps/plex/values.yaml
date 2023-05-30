@@ -30,9 +30,9 @@ ingress:
 claimToken: "claim-2RVFtg-jTpbc8W5UTrTj"
 timezone: "America/New_York"
 extraEnv: 
-    ADVERTISE_IP: 'https://plex.kleinsorge.dev'
-    ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
-    PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
+    # ADVERTISE_IP: 'https://plex.kleinsorge.dev'
+    # ALLOWED_NETWORKS: '192.168.0.0/16,10.0.0.0/8'
+    # PLEX_PREFERENCE_1: 'FriendlyName=plexonk8s'
   # puid: 1002
   # pgid: 1002
   # NVIDIA_VISIBLE_DEVICES: all
