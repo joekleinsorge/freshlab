@@ -2,6 +2,6 @@ name: plex
 apiVersion: v2
 version: 0.0.0
 dependencies:
-  - name: plex
+  - name: kube-plex
     version: 0.3.4
-    repository: https://raw.githubusercontent.com/ressu/kube-plex/gh-pages/index.yaml
+    repository: https://github.com/ressu/kube-plex

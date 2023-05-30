@@ -14,22 +14,19 @@ kubePlex:
     #   "gpu.intel.com/i915: 1
 ingress:
   enabled: true
-  ingressClassName: nginx
   annotations:
+    kubernetes.io/ingress.class: nginx    
     cert-manager.io/cluster-issuer: letsencrypt-prod
     hajimari.io/enable: 'true'
     hajimari.io/appName: 'plex'
     hajimari.io/icon: 'plex'
   hosts:
-    - host: &host plex.kleinsorge.dev
-      paths:
-        - path: /
-          pathType: Prefix
+    - plex.kleinsorge.dev
   tls:
     - secretName: plex-tls-certificate
       hosts:
-        - *host
-claimToken: "claim-4bKacSxz_EDx6p6xvhAc"
+        - plex.kleinsorge.dev
+claimToken: "claim-gzqrNzGLou84-PPyWXsz"
 timezone: "America/New_York"
 extraEnv: 
     ADVERTISE_IP: 'https://plex.kleinsorge.dev'
@@ -44,7 +41,3 @@ persistence:
     claimName: "plex-data-pvc"
   config:
     claimName: "plex-config-pvc"
-
----
-
-apiVersion: v1
