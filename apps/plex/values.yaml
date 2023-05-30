@@ -1,7 +1,5 @@
-# image:
-#   repository: plexinc/pms-docker
-#   tag: plexpass
-#   pullPolicy: Always
+image:
+  tag: plexpass
 kubePlex:
   resources: {}
     # Limits and requests that are applied to the kube-plex transcoding pod. Can
@@ -12,8 +10,11 @@ kubePlex:
     #   "gpu.intel.com/i915: 1
     # limits:
     #   "gpu.intel.com/i915: 1
+service:
+  type: ClusterIP
+  port: 32401
 ingress:
-  enabled: false
+  enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx    
     cert-manager.io/cluster-issuer: letsencrypt-prod
