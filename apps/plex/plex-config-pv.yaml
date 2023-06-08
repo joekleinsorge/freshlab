@@ -2,11 +2,14 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: plex-config-pv
+  namespace: plex
 spec:
+  storageClassName: ""
   capacity:
-    storage: 100G
+    storage: 10G
   accessModes:
     - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
   nfs:
     server: 192.168.1.208
     path: /volume1/kube/plex

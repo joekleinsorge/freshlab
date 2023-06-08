@@ -4,8 +4,11 @@ metadata:
   namespace: plex
   name: plex-config-pvc
 spec:
+  storageClassName: ""
+  volumeName: plex-config-pv
+  volumeMode: Filesystem
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi
+      storage: 10Gi

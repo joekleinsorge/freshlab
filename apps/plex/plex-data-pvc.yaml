@@ -4,6 +4,9 @@ metadata:
   namespace: plex
   name: plex-data-pvc
 spec:
+  storageClassName: ""
+  volumeName: plex-data-pv
+  volumeMode: Filesystem
   accessModes:
     - ReadOnlyMany
   resources:
