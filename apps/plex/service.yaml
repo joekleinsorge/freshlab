@@ -12,7 +12,7 @@ spec:
     - port: 32400
       targetPort: 32400
       name: pms-web
-      protocal: TCP
+      protocol: TCP
     - port: 3005
       targetPort: 3005
       name: plex-companion

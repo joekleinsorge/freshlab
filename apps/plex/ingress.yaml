@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: plex            
@@ -20,5 +20,5 @@ spec:
   tls:
   - hosts:
     - plex.kleinsorge.dev
-    secretName: plex.kleinsorge.dev-tls
+    secretName: plex-tls-certificate
 
