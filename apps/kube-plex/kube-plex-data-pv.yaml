@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolume
-metadata:
-  name: plex-config-pv
+metadata: 
+  name: kube-plex-data-pv
 spec:
   capacity:
-    storage: 100G
+    storage: 10Ti
   accessModes:
-    - ReadWriteMany
+    - ReadOnlyMany
   nfs:
     server: 192.168.1.208
-    path: /volume1/kube/plex
+    path: /volume1/Media

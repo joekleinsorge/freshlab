@@ -2,10 +2,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   namespace: kube-plex
-  name: plex-config-pvc
+  name: kube-plex-data-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadOnlyMany
   resources:
     requests:
-      storage: 100Gi
+      storage: 10Ti
