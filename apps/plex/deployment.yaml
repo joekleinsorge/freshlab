@@ -33,9 +33,9 @@ spec:
         - name: PLEX_CLAIM
           value: claim-2GvGs_NoMxjWBRqeGzF2 
         - name: PGID
-          value: 101 
+          value: "101"
         - name: PUID
-          value: 1030
+          value: "1030"
         - name: TZ
           value: America/New_York 
         image: ghcr.io/linuxserver/plex
