@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: plex               
+  name: plex                
+  namespace: plex           
+spec:
+  replicas: 1                     
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: plex
+  strategy:
+    rollingUpdate:
+      maxSurge: 0                 
+      maxUnavailable: 1           
+    type: RollingUpdate           
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: plex-config-pvc 
+      - name: data
+        persistentVolumeClaim:
+          claimName: plex-data-pvc 
+      containers:
+      - env:                      
+        - name: PLEX_CLAIM
+          value: claim-PohuhFU5o3xN-FJ3-5dF 
+        - name: PGID
+          value: "\x31\x30\x31" 
+        - name: PUID
+          value: "\x31\x30\x33\x30"
+        - name: VERSION
+          value: latest
+        - name: TZ
+          value: America/New_York 
+        image: ghcr.io/linuxserver/plex
+        imagePullPolicy: Always 
+        name: plex 
+        ports:
+        - containerPort: 32400  
+          name: pms-web          
+          protocol: TCP
+        - containerPort: 32469
+          name: dlna-tcp
+          protocol: TCP
+        - containerPort: 1900
+          name: dlna-udp
+          protocol: UDP
+        - containerPort: 3005
+          name: plex-companion
+          protocol: TCP  
+        - containerPort: 5353
+          name: discovery-udp
+          protocol: UDP  
+        - containerPort: 8324
+          name: plex-roku
+          protocol: TCP  
+        - containerPort: 32410
+          name: gdm-32410
+          protocol: UDP
+        - containerPort: 32412
+          name: gdm-32412
+          protocol: UDP
+        - containerPort: 32413
+          name: gdm-32413
+          protocol: UDP
+        - containerPort: 32414
+          name: gdm-32414
+          protocol: UDP
+        resources: {}
+        stdin: true
+        tty: true
+        volumeMounts:            
+        - mountPath: /config     
+          name: config 
+        - mountPath: /data
+          name: data 
+      restartPolicy: Always
