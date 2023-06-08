@@ -40,6 +40,11 @@ spec:
           value: America/New_York 
         image: ghcr.io/linuxserver/plex
         imagePullPolicy: Always 
+        readinessProbe:
+          tcpSocket:
+            port: 32400
+          initialDelaySeconds: 20
+          periodSeconds: 15
         name: plex 
         ports:
           - name: plex-port
@@ -54,8 +59,4 @@ spec:
         - mountPath: /data
           name: data 
       restartPolicy: Always
-      readinessProbe:
-        tcpSocket:
-          port: 32400
-        initialDelaySeconds: 20
-        periodSeconds: 15
+
