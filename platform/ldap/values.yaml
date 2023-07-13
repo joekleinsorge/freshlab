@@ -1,0 +1,57 @@
+app-template:
+  controller:
+    annotations:
+      reloader.stakater.dev/auto: "true"
+    type: statefulset
+  image:
+    repository: ghcr.io/lldap/lldap
+    tag: v0.4.3
+  env:
+    TZ: America/Los_Angeles
+    LLDAP_HTTP_PORT: &http-port 80
+    LLDAP_LDAP_PORT: &ldap-port 3890
+    LLDAP_HTTP_URL: https://lldap.kleinsorge.dev
+    LLDAP_LDAP_BASE_DN: dc=kleinsorge,dc.dev
+    LLDAP_USER_DN: admin
+    LLDAP_VERBOSE: true
+  envFrom:
+    - secretRef:
+        name: lldap-secret
+  service:
+    main:
+      ports:
+        http:
+          port: *http-port
+        ldap:
+          enabled: true
+          port: *ldap-port
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        hajimari.io/enable: "true"
+        hajimari.io/icon: lock-check-outline
+        hajimari.io/appName: lldap
+        hajimari.io/info: Light LDAP implementation for authentication
+      hosts:
+       - host: &host lldap.kleinsorge.dev
+         paths:
+           - path: /
+             pathType: Prefix
+      tls:
+        - secretName: paperless-tls-certificate
+          hosts:
+            - *host
+  persistence:
+    data:
+      enabled: true
+      storageClass: longhorn
+      accessMode: ReadWriteMany
+      size: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      memory: 500Mi
