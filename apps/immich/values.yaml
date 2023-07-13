@@ -1,27 +1,21 @@
-env:
-  REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-  DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
-  DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
-  DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
-  # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
-  DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
-  TYPESENSE_ENABLED: "{{ .Values.typesense.enabled }}"
-  TYPESENSE_API_KEY: "{{ .Values.typesense.env.TYPESENSE_API_KEY }}"
-  TYPESENSE_HOST: '{{ printf "%s-typesense" .Release.Name }}'
-  IMMICH_WEB_URL: '{{ printf "http://%s-web:3000" .Release.Name }}'
-  IMMICH_SERVER_URL: '{{ printf "http://%s-server:3001" .Release.Name }}'
-  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
-
-image:
-  tag: v1.53.0
+# env:
+  # REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
+  # DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+  # DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+  # DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+  # # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
+  # DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
+  # TYPESENSE_ENABLED: "{{ .Values.typesense.enabled }}"
+  # TYPESENSE_API_KEY: "{{ .Values.typesense.env.TYPESENSE_API_KEY }}"
+  # TYPESENSE_HOST: '{{ printf "%s-typesense" .Release.Name }}'
+  # IMMICH_WEB_URL: '{{ printf "http://%s-web:3000" .Release.Name }}'
+  # IMMICH_SERVER_URL: '{{ printf "http://%s-server:3001" .Release.Name }}'
+  # IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 immich:
   persistence:
-    # Main data store for all photos shared between different components.
     library:
-      # Automatically creating the library volume is not supported by this chart
-      # You have to specify an existing PVC to use
-      existingClaim:
+      existingClaim: immich-pvc
 
 # Dependencies
 postgresql:
@@ -57,7 +51,6 @@ typesense:
     pullPolicy: IfNotPresent
 
 # Immich components
-
 server:
   enabled: true
   image:
@@ -118,11 +111,19 @@ proxy:
   ingress:
     main:
       enabled: true 
+      ingressClassName: nginx
       annotations:
-        # proxy-body-size is set to 0 to remove the body limit on file uploads
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/appName: Immich
+        hajimari.io/icon: filmstrip
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
       hosts:
-        - host: immich.kleinsorge.dev
+        - host: &host files.kleinsorge.dev
           paths:
-            - path: "/"
-      tls: []
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: seafile-tls-certificate
+          hosts:
+            - *host
+  
