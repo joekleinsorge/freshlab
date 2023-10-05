@@ -22,6 +22,9 @@ hajimari:
     title: Home
     lightTheme: chalk
     darkTheme: horizon
+    showAppUrls: false
+    showAppInfo: true
+    showAppStatus: true
     customThemes:
       - name: danger
         backgroundColor: '#0c0e0c'
