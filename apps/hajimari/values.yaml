@@ -33,10 +33,10 @@ hajimari:
     globalBookmarks:
       - group: Homelab
         bookmarks:
-          - name: Documentation
-            url: https://home.kleinsorge.dev
           - name: Public GitHub repository
             url: https://github.com/joekleinsorge/freshlab
+          - name: Hardware
+            url: https://192.168.1.101:9090
       - group: External services
         bookmarks:
           - name: Terraform Cloud
