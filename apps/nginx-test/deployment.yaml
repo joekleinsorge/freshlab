@@ -5,17 +5,27 @@ metadata:
   labels:
     app: nginx-test
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: nginx-test
-  replicas: 3
   template:
     metadata:
       labels:
         app: nginx-test
     spec:
       nodeSelector:
-          psu: "true"
+        psu: "true"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nginx-test
       containers:
         - name: nginx
           image: nginxdemos/hello
@@ -35,11 +45,4 @@ spec:
       volumes:
         - name: nginx-test-pv
           persistentVolumeClaim:
-            claimName:  nginx-test-pvc
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app: nginx-test
+            claimName: nginx-test-pvc
