@@ -16,16 +16,6 @@ spec:
     spec:
       nodeSelector:
         psu: "true"
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - nginx-test
       containers:
         - name: nginx
           image: nginxdemos/hello
