@@ -35,13 +35,13 @@ spec:
           volumeMounts:
             - name: nginx-test-pv 
               mountPath: /usr/share/nginx/html
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "500Mi"
+          # resources:
+          #   requests:
+          #     memory: "64Mi"
+          #     cpu: "250m"
+          #   limits:
+          #     memory: "1Gi"
+          #     cpu: "500Mi"
       volumes:
         - name: nginx-test-pv
           persistentVolumeClaim:
