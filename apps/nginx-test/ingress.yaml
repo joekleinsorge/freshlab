@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-ingress
+  name: nginx-test-ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: web
+    hajimari.io/appName: web-test
     hajimari.io/icon: web
 spec:
   ingressClassName: nginx
@@ -19,6 +19,6 @@ spec:
                 port:
                   number: 80
   tls:
-    - secretName: nginx-tls-certificate
+    - secretName: nginx-test-tls-certificate
       hosts:
         - *host

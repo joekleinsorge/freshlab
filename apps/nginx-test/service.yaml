@@ -1,12 +1,12 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: nginx
+  name: nginx-test
   labels:
-    app: nginx
+    app: nginx-test
 spec:
   selector:
-    app: nginx
+    app: nginx-test
   ports:
   - port: 80
     protocol: TCP

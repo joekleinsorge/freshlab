@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: nginx-test
   labels:
-    app: nginx
+    app: nginx-test
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: nginx-test
   replicas: 3
   template:
     metadata:
       labels:
-        app: nginx
+        app: nginx-test
     spec:
       nodeSelector:
           psu: "true"
@@ -23,7 +23,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nfs-pvc
+            - name: nginx-test-pv 
               mountPath: /usr/share/nginx/html
           resources:
             requests:
@@ -42,4 +42,4 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app: nginx
+              app: nginx-test
