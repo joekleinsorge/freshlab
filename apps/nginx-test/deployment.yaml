@@ -33,9 +33,9 @@ spec:
               memory: "1Gi"
               cpu: "500Mi"
       volumes:
-        - name: nfs-pvc
+        - name: nginx-test-pv
           persistentVolumeClaim:
-            claimName: nfs-claim
+            claimName:  nginx-test-pvc
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname

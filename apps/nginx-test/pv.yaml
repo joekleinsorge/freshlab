@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata: 
-  name: nginx-test-data-pv
+  name: nginx-test-pv
 spec:
   storageClassName: ""
   capacity:
