@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: web
+    hajimari.io/icon: web
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: &host web.kleinsorge.dev
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+  tls:
+    - secretName: nginx-tls-certificate
+      hosts:
+        - *host
