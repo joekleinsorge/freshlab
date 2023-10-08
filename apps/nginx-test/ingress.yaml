@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: &host web.kleinsorge.dev
+    - host: &host web-test.kleinsorge.dev
       http:
         paths:
           - pathType: ImplementationSpecific
