@@ -5,13 +5,16 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 
-default: metal git-hooks
+default: metal bootstrap git-hooks
 
 git-hooks:
 	pre-commit install
 
 metal:
 	make -C metal
+
+bootstrap:
+	make -C bootstrap
 
 clean:
 	make -C metal teardown

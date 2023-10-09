@@ -19,3 +19,4 @@ kubeconfig.yaml
 *kubeconfig.yaml
 Chart.lock
 .vscode
+.token
