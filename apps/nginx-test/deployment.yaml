@@ -14,8 +14,6 @@ spec:
       labels:
         app: nginx-test
     spec:
-      nodeSelector:
-        psu: "true"
       containers:
         - name: nginx
           image: nginxdemos/hello
