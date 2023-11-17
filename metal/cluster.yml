@@ -1,19 +1,20 @@
+- name: Setup Operating system
   hosts: metal
   roles:
-    - { role: automatic_upgrade, tags: [always] }
-    - { role: disable_selinux, tags: [always] }
-    - { role: disable_firewalld, tags: [always] }
-    - { role: disable_swap, tags: [always] }
-    - { role: mount_nfs, tags: [always] }
+    - automatic_upgrade
+    - disable_selinux
+    - disable_firewalld
+    - disable_swap
+    - mount_nfs
 
 - name: Create Kubernetes cluster
   hosts: metal
   roles:
-    - { role: k3s, tags: [always] }
+    - k3s
 
 - name: Create some basic config
   hosts: localhost
   environment:
     KUBECONFIG: ./kubeconfig.yaml
   roles:
-    - { role: metallb_config, tags: [always] }
+    - metallb_config
