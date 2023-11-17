@@ -17,10 +17,10 @@
           pod-security.kubernetes.io/audit: privileged
           pod-security.kubernetes.io/warn: privileged
 
-# - name: Create MetalLB configmap
-#   kubernetes.core.k8s:
-#     definition: "{{ lookup('file', 'configmap.yaml') | from_yaml }}"
-
-- name: Create MetalLB ip-pool
+- name: Create MetalLB configmap
   kubernetes.core.k8s:
-    definition: "{{ lookup('file', 'ip-pool.yaml') | from_yaml }}"
+    definition: "{{ lookup('file', 'configmap.yaml') | from_yaml }}"
+
+# - name: Create MetalLB ip-pool
+#   kubernetes.core.k8s:
+#     definition: "{{ lookup('file', 'ip-pool.yaml') | from_yaml }}"
