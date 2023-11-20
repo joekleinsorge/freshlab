@@ -1,37 +1,51 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: minio
   namespace: minio
   annotations:
-    argocd.argoproj.io/sync-wave: '10'
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: minio
+    hajimari.io/icon: pencil 
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`minio.kleinsorge.dev`)
-      services:
-        - name: minio
-          port: 80
+  ingressClassName: nginx
+  rules:
+    - host: &host minio.kleinsorge.dev
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: minio
+                port:
+                  name: http
   tls:
-    secretName: minio-tls
+    - secretName: minio-tls-certificate
+      hosts:
+        - *host
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: minio-console
   namespace: minio
   annotations:
-    argocd.argoproj.io/sync-wave: '10'
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: minio-console
+    hajimari.io/icon: pencil 
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`minio-console.kleinsorge.dev`)
-      services:
-        - name: minio-console
-          port: 80
+  ingressClassName: nginx
+  rules:
+    - host: &host minio-console.kleinsorge.dev
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: minio-console
+                port:
+                  name: http
   tls:
-    secretName: minio-console-tls
+    - secretName: minio-console-tls-certificate
+      hosts:
+        - *host
