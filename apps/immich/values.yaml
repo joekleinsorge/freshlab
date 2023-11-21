@@ -1,7 +1,4 @@
 immich:
-  repository:
-    name: immich-charts
-    url: https://github.com/immich-app/immich-charts
   env:
     DB_PASSWORD:
       valueFrom:
@@ -13,7 +10,6 @@ immich:
         secretKeyRef:
           name: immich-secrets
           key: JWT_SECRET
-
   proxy:
     ingress:
       main:
@@ -28,7 +24,7 @@ immich:
           - host: &host immich.kleinsorge.dev
             paths:
               - path: /
-
+                pathType: Prefix
         tls:
           - secretName: immich-tls-certificate
             hosts:
