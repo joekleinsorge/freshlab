@@ -15,34 +15,41 @@ spec:
     matchLabels:
       app: nfs-subdir-external-provisioner
       release: nfs
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      annotations: null
-      labels:
-        app: nfs-subdir-external-provisioner
-        release: nfs
-    spec:
-      containers:
-        - env:
-            - name: PROVISIONER_NAME
-              value: cluster.local/nfs-nfs-subdir-external-provisioner
-            - name: NFS_SERVER
-              value: 192.168.1.208
-            - name: NFS_PATH
-              value: /volume1/kube
-          image: 'registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2'
-          imagePullPolicy: IfNotPresent
-          name: nfs-subdir-external-provisioner
-          securityContext: {}
-          volumeMounts:
-            - mountPath: /persistentvolumes
-              name: nfs-subdir-external-provisioner-root
-      securityContext: {}
-      serviceAccountName: nfs-nfs-subdir-external-provisioner
-      volumes:
-        - name: nfs-subdir-external-provisioner-root
-          nfs:
-            path: /volume1/kube
-            server: 192.168.1.208
+strategy:
+  type: Recreate
+template:
+  metadata:
+    annotations: {}
+    labels:
+      app: "nfs-subdir-external-provisioner"
+      release: "nfs"
+  spec:
+    containers:
+      - env:
+          - name: PROVISIONER_NAME
+            value: "cluster.local/nfs-nfs-subdir-external-provisioner"
+          - name: NFS_SERVER
+            value: "192.168.1.208"
+          - name: NFS_PATH
+            value: "/volume1/kube"
+        image: 'registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2'
+        imagePullPolicy: IfNotPresent
+        name: "nfs-subdir-external-provisioner"
+        securityContext: {}
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "500Mi"
+        volumeMounts:
+          - mountPath: "/persistent-volumes"
+            name: "nfs-subdir-external-provisioner-root"
+    securityContext: {}
+    serviceAccountName: "nfs-nfs-subdir-external-provisioner"
+    volumes:
+      - name: "nfs-subdir-external-provisioner-root"
+        nfs:
+          path: "/volume1/kube"
+          server: "192.168.1.208"
