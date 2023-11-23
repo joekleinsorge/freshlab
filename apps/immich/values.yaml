@@ -6,13 +6,17 @@ immich:
         existingClaim: immich-nfs
         mountPath: /usr/src/app/upload
   postgresql:
-    enabled: false
+    enabled: true 
     global:
       postgresql:
         auth:
           username: immich
           database: immich
           password: immich
+  redis:
+    enabled: true 
+  typesense:
+    enabled: true 
   server:
     ingress:
       main:
