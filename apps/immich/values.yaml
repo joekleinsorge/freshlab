@@ -15,11 +15,6 @@ immich:
           password: immich
   redis:
     enabled: true 
-  typesense:
-    enabled: true 
-    persistence:
-      tsdata:
-        enabled: false
   server:
     ingress:
       main:
