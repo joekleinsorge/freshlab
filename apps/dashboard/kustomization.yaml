@@ -5,6 +5,6 @@ resources:
 - ./ingress.yaml
 - ./sa.yaml
 - ./rb.yaml
-- https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended.yaml
+- https://raw.githubusercontent.com/kubernetes/dashboard/v3.0.0-alpha0/charts/kubernetes-dashboard.yaml 
 
 namespace: dashboard 
