@@ -2,9 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ./ingress.yaml
-- ./sa.yaml
-- ./rb.yaml
-- https://raw.githubusercontent.com/kubernetes/dashboard/v3.0.0-alpha0/charts/kubernetes-dashboard.yaml 
+- ./manifests.yaml
 
 namespace: kubernetes-dashboard 
