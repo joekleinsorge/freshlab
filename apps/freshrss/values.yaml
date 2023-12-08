@@ -1,8 +1,8 @@
 freshrss:
   env:
     TZ: America/New_York
-    PUID: 1030
-    PGID: 101
+    # PUID: 1030
+    # PGID: 101
   ingress:
     main:
       enabled: true
