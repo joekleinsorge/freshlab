@@ -69,9 +69,25 @@ spec:
           path: /volume1/photo
           server: 192.168.1.208
       - name: photoprism-config
-        nfs:
-          path: /volume1/kube/photoprism
-          server: 192.168.1.208
+        persistentVolumeClaim:
+          claimName: longhorn-simple-pvc
+        # nfs:
+        #   path: /volume1/kube/photoprism
+        #   server: 192.168.1.208
+---
+papiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: longhorn-simple-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+
 ---
 apiVersion: v1
 kind: Service
