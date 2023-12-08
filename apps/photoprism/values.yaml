@@ -1,4 +1,3 @@
-replicaCount: 1
 image:
   repository: photoprism/photoprism
   tag: "latest"
@@ -42,8 +41,6 @@ ingress:
     - secretName: photoprism-tls-certificate
       hosts:
         - *host
-
 resources:
   requests:
     memory: 2Gi
-
