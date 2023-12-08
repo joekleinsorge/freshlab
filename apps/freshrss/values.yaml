@@ -1,4 +1,8 @@
 freshrss:
+  image:
+    repository: linuxserver/freshrss
+    pullPolicy: IfNotPresent
+    tag: latest 
   env:
     TZ: America/New_York
     # PUID: 1030
