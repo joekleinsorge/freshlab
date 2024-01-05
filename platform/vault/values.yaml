@@ -26,9 +26,7 @@ vault:
         hajimari.io/icon: "pencil"
       hosts:
         - host: "vault.kleinsorge.dev"
-          paths:
-            - path: "/"
-              pathType: "Prefix"
+          paths: []
       tls:
         - secretName: "vault-tls-certificate"
           hosts:
