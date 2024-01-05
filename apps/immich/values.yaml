@@ -2,8 +2,7 @@ immich:
   immich:
     persistence:
       library:
-        existingClaim: immich-nfs
-        # mountPath: /usr/src/app/upload
+        existingClaim: "immich-nfs"
   postgresql:
     enabled: true 
   redis:
