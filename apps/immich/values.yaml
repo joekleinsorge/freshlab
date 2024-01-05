@@ -13,7 +13,7 @@ immich:
         auth:
           username: immich
           database: immich
-          password: immich
+          password: password
     primary:
       initdb:
         scripts:
