@@ -2,17 +2,10 @@ immich:
   immich:
     persistence:
       library:
-        enabled: true
         existingClaim: immich-nfs
-        mountPath: /usr/src/app/upload
+        # mountPath: /usr/src/app/upload
   postgresql:
     enabled: true 
-    global:
-      postgresql:
-        auth:
-          username: immich
-          database: immich
-          password: immich
   redis:
     enabled: true 
   server:
