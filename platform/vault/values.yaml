@@ -25,14 +25,14 @@ vault:
         hajimari.io/appName: "vault"
         hajimari.io/icon: "pencil"
       hosts:
-        - host: &host "vault.kleinsorge.dev"
+        - host: "vault.kleinsorge.dev"
           paths:
             - path: "/"
               pathType: "Prefix"
       tls:
         - secretName: "vault-tls-certificate"
           hosts:
-            - *host
+            - "vault.kleinsorge.dev" 
     ui:
       enabled: true
       serviceType: "ClusterIP"
