@@ -4,7 +4,23 @@ immich:
       library:
         existingClaim: "immich-nfs"
   postgresql:
-    enabled: true 
+    enabled: true
+    image:
+      repository: tensorchord/pgvecto-rs
+      tag: pg14-v0.1.11
+    global:
+      postgresql:
+        auth:
+          username: immich
+          database: immich
+          password: immich
+    primary:
+      initdb:
+        scripts:
+          create-extensions.sql: |
+            CREATE EXTENSION cube;
+            CREATE EXTENSION earthdistance;
+            CREATE EXTENSION vectors;
   redis:
     enabled: true 
   server:
