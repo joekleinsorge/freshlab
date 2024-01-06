@@ -6,7 +6,7 @@ app-template:
     type: statefulset
   image:
     repository: ghcr.io/authelia/authelia
-    tag: master@sha256:4bcd262eced076ebb30186e4eaf12fbe8f847f79ac3a8c467c5bbbb602ee4cba
+    tag: master@sha256:178312b86c8b3653cf90576d3a73b6d6788f224f185c5f862db1db7607ae01d7
   args: ["--config", "/etc/authelia/config.yaml"]
   service:
     main:
