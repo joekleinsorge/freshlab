@@ -1,0 +1,27 @@
+name: Lint
+on: 
+  push: null
+  pull_request: null
+
+jobs:
+  build:
+    name: Lint
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter/slim@latest
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+...

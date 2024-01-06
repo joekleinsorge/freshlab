@@ -2,8 +2,6 @@ apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
   name: actions-runner
-  annotations:
-    argocd.argoproj.io/sync-wave: '10'
 spec:
   replicas: 1
   template:
