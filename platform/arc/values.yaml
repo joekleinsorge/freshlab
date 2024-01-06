@@ -1,0 +1,8 @@
+arc:
+  authSecret:
+    enabled: true
+    create: false
+    name: "controller-manager"
+    annotations: {
+      github_token: "controller-manager"
+    }
