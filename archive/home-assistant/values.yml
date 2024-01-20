@@ -22,7 +22,7 @@ controllers:
           repository: ghcr.io/onedr0p/home-assistant
           # -- image tag
           # this example is not automatically updated, so be sure to use the latest image
-          tag: 2024.1.1
+          tag: 2024.1.4
 
       # Configure the code-server sidecar
       code:
