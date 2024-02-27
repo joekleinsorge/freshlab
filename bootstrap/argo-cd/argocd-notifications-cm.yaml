@@ -6,7 +6,7 @@ data:
   service.github: |
     appID: 842581
     installationID: 47784594
-    privateKey: $github-privateKey
+    privateKey: $github-privatekey
 template.app-deployed: |
   message: |
     Application {{.app.metadata.name}} is now running new version of deployments manifests.
@@ -17,15 +17,7 @@ template.app-deployed: |
       state: success
       label: "continuous-delivery/{{.app.metadata.name}}"
       targetURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-    deployment:
-      state: success
-      environment: production
-      environmentURL: "https://{{.app.metadata.name}}.example.com"
-      logURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
-      requiredContexts: []
-      autoMerge: true
-      transientEnvironment: false
-    pullRequestComment:
+   pullRequestComment:
       content: |
         Application {{.app.metadata.name}} is now running new version of deployments manifests.
         See more here: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true
