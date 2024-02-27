@@ -6,7 +6,7 @@ metadata:
   name: {{ $stack.name }}
   namespace: {{ $.Release.Namespace }}
 annotations:
-  notifications.argoproj.io/subscribe.<trigger-name>.github: ""
+  notifications.argoproj.io/subscribe.on-sync-succeeded.github: ""
 spec:
   generators:
     - git:
