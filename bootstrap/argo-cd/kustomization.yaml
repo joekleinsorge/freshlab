@@ -16,3 +16,4 @@ namespace: argocd
 resources:
 - github.com/argoproj-labs/argocd-autopilot/manifests/base?ref=v0.4.17
 - ./ingress.yaml
+- ./argocd-notifications-cm.yaml

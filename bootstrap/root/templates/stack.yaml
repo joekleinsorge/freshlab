@@ -5,6 +5,8 @@ kind: ApplicationSet
 metadata:
   name: {{ $stack.name }}
   namespace: {{ $.Release.Namespace }}
+annotations:
+  notifications.argoproj.io/subscribe.<trigger-name>.github: ""
 spec:
   generators:
     - git:
