@@ -1,0 +1,45 @@
+/* Body */
+body {
+    background: #f0f0f0;
+    color: #333333;
+}
+
+/* Navbar Logo */
+.nav-bar__logo img {
+    content: url(https://github.com/JoeKleinsorge/dotfiles/blob/main/imgs/icons/astronaut.jpg);
+    /* Add any custom styling here */
+}
+
+/* Top Bar */
+.top-bar {
+    background: #f8f8f8;
+}
+
+.top-bar__breadcrumbs {
+    color: #666666;
+}
+
+/* Filters Group Panel */
+.filters-group__panel {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Filter */
+.filter {
+    background-color: #f8f8f8;
+    color: #333333;
+}
+
+/* Filter Item */
+.filter__item {
+    background-color: #f8f8f8;
+    color: #333333;
+}
+
+/* Applications List Entry */
+.applications-list__entry {
+    background: #ffffff;
+    color: #333333;
+}
+
