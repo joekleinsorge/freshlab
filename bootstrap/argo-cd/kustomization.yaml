@@ -18,3 +18,4 @@ resources:
 - ./ingress.yaml
 patches:
 - path: ./argocd-notifications-cm.yaml
+- path: ./argocd-cm.yaml
