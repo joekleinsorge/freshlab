@@ -3,8 +3,6 @@ configMapGenerator:
 - behavior: merge
   literals:
   - |
-    ui.cssurl: "https://github.com/JoeKleinsorge/freshlab/bootstrap/custom.css"
-    exec.enabled: "true"
     repository.credentials=- passwordSecret:
         key: git_token
         name: autopilot-secret
