@@ -3,6 +3,8 @@ configMapGenerator:
 - behavior: merge
   literals:
   - |
+    ui.cssurl: "https://github.com/JoeKleinsorge/freshlab/bootstrap/custom.css"
+    exec.enabled: "true"
     repository.credentials=- passwordSecret:
         key: git_token
         name: autopilot-secret
@@ -10,8 +12,6 @@ configMapGenerator:
       usernameSecret:
         key: git_username
         name: autopilot-secret
-    ui.cssurl: "https://github.com/JoeKleinsorge/freshlab/bootstrap/custom.css"
-    exec.enabled: "true"
   name: argocd-cm
 kind: Kustomization
 namespace: argocd
