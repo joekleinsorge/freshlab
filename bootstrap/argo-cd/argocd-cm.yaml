@@ -1,5 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-data:
-  ui.cssurl: "https://github.com/JoeKleinsorge/freshlab/bootstrap/custom.css"
-  exec.enabled: "true"

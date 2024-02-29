@@ -10,6 +10,8 @@ configMapGenerator:
       usernameSecret:
         key: git_username
         name: autopilot-secret
+    ui.cssurl: "https://github.com/JoeKleinsorge/freshlab/bootstrap/custom.css"
+    exec.enabled: "true"
   name: argocd-cm
 kind: Kustomization
 namespace: argocd
@@ -18,4 +20,3 @@ resources:
 - ./ingress.yaml
 patches:
 - path: ./argocd-notifications-cm.yaml
-- path: ./argocd-cm.yaml
