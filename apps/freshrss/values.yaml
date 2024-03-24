@@ -5,8 +5,6 @@ freshrss:
     tag: latest 
   env:
     TZ: America/New_York
-    # PUID: 1030
-    # PGID: 101
   ingress:
     main:
       enabled: true
@@ -36,7 +34,7 @@ freshrss:
   persistence:
     config:
       enabled: true
-      # type: nfs
-      # server: 192.168.1.208
-      # path: /volume1/kube/freshrss
-      # # mountPath: /
+      type: nfs
+      server: 192.168.1.208
+      path: /volume1/kube/freshrss
+      mountPath: /
