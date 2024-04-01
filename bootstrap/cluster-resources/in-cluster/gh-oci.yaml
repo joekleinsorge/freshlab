@@ -7,9 +7,9 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 type: Opaque
 stringData:
-  enableOCI: true
-  name: gh-oci 
-  type: helm
-  url: https://ghcr.io 
+  enableOCI: 'true'
+  name: 'gh-oci'
+  type: 'helm'
+  url: 'https://ghcr.io'
   username: 'anonymous'
   password: '' 
