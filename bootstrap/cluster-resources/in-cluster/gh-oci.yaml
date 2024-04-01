@@ -10,6 +10,6 @@ stringData:
   enableOCI: 'true'
   name: 'gh-oci'
   type: 'helm'
-  url: 'https://ghcr.io'
+  url: 'ghcr.io/actions/actions-runner-controller-charts'
   username: 'anonymous'
   password: '' 
