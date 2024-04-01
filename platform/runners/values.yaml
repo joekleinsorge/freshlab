@@ -1,0 +1,5 @@
+runners:
+  githubConfigUrl: ""
+  githubConfigSecret: pre-defined-secret
+  maxRunners: 5
+  minRunners: 1

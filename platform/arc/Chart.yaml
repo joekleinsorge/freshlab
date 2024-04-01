@@ -1,8 +1,9 @@
 apiVersion: v2
-name: arc
+name: arc 
 version: 0.0.0
 dependencies:
-  - name: actions-runner-controller
-    version: 0.23.7
-    repository: https://actions-runner-controller.github.io/actions-runner-controller
+  - name: gha-runner-scale-set-contoller
+    version: 0.9.0
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-contoller
+ 
  
