@@ -10,5 +10,5 @@ stringData:
   name: 'ghcr.io'
   type: 'helm'
   url: 'ghcr.io/actions/actions-runner-controller-charts/*'
-  username: 'anonymous'
-  password: '' 
+  # username: 'anonymous'
+  # password: '' 
