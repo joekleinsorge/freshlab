@@ -61,15 +61,15 @@ spec:
             tcpSocket:
               port: 80
             timeoutSeconds: 1
-          volumeMounts:
-            - mountPath: /
-              name: config
+          # volumeMounts:
+          #   - mountPath: /
+          #     name: config
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       serviceAccountName: default
-      volumes:
-        - name: config
-          nfs:
-            path: /volume1/kube/freshrss
-            server: 192.168.1.208
+      # volumes:
+      #   - name: config
+      #     nfs:
+      #       path: /volume1/kube/freshrss
+      #       server: 192.168.1.208
 
