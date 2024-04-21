@@ -62,7 +62,7 @@ spec:
               port: 80
             timeoutSeconds: 1
           volumeMounts:
-            - mountPath: /
+            - mountPath: /config
               name: config
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
