@@ -67,11 +67,10 @@ spec:
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       serviceAccountName: default
-      # volumes:
+      volumes:
       #   - name: config
       #     persistentVolumeClaim:
       #       claimName: freshrss-pvc 
-      #     # nfs:
-          #   path: /volume1/kube/freshrss
-          #   server: 192.168.1.208
-          #
+          nfs:
+            path: /volume1/kube/freshrss
+            server: 192.168.1.208
