@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: rss
+    hajimari.io/icon: rss
+  labels:
+    app.kubernetes.io/instance: freshrss
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: freshrss
+    app.kubernetes.io/version: 1.18.1
+    helm.sh/chart: freshrss-6.4.2
+  name: freshrss
+  namespace: freshrss
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: rss.kleinsorge.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: freshrss
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - rss.kleinsorge.dev
+      secretName: freshrss-tls-certificate
+
