@@ -1,0 +1,47 @@
+plex:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/appName: plex
+      hajimari.io/icon: video 
+    hosts:
+      - host: &host plex.kleinsorge.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: plex-tls-certificate
+        hosts:
+          - *host
+  # pms:
+  #   # The storage class to use when provisioning the pms config volume
+  #   # this needs to be created manually, null will use the default
+  #   storageClassName: null
+  #   # the volume size to provision for the PMS database
+  #   configStorage: 2Gi
+  #   # Name of an existing `PersistentVolumeClaim` for the PMS database
+  #   # NOTE: When set, 'configStorage' and 'storageClassName' are ignored.
+  #   configExistingClaim: ""
+
+  extraEnv:
+    PLEX_CLAIM: "claim"
+    HOSTNAME: "k8Plex"
+    TZ: "Etc/UTC"
+    PLEX_UPDATE_CHANNEL: "5"
+    PLEX_UID: "101"
+    PLEX_GID: "1001"
+    ALLOWED_NETWORKS: "192.168.1.1/22"
+
+  # Optionally specify additional volume mounts for the PMS and init containers.
+  extraVolumeMounts:
+    - name: media 
+      mountPath: /my_media
+
+  # Optionally specify additional volumes for the pod.
+  extraVolumes:
+    - name: media
+      nfs:
+        path: /volume1/Media
+        server: 192.168.1.208

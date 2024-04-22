@@ -13,20 +13,20 @@ image:
  #service:
  #  type: ClusterIP
  #  port: 32400
- #ingress:
- #  enabled: true
- #  annotations:
- #    kubernetes.io/ingress.class: nginx    
- #    cert-manager.io/cluster-issuer: letsencrypt-prod
- #    hajimari.io/enable: 'true'
- #    hajimari.io/appName: 'plex'
- #    hajimari.io/icon: 'plex'
- #  hosts:
- #    - plex.kleinsorge.dev
- #  tls:
- #    - secretName: plex-tls-certificate
- #      hosts:
- #        - plex.kleinsorge.dev
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx    
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/enable: 'true'
+    hajimari.io/appName: 'plex'
+    hajimari.io/icon: 'plex'
+  hosts:
+    - plex.kleinsorge.dev
+  tls:
+    - secretName: plex-tls-certificate
+      hosts:
+        - plex.kleinsorge.dev
 claimToken: "claim-yPCYmPQ6PCBzEMUsZqXf"
 timezone: "America/New_York"
 extraEnv: 
