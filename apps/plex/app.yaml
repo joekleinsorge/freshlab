@@ -1,0 +1,24 @@
+project: default
+source:
+  repoURL: 'https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages'
+  targetRevision: 0.3.0
+  chart: plex-media-server
+  valueFiles:
+  - values.yaml
+destination:
+  namespace: plex
+  name: in-cluster
+syncPolicy:
+  automated:
+    prune: true
+    selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
+    - ServerSideApply=true
+  retry:
+    limit: 10
+    backoff:
+      duration: 1m
+      factor: 2
+      maxDuration: 16m
