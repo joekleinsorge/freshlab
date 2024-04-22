@@ -3,8 +3,9 @@ source:
   repoURL: 'https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages'
   targetRevision: 0.3.0
   chart: plex-media-server
-  valueFiles:
-  - values.yaml
+  helm:
+    valueFiles:
+    - values.yaml
 destination:
   namespace: plex
   name: in-cluster
