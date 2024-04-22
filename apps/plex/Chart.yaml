@@ -4,6 +4,6 @@ version: 0.0.0
 dependencies:
   - name: plex 
     version: 0.3.0 
-    # repository: https://github.com/plexinc/pms-docker/tree/master/charts
+    repository: https://github.com/plexinc/pms-docker/tree/master/charts
     # repository: file:https://github.com/plexinc/pms-docker/blob/gh-pages/index.yaml
-    repository: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages/index.yaml
+    # repository: https://raw.githubusercontent.com/plexinc/pms-docker/gh-pages/index.yaml
