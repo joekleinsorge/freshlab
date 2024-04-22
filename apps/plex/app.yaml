@@ -5,7 +5,7 @@ source:
   chart: plex-media-server
   helm:
     valueFiles:
-    - values.yaml
+      values.yaml
 destination:
   namespace: plex
   name: in-cluster
