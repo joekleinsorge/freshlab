@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: plex
+    app.kubernetes.io/instance: plex
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/version: 1.16.0
+    name: plex
+  name: plex
+  namespace: plex
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: plex
+      app.kubernetes.io/name: plex
+  serviceName: plex 
+  template:
+    metadata:
+      annotations: {}
+      labels:
+        app: plex
+        app.kubernetes.io/instance: plex
+        app.kubernetes.io/name: plex
+        app.kubernetes.io/version: 1.16.0
+    spec:
+      affinity: {}
+      containers:
+        - env: null
+          image: 'index.docker.io/plexinc/pms-docker:latest'
+          imagePullPolicy: IfNotPresent
+          name: plex-pms
+          ports:
+            - containerPort: 32400
+              name: pms
+          volumeMounts:
+            - mountPath: /config
+              name: pms-config
+            - mountPath: /transcode
+              name: pms-transcode
+      initContainers: null
+      nodeSelector: {}
+      serviceAccountName: plex 
+      terminationGracePeriodSeconds: 120
+      tolerations: []
+      volumes:
+        - emptyDir: {}
+          name: pms-transcode
+  volumeClaimTemplates:
+    - metadata:
+        name: pms-config
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+
