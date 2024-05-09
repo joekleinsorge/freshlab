@@ -26,8 +26,8 @@ spec:
       affinity: {}
       containers:
         - env:
-          - name: PLEX_CLAIM
-            value: "claim-cezq99W2-Gyd17spC4Si" 
+          # - name: PLEX_CLAIM
+          #   value: claim-cezq99W2-Gyd17spC4Si 
           - name: TZ
             value: America/New_York
           image: lscr.io/linuxserver/plex:latest
