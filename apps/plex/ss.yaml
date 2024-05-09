@@ -53,7 +53,9 @@ spec:
             path: /volume1/Media
             readOnly: true
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+     metadata:
         name: pms-config
       spec:
         accessModes:
