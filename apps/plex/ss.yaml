@@ -27,7 +27,7 @@ spec:
       containers:
         - env:
           - name: PLEX_CLAIM
-            value: claim-bD-YXNkVyTHsYeCnSHPq 
+            value: claim-xzd3t6GPqzwVgnesddeq
           - name: TZ
             value: America/New_York
           - name: VERSION
