@@ -30,6 +30,8 @@ spec:
           #   value: claim-cezq99W2-Gyd17spC4Si 
           - name: TZ
             value: America/New_York
+          - name: version
+            value: latest
           image: lscr.io/linuxserver/plex:latest
           imagePullPolicy: IfNotPresent
           name: plex-pms
