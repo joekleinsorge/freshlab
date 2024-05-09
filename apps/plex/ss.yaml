@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/instance: plex
     app.kubernetes.io/name: plex
     app.kubernetes.io/version: 1.16.0
-    name: plex
   name: plex
   namespace: plex
 spec:
@@ -14,7 +13,7 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: plex
       app.kubernetes.io/name: plex
-  serviceName: plex 
+  serviceName: plex
   template:
     metadata:
       annotations: {}
@@ -26,7 +25,7 @@ spec:
     spec:
       affinity: {}
       containers:
-        - env: null
+        - env: []
           image: 'index.docker.io/plexinc/pms-docker:latest'
           imagePullPolicy: IfNotPresent
           name: plex-pms
@@ -38,14 +37,21 @@ spec:
               name: pms-config
             - mountPath: /transcode
               name: pms-transcode
-      initContainers: null
+            - mountPath: /media
+              name: pms-media
+      initContainers: []
       nodeSelector: {}
-      serviceAccountName: plex 
+      serviceAccountName: plex
       terminationGracePeriodSeconds: 120
       tolerations: []
       volumes:
-        - emptyDir: {}
-          name: pms-transcode
+        - name: pms-transcode
+          emptyDir: {}
+        - name: pms-media
+          nfs:
+            server: 192.168.1.208
+            path: /volume1/Media
+            readOnly: true
   volumeClaimTemplates:
     - metadata:
         name: pms-config
@@ -55,4 +61,5 @@ spec:
         resources:
           requests:
             storage: 2Gi
+
 
