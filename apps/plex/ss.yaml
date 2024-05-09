@@ -27,8 +27,10 @@ spec:
       containers:
         - env:
           - name: PLEX_CLAIM
-            value: "claim-C4pBnwA-AHcyEXN_iVA8" 
-          image: 'index.docker.io/plexinc/pms-docker:latest'
+            value: "claim-cezq99W2-Gyd17spC4Si" 
+          - name: TZ
+            value: America/New_York
+          image: lscr.io/linuxserver/plex:latest
           imagePullPolicy: IfNotPresent
           name: plex-pms
           ports:
