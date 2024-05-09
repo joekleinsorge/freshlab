@@ -25,7 +25,9 @@ spec:
     spec:
       affinity: {}
       containers:
-        - env: []
+        - env:
+          - name: PLEX_CLAIM
+            value: claim-a5sNy-u562cWcAbefspV"
           image: 'index.docker.io/plexinc/pms-docker:latest'
           imagePullPolicy: IfNotPresent
           name: plex-pms
@@ -55,7 +57,7 @@ spec:
   volumeClaimTemplates:
     - apiVersion: v1
       kind: PersistentVolumeClaim
-     metadata:
+      metadata:
         name: pms-config
       spec:
         accessModes:
