@@ -15,12 +15,13 @@ spec:
     - host: plex.kleinsorge.dev
       http:
         paths:
-          - backend:
-              service:
-                name: plex 
-                port:
-                  name: http
-            pathType: ImplementationSpecific
+        - path: '/'
+          pathType: Prefix
+          backend:
+            service:
+              name: plex
+              port:
+                number: 32400
   tls:
     - hosts:
         - plex.kleinsorge.dev
