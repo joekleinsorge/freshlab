@@ -101,32 +101,21 @@ frigate:
     ipFamilies: []
 
   ingress:
-    # -- Enables the use of an Ingress Controller to front the Service and can provide HTTPS
-    enabled: false
-
-    # -- ingressClassName for using on clusters with multiple ingresses, default is null
-    ingressClassName: ~
-
-    # -- annotations to configure your Ingress. See your Ingress Controller's Docs for more info.
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-      # For NGINX INC, these may be neccessary
-      # nginx.org/proxy-read-timeout: "3600"
-      # nginx.org/proxy-send-timeout: "3600"
-      # nginx.org/websocket-services: "<release_name>-frigate" # TODO: can this be automated?
-
-    # -- list of hosts and their paths that ingress controller should repsond to.
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/appName: frigate 
+      hajimari.io/icon: video-camera
     hosts:
-      - host: chart.example.local
+      - host: &host frigate.kleinsorge.dev
         paths:
-          - '/'
-
-    # -- list of TLS configurations
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: frigate-tls-certificate
+        hosts:
+          - *host
 
   persistence:
     config:
