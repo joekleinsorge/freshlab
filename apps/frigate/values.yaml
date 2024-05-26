@@ -23,13 +23,23 @@ frigate:
       password: password
       stats_interval: 60
     detectors:
-      cpu1:
-        type: cpu
+      ov:
+        type: openvino
+        device: AUTO
+        model:
+          path: /openvino-model/ssdlite_mobilenet_v2.xml
+
+    model:
+      width: 300
+      height: 300
+      input_tensor: nhwc
+      input_pixel_format: bgr
+      labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     cameras:
       front_door:
         ffmpeg:
           inputs:
-            - path: rtsp://frigated:Frigated@192.168.1.110:554/rtsp
+            - path: rtsp://frigated:Frigated@192.168.1.110:554/rtsp/cam/realmonitor?channel=1&subtype=2
               roles:
                 - detect
   probes:
