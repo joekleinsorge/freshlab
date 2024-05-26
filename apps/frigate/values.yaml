@@ -35,13 +35,93 @@ frigate:
       input_tensor: nhwc
       input_pixel_format: bgr
       labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+    # cameras:
+    #   front_door:
+    #     ffmpeg:
+    #       inputs:
+    #         - path: rtsp://frigated:Frigated@192.168.1.110:554/rtsp/cam/realmonitor?channel=1&subtype=2
+    #           roles:
+    #             - detect
+
+    #### go2rtc config ###
+    go2rtc:
+      streams:
+        frontnorth:
+          - rtsp://user:pass@192.168.0.69:554/live0
+          - "ffmpeg:frontnorth#audio=opus"
+        frontnorth_sub: rtsp://frigated:Frigated@192.168.1.110:554/cam/realmonitor?channel=1&subtype=2
+    ffmpeg:
+      global_args: -hide_banner -loglevel warning -threads 2
+      hwaccel_args: preset-vaapi
+      input_args: preset-rtsp-restream
+      output_args:
+        detect: -threads 2 -f rawvideo -pix_fmt yuv420p
+        record: preset-record-generic-audio-copy
+    motion:
+      threshold: 25
+      improve_contrast: false
     cameras:
-      front_door:
+      frontnorth:
+        enabled: true
+        audio:
+          enabled: true
+        ui:
+          order: 0
+        birdseye:
+          order: 0
         ffmpeg:
           inputs:
-            - path: rtsp://frigated:Frigated@192.168.1.110:554/rtsp/cam/realmonitor?channel=1&subtype=2
-              roles:
-                - detect
+          - path: rtsp://192.168.1.110:8554/frontnorth_sub
+            roles:
+              - audio
+              - detect
+          - path: rtsp://192.168.1.110:8554/frontnorth
+            roles:
+              - record
+        objects:
+          filters:
+            bird:
+              min_score: 0.85
+            car:
+              min_area: 2000
+              max_area: 24000000
+              min_score: 0.85
+            amazon:
+              min_score: 0.75
+            fedex:
+              min_score: 0.75
+            ups:
+              min_score: 0.75
+            cat:
+              min_score: 0.90
+              threshold: 0.7
+            dog:
+              min_score: 0.90
+              threshold: 0.7
+            deer:
+              min_score: 0.85
+              threshold: 0.7
+            person:
+              min_score: 0.90
+              threshold: 0.7
+        motion:
+          mask:
+            - 528,720,525,665,0,673,0,720
+            - 1280,0,298,0,148,144
+        zones:
+          zone_frontyard:
+            coordinates: 476,174,1280,371,1280,93,879,49,379,127,140,188,143,238
+            objects:
+              - person
+              - dog
+              - deer
+          zone_front_patio:
+            coordinates: 0,720,1280,720,1280,398,846,264,467,190,39,273
+            objects:
+              - person
+              - dog
+              - deer
+              - cat
   probes:
     liveness:
       enabled: true
