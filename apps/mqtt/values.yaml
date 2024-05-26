@@ -1,0 +1,8 @@
+mosquitto:
+  enabled: true
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    storageClass: ""
+
