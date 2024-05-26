@@ -80,8 +80,6 @@ frigate:
               - record
         objects:
           filters:
-            bird:
-              min_score: 0.85
             car:
               min_area: 2000
               max_area: 24000000
@@ -92,36 +90,20 @@ frigate:
               min_score: 0.75
             ups:
               min_score: 0.75
-            cat:
-              min_score: 0.90
-              threshold: 0.7
-            dog:
-              min_score: 0.90
-              threshold: 0.7
-            deer:
-              min_score: 0.85
-              threshold: 0.7
             person:
               min_score: 0.90
               threshold: 0.7
-        motion:
-          mask:
-            - 528,720,525,665,0,673,0,720
-            - 1280,0,298,0,148,144
-        zones:
-          zone_frontyard:
-            coordinates: 476,174,1280,371,1280,93,879,49,379,127,140,188,143,238
-            objects:
-              - person
-              - dog
-              - deer
-          zone_front_patio:
-            coordinates: 0,720,1280,720,1280,398,846,264,467,190,39,273
-            objects:
-              - person
-              - dog
-              - deer
-              - cat
+        # motion:
+        #   mask:
+        #     - 528,720,525,665,0,673,0,720
+        #     - 1280,0,298,0,148,144
+        # zones:
+        #   zone_frontyard:
+        #     coordinates: 476,174,1280,371,1280,93,879,49,379,127,140,188,143,238
+        #     objects:
+        #       - person
+
+
   probes:
     liveness:
       enabled: true
