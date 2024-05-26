@@ -35,12 +35,8 @@ frigate:
       stats_interval: 60
 
     detectors:
-      # coral:
-      #   type: edgetpu
-      #   device: usb
       cpu1:
         type: cpu
-
     cameras:
       # Name of your camera
       front_door:
