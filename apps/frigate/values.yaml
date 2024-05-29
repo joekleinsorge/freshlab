@@ -45,14 +45,36 @@ frigate:
             - path: rtsp://frigated:Frigated@192.168.1.110:554/live
               roles:
                 - record
-        #   output_args:
-        #     detect: '-vf scale=1024:576:force_original_aspect_ratio=increase -f rawvideo -an -pix_fmt yuv420p'
-        #     rtmp: -vf scale=1024:576:force_original_aspect_ratio=increase -an -f flv
-        #     record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
-        # detect:
-        #   width: 1024
-        #   height: 576
-        #   fps: 5
+        motion:
+          mask:
+            - 166,119,0,248,100,576,704,576,704,249,461,151
+        zones:
+          zone_0:
+            coordinates: 0,226,29,392,90,576,704,576,704,365,704,245,449,140,203,114
+          zone_1:
+            coordinates: 390,104,55,110,100,576,131,73,484,67,704,131,704,233
+        detect:
+          width: 1280
+          height: 720
+          fps: 5
+    record:
+      enabled: True
+      retain:
+        days: 7
+        mode: motion
+      events:
+        retain:
+          default: 30
+          mode: motion
+    snapshots:
+      enabled: True
+      retain:
+        default: 30
+
+    #   output_args:
+    #     detect: '-vf scale=1024:576:force_original_aspect_ratio=increase -f rawvideo -an -pix_fmt yuv420p'
+    #     rtmp: -vf scale=1024:576:force_original_aspect_ratio=increase -an -f flv
+    #     record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
   probes:
     liveness:
       enabled: true
