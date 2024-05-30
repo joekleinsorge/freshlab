@@ -22,6 +22,8 @@ frigate:
       user: mqtt_user
       password: password
       stats_interval: 60
+    ffmpeg:
+      hwaccel_args: preset-vaapi
     detectors:
       ov:
         type: openvino
@@ -35,7 +37,7 @@ frigate:
       input_pixel_format: bgr
       labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     cameras:
-      front_door:
+      front:
         ffmpeg:
           inputs:
             - path: rtsp://frigated:Frigated@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
@@ -54,6 +56,20 @@ frigate:
           width: 1280
           height: 720
           fps: 5
+      back:
+        ffmpeg:
+          inputs:
+            - path: rtsp://frigated:Frigated@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
+              roles:
+                - detect
+                - rtmp
+            - path: rtsp://frigated:Frigated@192.168.1.111:554/live
+              roles:
+                - record
+        detect:
+          width: 1280
+          height: 720
+          fps: 5
     record:
       enabled: True
       retain:
@@ -61,17 +77,12 @@ frigate:
         mode: motion
       events:
         retain:
-          default: 30
+          default: 20
           mode: motion
     snapshots:
       enabled: True
       retain:
-        default: 30
-
-    #   output_args:
-    #     detect: '-vf scale=1024:576:force_original_aspect_ratio=increase -f rawvideo -an -pix_fmt yuv420p'
-    #     rtmp: -vf scale=1024:576:force_original_aspect_ratio=increase -an -f flv
-    #     record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+        default: 20
   probes:
     liveness:
       enabled: true
@@ -162,7 +173,7 @@ frigate:
 
     media:
       # -- Enables persistence for the media directory
-      enabled: false
+      enabled: true 
       ## frigate data Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
