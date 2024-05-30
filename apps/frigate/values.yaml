@@ -22,8 +22,8 @@ frigate:
       user: mqtt_user
       password: password
       stats_interval: 60
-    ffmpeg:
-      hwaccel_args: preset-vaapi
+    # ffmpeg:
+    #   hwaccel_args: preset-vaapi
     detectors:
       ov:
         type: openvino
