@@ -15,13 +15,15 @@ frigate:
     sizeLimit: 1Gi
   config: |
     mqtt:
-      host: mqtt.server.com
-      port: 1883
-      topic_prefix: frigate
-      client_id: frigate
-      user: mqtt_user
-      password: password
-      stats_interval: 60
+      enabled: False
+    # mqtt:
+    #   host: mqtt.server.com
+    #   port: 1883
+    #   topic_prefix: frigate
+    #   client_id: frigate
+    #   user: mqtt_user
+    #   password: password
+    #   stats_interval: 60
     # ffmpeg:
     #   hwaccel_args: preset-vaapi
     detectors:
