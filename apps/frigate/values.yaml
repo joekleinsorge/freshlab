@@ -26,6 +26,12 @@ frigate:
     #   stats_interval: 60
     # ffmpeg:
     #   hwaccel_args: preset-vaapi
+    objects:
+      track:
+        - person
+        - cat
+        - dog
+        - bird
     detectors:
       ov:
         type: openvino
