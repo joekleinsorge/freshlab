@@ -4,4 +4,4 @@ version: 0.0.0
 dependencies:
   - name: gha-runner-scale-set-contoller
     version: 0.9.1
-    repository: ghcr.io/actions/actions-runner-controller-charts 
+    repository: 'ghcr.io/actions/actions-runner-controller-charts'
