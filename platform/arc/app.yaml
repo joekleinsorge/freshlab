@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: arc-system
+  finalizers: 
+    - resources-finalizer.argocd.argoproj.io
+  labels: 
+    name: arc-system
+spec:
+  project: default 
+  sources:
+    - chart: gha-runner-scale-set-controller
+      repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
+      targetRevision: 0.9.1
+      helm:
+        valueFiles:
+          - $values/values.yaml
+    - repoURL: 'https://github.com/joekleinsorge/freshlab.git'
+      targetRevision: main 
+      ref: platform/arc/values
+  destination:
+    server: 'https://kubernetes.default.svc' 
+    namespace: arc-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Replace=true
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2 
+        maxDuration: 3m
