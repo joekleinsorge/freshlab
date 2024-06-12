@@ -3,6 +3,5 @@ gitops:
   revision: main
 stacks:
   - name: system
-  - name: platform
   - name: global
   - name: apps
