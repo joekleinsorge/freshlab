@@ -7,7 +7,7 @@ metadata:
   labels: 
     name: arc-system
 spec:
-  project: default 
+  project: default
   sources:
     - chart: gha-runner-scale-set-controller
       repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
@@ -19,7 +19,7 @@ spec:
       targetRevision: main 
       ref: platform/arc/values
   destination:
-    server: 'https://kubernetes.default.svc' 
+    name: in-cluster
     namespace: arc-system
   syncPolicy:
     automated:

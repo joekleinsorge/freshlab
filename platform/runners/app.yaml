@@ -19,7 +19,7 @@ spec:
       targetRevision: main 
       ref: platform/runners/values
   destination:
-    server: 'https://kubernetes.default.svc'
+    name: in-cluster
     namespace: arc-runners
   syncPolicy:
     automated:

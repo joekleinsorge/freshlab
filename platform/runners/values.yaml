@@ -1,5 +1,4 @@
-runners:
-  githubConfigUrl: "https://github.com/JoeKleinsorge/freshlab"
-  githubConfigSecret: gh-arc-app 
-  maxRunners: 5
-  minRunners: 1
+githubConfigUrl: "https://github.com/JoeKleinsorge/freshlab"
+githubConfigSecret: gh-arc-app 
+maxRunners: 5
+minRunners: 1
