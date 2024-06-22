@@ -1,7 +1,6 @@
 firefly-iii:
   persistence:
     enabled: true
-    storageClassName: "nfs-client"
     accessModes: ReadWriteOnce
     storage: 1Gi
   config:

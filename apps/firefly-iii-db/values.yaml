@@ -1,12 +1,10 @@
 firefly-db:
   storage:
-    class: 'nfs-client'
     accessModes: ReadWriteOnce
     dataSize: 1Gi
   backup:
     destination: http
     pvc:
-      class: 'nfs-client'
       accessModes: ReadWriteOnce
       dataSize: 1Gi
   configs:
