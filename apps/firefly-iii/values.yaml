@@ -1,4 +1,24 @@
 firefly-iii:
+  persistence:
+    enabled: true
+    storageClassName: "nfs-client"
+    accessModes: ReadWriteOnce
+    storage: 1Gi
+  config:
+    env:
+      DB_HOST: "firefly-db"
+      DB_CONNECTION: pgsql
+      DB_PORT: "5432"
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DEFAULT_LANGUAGE: "en_US"
+      DEFAULT_LOCALE: "equal"
+      TZ: "New_York/America"
+      TRUSTED_PROXIES: "**"
+  secrets:
+    env:
+      APP_PASSWORD: "CHANGE_ENCRYPT_ME"
+      DB_PASSWORD: "CHANGE_ENCRYPT_ME"
   ingress:
     main:
       enabled: true
@@ -16,37 +36,3 @@ firefly-iii:
         - secretName: firefly-iii-tls-certificate
           hosts:
             - *host
-  env:
-    SITE_OWNER: lab@kleinsorge.dev
-    TZ: America/New_York
-    # DB_CONNECTION: mysql
-    # DB_HOST: db
-    # DB_PORT: 3306
-    # DB_DATABASE: "firefly"
-    # DB_USERNAME: "firefly"
-    # DB_PASSWORD: secret_firefly_password
-  # mariadb:
-  #  enabled: true
-  #  username: "firefly"
-  #  rootPassword: secret_firefly_password
-  #  password: secret_firefly_password
-  #  database: "firefly"
-spec:
-  template:
-    spec:
-      containers:
-        volumeMounts:
-          - name: nfs-pvc
-            mountPath: /
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Mi
-  storageClassName: nfs-client

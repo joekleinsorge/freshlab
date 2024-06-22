@@ -1,0 +1,20 @@
+firefly-db:
+  storage:
+    class: 'nfs-client'
+    accessModes: ReadWriteOnce
+    dataSize: 1Gi
+  backup:
+    destination: http
+    pvc:
+      class: 'nfs-client'
+      accessModes: ReadWriteOnce
+      dataSize: 1Gi
+  configs:
+    DBHOST: firefly-firefly-db
+    DBPORT: "5432"
+    DBNAME: firefly
+    DBUSER: firefly
+    TZ: New_York/America
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_USER: firefly
+    POSTGRES_PASSWORD: "CHANGE_ENCRYPT_ME"

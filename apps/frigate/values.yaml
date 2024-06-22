@@ -141,7 +141,7 @@ frigate:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       hajimari.io/appName: frigate 
-      hajimari.io/icon: video-camera
+      hajimari.io/icon: cctv 
     hosts:
       - host: &host frigate.kleinsorge.dev
         paths:

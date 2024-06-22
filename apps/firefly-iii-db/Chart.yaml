@@ -1,7 +1,7 @@
 apiVersion: v2
-name: firefly-iii
+name: firefly-db 
 version: 0.0.0
 dependencies:
-  - name: firefly-iii
-    version: 1.8.1
+  - name: firefly-db
+    version: 0.2.1
     repository: https://firefly-iii.github.io/kubernetes 
