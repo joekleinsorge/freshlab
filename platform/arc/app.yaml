@@ -1,26 +1,30 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: arc-system
+  name: arc-system2
   finalizers: 
     - resources-finalizer.argocd.argoproj.io
   labels: 
-    name: arc-system
+    name: arc-system2
 spec:
   project: default
-  sources:
-    - chart: gha-runner-scale-set-controller
-      repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
-      targetRevision: 0.9.3
-      helm:
-        valueFiles:
-          - $values/values.yaml
-    - repoURL: 'https://github.com/joekleinsorge/freshlab.git'
-      targetRevision: main 
-      ref: platform/arc
+  source:
+    repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
+    targetRevision: '0.9.3'
+    chart: 'gha-runner-scale-set-controller'
+  # sources:
+  #   - chart: gha-runner-scale-set-controller
+  #     repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
+  #     targetRevision: 0.9.3
+  #     helm:
+  #       valueFiles:
+  #         - $values/values.yaml
+    # - repoURL: 'https://github.com/joekleinsorge/freshlab.git'
+    #   targetRevision: main 
+    #   ref: platform/arc
   destination:
     name: in-cluster
-    namespace: arc-system
+    namespace: arc-system2
   syncPolicy:
     automated:
       prune: true
