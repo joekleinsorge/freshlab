@@ -1,0 +1,4 @@
+kubedoom:
+  kubedoom:
+  # -- You can also kill Namespaces instead of Pods. Simply set this to `namespaces`. Allowed values: `pods`, `namespaces`.
+  mode: "pods"
