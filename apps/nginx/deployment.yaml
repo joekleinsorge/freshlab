@@ -21,7 +21,7 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: nfs-pvc
+            - name: pvc
               mountPath: /usr/share/nginx/html
           resources:
             requests:
@@ -31,6 +31,6 @@ spec:
               memory: "1Gi"
               cpu: "500Mi"
       volumes:
-        - name: nfs-pvc
+        - name: pvc
           persistentVolumeClaim:
-            claimName: nfs-claim
+            claimName: pv-claim
