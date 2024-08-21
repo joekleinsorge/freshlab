@@ -49,5 +49,5 @@ spec:
       - name: pvc
         nfs:
           server: 192.168.1.208
-          path: /volume1/photo
+          path: /volume1/kube
           
