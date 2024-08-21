@@ -1,7 +1,7 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: nginx
+  name: nginx-service
   labels:
     app: nginx
 spec:
@@ -9,6 +9,7 @@ spec:
     app: nginx
   ports:
   - port: 80
-    protocol: TCP
     targetPort: 80
+  - port:
+    targetPort: 443
   type: LoadBalancer

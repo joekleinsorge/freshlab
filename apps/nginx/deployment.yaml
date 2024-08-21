@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -28,10 +28,11 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: nginx
-          image: nginxdemos/hello:latest
+          image: nginx:1.19
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
+            - containerPort: 443
           volumeMounts:
             - name: pvc
               mountPath: /usr/share/nginx/html
