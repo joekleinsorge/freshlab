@@ -35,7 +35,7 @@ spec:
             - containerPort: 443
           volumeMounts:
             - name: pvc
-              mountPath: /usr/share/nginx/html
+              mountPath: /
           resources:
             requests:
               memory: "64Mi"
