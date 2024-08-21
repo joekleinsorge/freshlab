@@ -43,7 +43,10 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "500m"
+          command: ["/bin/sh"]
+          args: ["-c", "nginx -g 'daemon off;'"]
       volumes:
         - name: pvc
           persistentVolumeClaim:
             claimName: pv-claim
+          
