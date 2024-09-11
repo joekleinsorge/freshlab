@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: kindle-weather
-        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather:2be9daf
+        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather:5b3985e
         ports:
         - containerPort: 8080
         resources:
