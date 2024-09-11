@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kindle-weather
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kindle-weather
+  template:
+    metadata:
+      labels:
+        app: kindle-weather
+    spec:
+      containers:
+      - name: kindle-weather
+        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather:2be9daf
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        volumeMounts:
+        - name: secrets
+          mountPath: "/etc/secrets"
+          readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          secretName: api-keys
+
