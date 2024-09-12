@@ -20,7 +20,7 @@ spec:
     kind: Application
   project: default
   source:
-    path: projects
+    path: ./bootstrap/root
     repoURL: https://github.com/joekleinsorge/freshlab.git
   syncPolicy:
     automated:
