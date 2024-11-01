@@ -1,3 +1,0 @@
-sealed-secret:
-  startupProbe:
-    enabled: true 

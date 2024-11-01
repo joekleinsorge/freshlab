@@ -1,6 +1,7 @@
 - name: Setup Operating system
   hosts: metal
   roles:
+    - prerequisites
     - automatic_upgrade
     - disable_selinux
     - disable_firewalld
@@ -12,9 +13,14 @@
   roles:
     - k3s
 
-- name: Create some basic config
+- name: Install Kubernetes addons
   hosts: localhost
-  environment:
-    KUBECONFIG: ./kubeconfig.yaml
   roles:
-    - metallb_config
+    - cilium
+
+# - name: Create some basic config
+#   hosts: localhost
+#   environment:
+#     KUBECONFIG: ./kubeconfig.yaml
+#   roles:
+#     - metallb_config

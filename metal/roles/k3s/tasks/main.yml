@@ -24,6 +24,7 @@
   loop:
     - /etc/rancher/k3s
     - /etc/rancher/node
+    - "{{ k3s_data_dir }}/agent/pod-manifests"
 
 - name: Check if k3s token file exists on the first node
   run_once: true
@@ -61,6 +62,16 @@
       dest: "{{ k3s_config_file }}"
     - src: k3s.service.j2
       dest: "{{ k3s_service_file }}"
+
+- name: Copy kube-vip manifests
+  when: "'masters' in group_names"
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+  loop:
+    - src: kube-vip.yaml.j2
+      dest: "{{ k3s_data_dir }}/agent/pod-manifests/kube-vip.yaml"
 
 - name: Enable k3s service
   ansible.builtin.systemd:
