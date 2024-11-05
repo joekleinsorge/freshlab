@@ -35,11 +35,12 @@ argocd-apps:
       namespace: argocd
       generators:
         - git:
-            repoURL: &repoURL http://github.com/joekleinsorge/freshlab
+            repoURL: &repoURL https://github.com/joekleinsorge/freshlab
             revision: &revision main 
             directories:
               - path: system/*
               - path: platform/*
+              - path: global/*
               - path: apps/*
       template:
         metadata:
@@ -67,3 +68,4 @@ argocd-apps:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
+

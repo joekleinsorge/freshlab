@@ -19,7 +19,7 @@
     enabled: true
     daemon_reload: true
 
-- name: Restart automatic upgrade service
-  ansible.builtin.systemd:
-    name: dnf-automatic.timer
-    state: restarted
+# - name: Restart automatic upgrade service
+#   ansible.builtin.systemd:
+#     name: dnf-automatic.timer
+#     state: restarted

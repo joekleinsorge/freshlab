@@ -8,15 +8,6 @@
         name: argocd
         state: present
 
-    - name: Check if this is the first installation
-      kubernetes.core.k8s_info:
-        kind: Pod
-        label_selectors:
-          - app.kubernetes.io/instance=gitea
-        field_selectors:
-          - status.phase=Running
-      register: first_install
-
     - name: Render ArgoCD manifests from Helm chart
       kubernetes.core.helm_template:
         chart_ref: ./argocd

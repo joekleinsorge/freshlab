@@ -1,3 +1,8 @@
+all:
+  vars:
+    control_plane_endpoint: 192.168.1.200
+    load_balancer_ip_pool:
+      - 192.168.1.224/27
 metal:
   children:
     masters:
@@ -5,4 +10,4 @@ metal:
         metal1: {ansible_host: 192.168.1.101, disk: sda, network_interface: ens18}
         metal2: {ansible_host: 192.168.1.102, disk: sda, network_interface: ens18}
         metal3: {ansible_host: 192.168.1.103, disk: sda, network_interface: ens18}
-        
+ 
