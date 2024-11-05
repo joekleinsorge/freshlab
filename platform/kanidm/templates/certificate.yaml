@@ -1,4 +1,3 @@
-# TODO https://github.com/kanidm/kanidm/issues/1227
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
