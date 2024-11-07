@@ -68,4 +68,22 @@ argocd-apps:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
-
+argo-workflows:
+  server:
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - host: &host workflows.kleinsorge.dev
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                name: argocd-argo-workflows-serve 
+                port: http
+      tls:
+        - hosts:
+            - *host
+          secretName: argo-workflows-tls-certificate
