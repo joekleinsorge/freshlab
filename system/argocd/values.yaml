@@ -76,14 +76,8 @@ argo-workflows:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
-        - host: &host workflows.kleinsorge.dev
-          paths:
-            - path: /
-              pathType: Prefix
-              service:
-                name: argocd-argo-workflows-serve 
-                port: http
+        - workflows.kleinsorge.dev
       tls:
         - hosts:
-            - *host
+            - workflows.kleinsorge.dev
           secretName: argo-workflows-tls-certificate
