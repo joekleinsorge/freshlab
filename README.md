@@ -6,7 +6,7 @@ This is my GitOps homelab, or "Freshlab" because it's the latest version that I 
 
 This project is my homelab in a repo, utilizing some IaC and GitOps to manage the infrastructure and automate the provisioning, operating and updating of my self-hosted services.
 
-Please note that Freshlab is a personal project and not intended for production use. It's a continuously evolving work-in-progress, and feedback, suggestions, and contributions from the community are welcome to further enhance its capabilities.
+> ⚠️ **Note**: Freshlab is a personal project and not intended for production use. While you're welcome to use it as inspiration or reference, it's a continuously evolving work-in-progress. Feedback, suggestions, and contributions from the community are always welcome!
 
 ## Features
 
