@@ -1,0 +1,19 @@
+---
+- name: Configure Zincati service for CoreOS updates
+  ansible.builtin.copy:
+    dest: /etc/zincati/config.d/90-custom-update-policy.toml
+    content: |
+      [updates]
+      strategy = "periodic"
+      [[updates.periodic.window]]
+      days = [ "Mon", "Wed", "Fri" ]  # Adjust as needed
+      start_time = "03:00"
+      length_hours = 1
+    mode: '0644'
+
+- name: Ensure Zincati service is enabled
+  ansible.builtin.systemd:
+    name: zincati.service
+    state: started
+    enabled: true
+    daemon_reload: true

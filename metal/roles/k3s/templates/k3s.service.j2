@@ -2,11 +2,12 @@
 Description=Lightweight Kubernetes
 Documentation=https://k3s.io
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=notify
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
+ExecStartPre=-/usr/bin/mkdir -p /opt/k3s
+ExecStartPre=-/usr/bin/mkdir -p /var/lib/rancher/k3s
 ExecStart=/usr/local/bin/k3s {{ 'server' if 'masters' in group_names else 'agent' }}
 KillMode=process
 Delegate=yes
@@ -19,6 +20,7 @@ TasksMax=infinity
 TimeoutStartSec=0
 Restart=always
 RestartSec=5s
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 [Install]
 WantedBy=multi-user.target

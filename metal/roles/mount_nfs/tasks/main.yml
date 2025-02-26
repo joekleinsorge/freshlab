@@ -1,7 +1,33 @@
-- name: Mount NFS volume
-  ansible.posix.mount:
-    src: 192.168.1.208:/volume1/Media
-    path: /mnt/media
-    opts: rw,sync,hard
-    state: mounted
-    fstype: nfs
+---
+- name: Create NFS mount directories
+  ansible.builtin.file:
+    path: /mnt/nfs
+    state: directory
+    mode: '0755'
+
+- name: Configure NFS mount using systemd
+  ansible.builtin.copy:
+    dest: "/etc/systemd/system/mnt-nfs.mount"
+    content: |
+      [Unit]
+      Description=NFS Mount for /mnt/nfs
+      After=network-online.target
+      Wants=network-online.target
+
+      [Mount]
+      What=192.168.1.100:/volume1/share
+      Where=/mnt/nfs
+      Type=nfs
+      Options=defaults,_netdev,noatime
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Enable and start NFS mount
+  ansible.builtin.systemd:
+    name: mnt-nfs.mount
+    state: started
+    enabled: true
+    daemon_reload: true 
+

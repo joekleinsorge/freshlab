@@ -3,6 +3,7 @@
   roles:
     - prerequisites
     - coreos_config
+    - coreos_updates
     - mount_nfs
 
 - name: Create Kubernetes cluster

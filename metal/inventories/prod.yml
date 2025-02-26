@@ -5,6 +5,9 @@ all:
       - 192.168.1.224/27
     ansible_python_interpreter: /usr/bin/python3
     ansible_user: core  
+    ansible_become: true
+    ansible_become_method: sudo
+    container_runtime_endpoint: unix:///var/run/containerd/containerd.sock
 metal:
   children:
     masters:
