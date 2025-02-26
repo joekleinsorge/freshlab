@@ -10,7 +10,7 @@ Please note that Freshlab is a personal project and not intended for production 
 
 ## Features
 
-- One-command re-deployment for seamless updates
+- One-command re-deployment for on demand freshness
 - Automated k3s cluster provisioning and management for efficient operations
 - GitOps managed cluster configuration for declarative and version-controlled infrastructure management
 - Automatic rolling updates for the operating system and Kubernetes for improved security and stability
