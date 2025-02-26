@@ -2,10 +2,7 @@
   hosts: metal
   roles:
     - prerequisites
-    - automatic_upgrade
-    - disable_selinux
-    - disable_firewalld
-    - disable_swap
+    - coreos_config
     - mount_nfs
 
 - name: Create Kubernetes cluster
@@ -19,10 +16,3 @@
     KUBECONFIG: ./kubeconfig.yaml
   roles:
     - cilium
-
-# - name: Create some basic config
-#   hosts: localhost
-#   environment:
-#     KUBECONFIG: ./kubeconfig.yaml
-#   roles:
-#     - metallb_config

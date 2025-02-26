@@ -1,0 +1,41 @@
+---
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/systemd/system
+    - /opt/cni/bin
+    - /var/lib/rancher/k3s
+    - /var/lib/kubelet
+
+- name: Configure system modules
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      br_netfilter
+      overlay
+    mode: '0644'
+
+- name: Load kernel modules
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - br_netfilter
+    - overlay
+
+- name: Configure sysctl parameters
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+    reload: true
+  loop:
+    - {name: "fs.inotify.max_queued_events", value: "16384"}
+    - {name: "fs.inotify.max_user_instances", value: "8192"}
+    - {name: "fs.inotify.max_user_watches", value: "524288"}
+    - {name: "net.bridge.bridge-nf-call-iptables", value: "1"}
+    - {name: "net.bridge.bridge-nf-call-ip6tables", value: "1"}
+    - {name: "net.ipv4.ip_forward", value: "1"}

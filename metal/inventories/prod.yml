@@ -3,6 +3,8 @@ all:
     control_plane_endpoint: 192.168.1.200
     load_balancer_ip_pool:
       - 192.168.1.224/27
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: core  
 metal:
   children:
     masters:

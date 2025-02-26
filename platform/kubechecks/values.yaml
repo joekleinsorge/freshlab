@@ -1,0 +1,18 @@
+kubechecks:
+  configMap:
+    create: true 
+    env: 
+      KUBECHECKS_ARGOCD_WEBHOOK_URL: https://argocd.kleinsorge.dev/api/webhook
+      KUBECHECKS_WEBHOOK_URL_BASE: https://kubechecks.kleinsorge.dev.
+      KUBECHECKS_ARGOCD_API_SERVER_ADDR: argocd.kleinsorge.dev
+  ingress:
+    create: true 
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - &host kubechecks.kleinsorge.dev
+    tls:
+      - secretName: kubechekcs-tls-certificate
+        hosts:
+          - *host

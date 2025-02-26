@@ -1,3 +1,0 @@
-- name: Disable Swap
-  shell: swapoff -a
-  become: true
