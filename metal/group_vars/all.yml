@@ -1,4 +1,25 @@
-ansible_user: root
-ansible_ssh_private_key_file: ~/.ssh/id_ed25519
-ssh_public_key: "{{lookup('file', '~/.ssh/id_ed25519.pub') }}"
-dns_server: "8.8.8.8"
+# K3s configuration
+k3s_version: v1.31.1+k3s1
+k3s_config_file: /etc/rancher/k3s/config.yaml
+k3s_token_file: /etc/rancher/node/password
+k3s_service_file: /etc/systemd/system/k3s.service
+k3s_data_dir: /var/lib/rancher/k3s
+k3s_kubeconfig_file: /etc/rancher/k3s/k3s.yaml
+
+# Cilium configuration
+cilium_repo_url: https://helm.cilium.io
+cilium_version: 1.16.1
+cilium_namespace: kube-system
+cilium_values:
+  operator:
+    replicas: 1
+  kubeProxyReplacement: true
+  l2announcements:
+    enabled: true
+  k8sServiceHost: "{{ control_plane_endpoint }}"
+  k8sServicePort: 6443
+  hubble:
+    relay:
+      enabled: true
+    ui:
+      enabled: true

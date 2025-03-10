@@ -1,19 +1,38 @@
-- name: Setup Operating system
-  hosts: metal
-  roles:
-    - prerequisites
-    - coreos_config
-    - coreos_updates
-    - mount_nfs
+---
+# K3s HA Installation Playbook
+# Description: Installs a highly available K3s cluster with kube-vip and Cilium on CoreOS
 
-- name: Create Kubernetes cluster
-  hosts: metal
-  roles:
-    - k3s
+- name: Install HA K3s Cluster
+  hosts: k3s_cluster
+  gather_facts: no
+  
+  pre_tasks:
+    - name: Ensure required directories exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /etc/rancher/k3s
+        - /etc/rancher/node
+        - "{{ k3s_data_dir }}/agent/pod-manifests"
 
-- name: Install Kubernetes addons
-  hosts: localhost
-  environment:
-    KUBECONFIG: ./kubeconfig.yaml
   roles:
-    - cilium
+    - role: k3s
+      vars:
+        k3s_server_config:
+          tls-san:
+            - "{{ control_plane_endpoint }}"
+          disable:
+            - local-storage
+            - servicelb
+            - traefik
+          disable-helm-controller: true
+          disable-kube-proxy: true
+          disable-network-policy: true
+          flannel-backend: none
+          secrets-encryption: true
+          node-taint: []
+
+    - role: cilium
+      when: inventory_hostname == groups['masters'][0]

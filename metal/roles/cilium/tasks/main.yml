@@ -1,27 +1,19 @@
 - name: Install Cilium
-  kubernetes.core.helm:
-    name: cilium
-    chart_ref: cilium
-    chart_repo_url: "{{ cilium_repo_url }}"
-    chart_version: "{{ cilium_version }}"
-    release_namespace: "{{ cilium_namespace }}"
-    values: "{{ cilium_values }}"
+  raw: |
+    helm install cilium cilium/cilium --namespace {{ cilium_namespace }} --version {{ cilium_version }} --set operator.replicas=1 --set kubeProxyReplacement=true --set l2announcements.enabled=true --set k8sServiceHost=127.0.0.1 --set k8sServicePort=6444 --set hubble.relay.enabled=true --set hubble.ui.enabled=true
 
 - name: Wait for Cilium CRDs
-  kubernetes.core.k8s_info:
-    kind: CustomResourceDefinition
-    name: "{{ item }}"
-  loop:
-    - ciliuml2announcementpolicies.cilium.io
-    - ciliumloadbalancerippools.cilium.io
-  register: crd
-  until: crd.resources | length > 0
-  retries: 5
-  delay: 10
+  raw: |
+    for crd in ciliuml2announcementpolicies.cilium.io ciliumloadbalancerippools.cilium.io; do
+      until kubectl get crd $crd; do
+        sleep 10
+      done
+    done
 
-- name: Apply Cilium resources
-  kubernetes.core.k8s:
-    template: "{{ item }}"
-  loop:
-    - ciliuml2announcementpolicy.yaml
-    - ciliumloadbalancerippool.yaml
+- name: Apply Cilium L2 Announcement Policy
+  raw: |
+    kubectl apply -f /path/to/ciliuml2announcementpolicy.yaml
+
+- name: Apply Cilium Load Balancer IP Pool
+  raw: |
+    kubectl apply -f /path/to/ciliumloadbalancerippool.yaml

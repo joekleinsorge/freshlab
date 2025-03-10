@@ -6,4 +6,5 @@ spec:
   blocks:
     {% for cidr in load_balancer_ip_pool %}
     - cidr: {{ cidr }}
+      raw: true
     {% endfor %}

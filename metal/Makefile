@@ -4,15 +4,11 @@ default: cluster
 
 cluster:
 	ansible-playbook \
-		--inventory inventories/prod.yml \
+		--inventory inventory.ini \
 		cluster.yml
 	cp $(shell pwd)/kubeconfig.yaml ~/.kube/config
 
 console:
 	ansible-console \
-		--inventory inventories/prod.yml
+		--inventory inventory.ini
 
-teardown:
-	ansible-playbook \
-		--inventory inventories/prod.yml \
-		teardown.yml
