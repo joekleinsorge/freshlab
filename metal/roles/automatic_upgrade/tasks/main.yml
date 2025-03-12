@@ -10,7 +10,6 @@
     src: automatic.conf
     dest: /etc/dnf/automatic.conf
     mode: 0644
-    validate: dnf-automatic --validate
 
 - name: Enable automatic upgrade service
   ansible.builtin.systemd:
