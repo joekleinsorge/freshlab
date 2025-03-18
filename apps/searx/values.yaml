@@ -1,0 +1,14 @@
+searxng:
+  env:
+    INSTANCE_NAME: "search"
+    BASE_URL: "https://search.kleinsorge.dev"
+    AUTOCOMPLETE: "false"
+  persistence:
+    config:
+      enabled: true 
+  ingress:
+    main:
+      enabled: true 
+  redis:
+    enabled: true
+  
