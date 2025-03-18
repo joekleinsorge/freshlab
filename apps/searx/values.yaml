@@ -9,6 +9,19 @@ searxng:
   ingress:
     main:
       enabled: true 
+      ingressclassname: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/enable: 'true'
+      hosts:
+        - host: &host search.kleinsorge.dev
+          paths:
+            - path: /
+              pathtype: prefix
+      tls:
+        - secretname: search-tls-certificate
+          hosts:
+            - *host
   redis:
     enabled: true
   
