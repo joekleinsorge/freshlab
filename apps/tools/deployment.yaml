@@ -19,5 +19,4 @@ spec:
         image: iib0011/omni-tools:latest
         ports:
         - containerPort: 80
-        restartPolicy: Always
 
