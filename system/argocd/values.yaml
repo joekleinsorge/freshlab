@@ -81,3 +81,16 @@ argo-workflows:
         - hosts:
             - workflows.kleinsorge.dev
           secretName: argo-workflows-tls-certificate
+argo-rollouts:
+  server:
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - rollouts.kleinsorge.dev
+      tls:
+        - hosts:
+            - rollouts.kleinsorge.dev
+          secretName: argo-rollouts-tls-certificate
