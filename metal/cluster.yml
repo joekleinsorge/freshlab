@@ -6,6 +6,7 @@
     - disable_selinux
     - disable_firewalld
     - disable_swap
+    - limit_logs
     - mount_nfs
 
 - name: Create Kubernetes cluster

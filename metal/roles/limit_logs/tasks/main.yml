@@ -1,0 +1,20 @@
+- name: Ensure journald config directory exists
+  ansible.builtin.file:
+    path: /etc/systemd/journald.conf.d
+    state: directory
+    mode: '0755'
+
+- name: Set persistent log size limits for journald
+  ansible.builtin.copy:
+    dest: /etc/systemd/journald.conf.d/limit-size.conf
+    content: |
+      [Journal]
+      SystemMaxUse=200M
+      RuntimeMaxUse=100M
+    mode: '0644'
+
+- name: Restart journald to apply log limits
+  ansible.builtin.systemd:
+    name: systemd-journald
+    state: restarted
+
