@@ -145,9 +145,8 @@ frigate:
     hosts:
       - host: &host frigate.kleinsorge.dev
         paths:
-          paths:
-            - path: /
-              pathType: Prefix
+          - path: /
+            pathType: Prefix
 
     tls:
       - secretName: frigate-tls-certificate
