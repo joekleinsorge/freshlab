@@ -147,6 +147,9 @@ frigate:
         paths:
           - path: '/'
             pathType: ImplementationSpecific
+            service:
+              name: frigate
+              port: 5000
 
     tls:
       - secretName: frigate-tls-certificate
