@@ -1,6 +1,9 @@
 hajimari:
   env:
     TZ: America/New_York
+  persistence:
+    data:
+      enabled: false
   ingress:
     main:
       enabled: true
