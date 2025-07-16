@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-data-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: <NFS_SERVER_ADDRESS>
+    path: <NFS_EXPORT_PATH>/mysql_data
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: romm-resources-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: <NFS_SERVER_ADDRESS>
+    path: <NFS_EXPORT_PATH>/romm_resources
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: romm-redis-data-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: <NFS_SERVER_ADDRESS>
+    path: <NFS_EXPORT_PATH>/romm_redis_data

@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: romm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: romm
+  template:
+    metadata:
+      labels:
+        app: romm
+    spec:
+      containers:
+        - name: romm
+          image: rommapp/romm:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: romm-db
+            - name: DB_NAME
+              value: romm
+            - name: DB_USER
+              value: romm-user
+            - name: DB_PASSWD
+              value: ""
+            - name: ROMM_AUTH_SECRET_KEY
+              value: ""
+            - name: IGDB_CLIENT_ID
+              value: ""
+            - name: IGDB_CLIENT_SECRET
+              value: ""
+            - name: MOBYGAMES_API_KEY
+              value: ""
+            - name: STEAMGRIDDB_API_KEY
+              value: ""
+            - name: SCREENSCRAPER_USER
+              value: ""
+            - name: SCREENSCRAPER_PASSWORD
+              value: ""
+            - name: RETROACHIEVEMENTS_API_KEY
+              value: ""
+          volumeMounts:
+            - name: romm-resources
+              mountPath: /romm/resources
+            - name: romm-redis-data
+              mountPath: /redis-data
+            - name: library
+              mountPath: /romm/library
+            - name: assets
+              mountPath: /romm/assets
+            - name: config
+              mountPath: /romm/config
+      volumes:
+        - name: romm-resources
+          persistentVolumeClaim:
+            claimName: romm-resources-pvc
+        - name: romm-redis-data
+          persistentVolumeClaim:
+            claimName: romm-redis-data-pvc
+        - name: library
+          hostPath:
+            path: /path/to/library
+        - name: assets
+          hostPath:
+            path: /path/to/assets
+        - name: config
+          hostPath:
+            path: /path/to/config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: romm-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: romm-db
+  template:
+    metadata:
+      labels:
+        app: romm-db
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:latest
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              value: ""
+            - name: MARIADB_DATABASE
+              value: romm
+            - name: MARIADB_USER
+              value: romm-user
+            - name: MARIADB_PASSWORD
+              value: ""
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          readinessProbe:
+            exec:
+              command:
+                - healthcheck.sh
+                - --connect
+                - --innodb_initialized
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data-pvc
