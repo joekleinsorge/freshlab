@@ -29,7 +29,13 @@ rook-ceph-cluster:
         - name: set1
           count: 1
           portable: false
-          tuneSlowDeviceClass: false
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "2Gi"
+            limits:
+              cpu: "2"
+              memory: "4Gi"
           volumeClaimTemplates:
             - metadata:
                 name: data
