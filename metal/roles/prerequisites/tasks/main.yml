@@ -1,8 +1,204 @@
-- name: Adjust kernel parameters
-  ansible.posix.sysctl:
+- name: Pre-flight system checks
+  block:
+    - name: Check system memory
+      ansible.builtin.shell: free -b | awk '/^Mem:/{print $2}'
+      register: total_memory
+      changed_when: false
+      check_mode: no
+
+    - name: Check CPU cores
+      ansible.builtin.shell: nproc
+      register: cpu_cores
+      changed_when: false
+      check_mode: no
+
+    - name: Check available disk space
+      ansible.builtin.shell: df -B1 / | awk 'NR==2 {print $4}'
+      register: available_space
+      changed_when: false
+      check_mode: no
+
+    - name: Verify minimum system requirements
+      ansible.builtin.assert:
+        that:
+          - total_memory.stdout|int >= 4294967296  # 4GB in bytes
+          - cpu_cores.stdout|int >= 2
+          - available_space.stdout|int >= 21474836480  # 20GB in bytes
+        msg: "System does not meet minimum requirements: 4GB RAM, 2 CPU cores, 20GB disk space"
+  tags: ['preflight']
+
+- name: Configure sysctl for Kubernetes
+  ansible.builtin.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
+    state: present
+    sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+    reload: true
+  loop: "{{ k8s_sysctl_params }}"
+  vars:
+    k8s_sysctl_params:
+      - { name: 'fs.inotify.max_queued_events', value: '16384' }
+      - { name: 'fs.inotify.max_user_instances', value: '8192' }
+      - { name: 'fs.inotify.max_user_watches', value: '524288' }
+      - { name: 'vm.swappiness', value: '0' }
+      - { name: 'vm.panic_on_oom', value: '0' }
+      - { name: 'kernel.panic', value: '10' }
+      - { name: 'kernel.panic_on_oops', value: '1' }
+      - { name: 'fs.file-max', value: '2097152' }
+      - { name: 'fs.nr_open', value: '2097152' }
+      - { name: 'net.ipv4.ip_forward', value: '1' }
+      - { name: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+      - { name: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+      - { name: 'net.ipv4.ip_nonlocal_bind', value: '1' }
+      - { name: 'net.ipv4.conf.all.rp_filter', value: '1' }
+      - { name: 'kernel.keys.root_maxkeys', value: '1000000' }
+  tags: ['sysctl', 'kubernetes']
+
+- name: Manage swap
+  block:
+    - name: Check if swap is enabled
+      ansible.builtin.command: swapon --show
+      register: swap_status
+      changed_when: false
+      check_mode: no
+
+    - name: Disable swap in running system
+      ansible.builtin.command: swapoff -a
+      when: swap_status.stdout != ""
+      register: swapoff_result
+      changed_when: swapoff_result.rc == 0
+
+    - name: Remove swap from fstab
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s.*)'
+        replace: '# \1'
+        backup: yes
+  tags: ['swap']
+
+- name: Disable SELinux
+  ansible.builtin.selinux:
+    state: disabled
+  tags: ['security']
+
+- name: Disable firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+  tags: ['security']
+
+- name: Load required kernel modules
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
   loop:
-    - {name: "fs.inotify.max_queued_events", value: 16384}
-    - {name: "fs.inotify.max_user_instances", value: 8192}
-    - {name: "fs.inotify.max_user_watches", value: 524288}
+    - br_netfilter
+    - overlay
+  tags: ['kernel']
+
+- name: Ensure kernel modules load at boot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      br_netfilter
+      overlay
+    mode: '0644'
+  tags: ['kernel']
+
+- name: Configure system logging
+  block:
+    - name: Ensure journald config directory exists
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d
+        state: directory
+        mode: '0755'
+
+    - name: Set persistent log size limits for journald
+      ansible.builtin.copy:
+        dest: /etc/systemd/journald.conf.d/limit-size.conf
+        content: |
+          [Journal]
+          SystemMaxUse=200M
+          RuntimeMaxUse=100M
+          MaxRetentionSec=1week
+          SystemMaxFileSize=50M
+        mode: '0644'
+
+    - name: Configure logrotate for system and K3s logs
+      ansible.builtin.copy:
+        dest: /etc/logrotate.d/system-logs
+        content: |
+          /var/log/* {
+            rotate 7
+            daily
+            missingok
+            notifempty
+            compress
+            delaycompress
+            sharedscripts
+            size 50M
+            postrotate
+              /bin/kill -HUP `cat /var/run/syslogd.pid 2>/dev/null` 2>/dev/null || true
+            endscript
+          }
+
+          /var/log/k3s.log /var/log/containers/*.log {
+            rotate 7
+            daily
+            missingok
+            notifempty
+            compress
+            maxsize 50M
+            create 0644 root root
+            sharedscripts
+            postrotate
+              systemctl kill -s HUP k3s.service >/dev/null 2>&1 || true
+            endscript
+          }
+        mode: '0644'
+
+    - name: Restart journald to apply log limits
+      ansible.builtin.systemd:
+        name: systemd-journald
+        state: restarted
+        daemon_reload: true
+  tags: ['logs']
+
+- name: Verify network connectivity
+  block:
+    - name: Check k3s port availability
+      ansible.builtin.wait_for:
+        port: 6443
+        timeout: 1
+        state: stopped
+      register: port_check
+      ignore_errors: true
+
+    - name: Verify port is available
+      ansible.builtin.assert:
+        that:
+          - port_check is success
+        msg: "Port 6443 is already in use. Please ensure it's available for k3s."
+  tags: ['network']
+
+- name: Configure container runtime resource limits
+  block:
+    - name: Create container resources configuration directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/k3s.service.d
+        state: directory
+        mode: '0755'
+
+    - name: Configure container resource limits
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/k3s.service.d/resource-limits.conf
+        content: |
+          [Service]
+          CPUAccounting=true
+          MemoryAccounting=true
+          CPUQuota=80%
+          MemoryMax=80%
+        mode: '0644'
+      notify: Restart k3s service
+  tags: ['resources']
