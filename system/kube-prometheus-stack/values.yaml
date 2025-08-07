@@ -1,4 +1,29 @@
 kube-prometheus-stack:
+  prometheus-node-exporter:
+    extraArgs:
+      - --collector.systemd
+      - --collector.processes
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
+      - --collector.netclass.ignored-devices=^(veth.*|cali.*|tunl.*|dummy.*)$
+      - --collector.textfile
+      - --collector.cpu.info
+      - --collector.meminfo_numa
+      - --collector.network_route
+      - --collector.schedstat
+      - --collector.thermal_zone
+    resources:
+      limits:
+        cpu: 250m
+        memory: 180Mi
+      requests:
+        cpu: 100m
+        memory: 50Mi
+    serviceMonitor:
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: instance
+      scrapeTimeout: 30s
+      interval: 30s
   grafana:
     adminPassword: password
     ingress:
@@ -21,9 +46,63 @@ kube-prometheus-stack:
     grafana.ini:
       server:
         root_url: https://grafana.kleinsorge.dev
+      auth:
+        disable_login_form: false
+        oauth_auto_login: false
+      security:
+        allow_embedding: true
+        cookie_secure: true
+        strict_transport_security: true
+      users:
+        allow_sign_up: false
+      analytics:
+        reporting_enabled: false
+        check_for_updates: false
+      dashboards:
+        default_home_dashboard_path: /var/lib/grafana/dashboards/default-home.json
+      unified_alerting:
+        enabled: true
+    resources:
+      limits:
+        cpu: 300m
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    persistence:
+      enabled: true
+      size: 10Gi
+      storageClassName: rook-ceph-block
   prometheus:
     prometheusSpec:
       ruleSelectorNilUsesHelmValues: false
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       probeSelectorNilUsesHelmValues: false
+      retention: 15d
+      retentionSize: "10GB"
+      resources:
+        requests:
+          cpu: 500m
+          memory: 2Gi
+        limits:
+          cpu: 1000m
+          memory: 4Gi
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: rook-ceph-block
+            resources:
+              requests:
+                storage: 50Gi
+      walCompression: true
+      enableFeatures:
+        - remote-write-receiver
+      additionalScrapeConfigs:
+        - job_name: 'blackbox'
+          metrics_path: /probe
+          params:
+            module: [http_2xx]
+          static_configs:
+            - targets:
+              - https://grafana.kleinsorge.dev

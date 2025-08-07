@@ -1,31 +1,52 @@
 - name: Teardown Kubernetes cluster
   hosts: metal
   tasks:
-  - name: Disable k3s
-    shell: |
-        systemctl disable k3s.service
-        systemctl reset-failed k3s.service
-        systemctl daemon-reload
-    ignore_errors: true
-        
-  - name: rm -rf /var files
-    shell: |      
-        sudo rm -rf /var/lib/rancher
-        sudo rm -rf /var/lib/longhorn
+  - name: Stop k3s service
+    systemd:
+      name: k3s
+      state: stopped
     ignore_errors: true
 
-  - name: rm -rf /etc files
+  - name: Run k3s uninstall script
     shell: |
-        sudo rm -rf /etc/systemd/system/k3s.service
-        sudo rm -rf /etc/rancher
+      if [ -f /usr/local/bin/k3s-uninstall.sh ]; then
+        /usr/local/bin/k3s-uninstall.sh
+      fi
     ignore_errors: true
 
-  - name: rm -rf bin
+  - name: Cleanup CNI configurations
     shell: |
-        sudo rm -rf /usr/local/bin/k3s
+      rm -rf /etc/cni/net.d/*
+      rm -rf /var/lib/cni/
     ignore_errors: true
 
-  - name: reboot
+  - name: Remove k3s data directories
     shell: |
-        reboot 
+      rm -rf /var/lib/rancher
+      rm -rf /var/lib/longhorn
+      rm -rf /var/lib/kubelet
+      rm -rf /etc/rancher
+    ignore_errors: true
+
+  - name: Clean up iptables
+    shell: |
+      iptables -F
+      iptables -X
+      ip6tables -F
+      ip6tables -X
+    ignore_errors: true
+
+  - name: Kill any remaining k3s processes
+    shell: |
+      pkill -9 -f k3s || true
+    ignore_errors: true
+
+  - name: Remove systemd service files
+    shell: |
+      rm -f /etc/systemd/system/k3s*.service
+      systemctl daemon-reload
+    ignore_errors: true
+
+  - name: Reboot system
+    reboot:
     ignore_errors: true

@@ -26,6 +26,27 @@
     - /etc/rancher/node
     - "{{ k3s_data_dir }}/agent/pod-manifests"
 
+- name: Configure container runtime resource limits
+  block:
+    - name: Create container resources configuration directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/k3s.service.d
+        state: directory
+        mode: '0755'
+
+    - name: Configure container resource limits
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/k3s.service.d/resource-limits.conf
+        content: |
+          [Service]
+          CPUAccounting=true
+          MemoryAccounting=true
+          CPUQuota=80%
+          MemoryMax=80%
+        mode: '0644'
+      notify: Restart k3s service
+  tags: ['resources']
+
 - name: Check if k3s token file exists on the first node
   run_once: true
   ansible.builtin.stat:

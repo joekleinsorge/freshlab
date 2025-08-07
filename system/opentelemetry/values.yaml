@@ -1,0 +1,326 @@
+opentelemetry-operator:
+  admissionWebhooks:
+    certManager:
+      enabled: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  presets:
+    # Enable Kubernetes events collection
+    kubernetesEvents:
+      enabled: true
+      allNamespaces: true
+      verbosity: detailed
+
+opentelemetry-collector:
+  mode: daemonset
+  serviceAccount:
+    create: true
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      
+      # Add kubeletstats receiver
+      kubeletstats:
+        collection_interval: 20s
+        auth_type: serviceAccount
+        endpoint: ${K8S_NODE_NAME}:10250
+        insecure_skip_verify: true
+        metric_groups:
+          - container
+          - pod
+          - node
+          - volume
+        
+      # Add container logs receiver
+      filelog:
+        include: [/var/log/pods/**/*.log]
+        exclude: []
+        start_at: beginning
+        include_file_path: true
+        include_file_name: false
+        operators:
+          - type: router
+            id: get-format
+            routes:
+              - output: parser-docker
+                expr: 'body matches "^\\{"'
+          - type: json_parser
+            id: parser-docker
+            output: extract_metadata_from_filepath
+            timestamp:
+              parse_from: time
+              layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          - type: regex_parser
+            id: extract_metadata_from_filepath
+            regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<pod_uid>[a-f0-9\-]+)\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
+            parse_from: attributes["file.path"]
+            
+    processors:
+      batch:
+        timeout: 1s
+        send_batch_size: 1024
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 400
+        spike_limit_mib: 100
+      resourcedetection:
+        detectors: [env, system, kubernetes]
+        timeout: 2s
+      k8sattributes:
+        auth_type: "serviceAccount"
+        passthrough: false
+        extract:
+          metadata:
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.namespace.name
+            - k8s.node.name
+            - container.image.name
+        pod_association:
+          - sources:
+            - from: resource_attribute
+              name: k8s.pod.uid
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: 'otel-collector'
+              scrape_interval: 10s
+              static_configs:
+                - targets: [ '${MY_POD_IP}:8888' ]
+      hostmetrics:
+        collection_interval: 30s
+        scrapers:
+          cpu:
+            metrics_config:
+              enable_all_metrics: true
+          memory:
+            metrics_config:
+              enable_all_metrics: true
+          disk:
+          filesystem:
+          network:
+          process:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+    processors:
+      batch:
+        timeout: 10s
+        send_batch_size: 1024
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 400
+        spike_limit_mib: 100
+      resourcedetection:
+        detectors: [env, system]
+        system:
+          hostname_sources: [os]
+      k8sattributes:
+        auth_type: serviceAccount
+        passthrough: false
+        filter:
+          node_from_env_var: KUBE_NODE_NAME
+
+    exporters:
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        namespace: otel
+        const_labels:
+          cluster: k3s
+        resource_to_telemetry_conversion:
+          enabled: true
+      
+      otlp:
+        endpoint: api.honeycomb.io:443
+        headers:
+          x-honeycomb-team: ${HONEYCOMB_API_KEY}
+      
+      loki:
+        endpoint: http://loki.loki:3100/loki/api/v1/push
+        format: json
+        labels:
+          resource:
+            container.name: "container_name"
+            k8s.namespace.name: "namespace"
+            k8s.pod.name: "pod_name"
+            k8s.container.name: "container_name"
+          attributes:
+            severity: "severity"
+            app: "app"
+      
+      debug:
+        verbosity: detailed
+
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+        path: /
+        check_collector_pipeline:
+          enabled: true
+          interval: 5s
+          exporter_failure_threshold: 5
+      
+      memory_ballast:
+        size_mib: 165
+      
+      pprof:
+        endpoint: 0.0.0.0:1777
+        block_profile_fraction: 0
+      
+      zpages:
+        endpoint: 0.0.0.0:55679
+
+    service:
+      extensions: [health_check, memory_ballast, pprof, zpages]
+      pipelines:
+        traces:
+          receivers: [otlp, jaeger, zipkin]
+          processors: [memory_limiter, batch, k8sattributes, resourcedetection]
+          exporters: [otlp, debug]
+        metrics:
+          receivers: [otlp, prometheus, hostmetrics, kubeletstats]
+          processors: [memory_limiter, batch, k8sattributes, resourcedetection]
+          exporters: [prometheus, debug]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [memory_limiter, batch, k8sattributes, resourcedetection]
+          exporters: [loki, debug]
+      telemetry:
+        logs:
+          level: info
+          development: false
+          encoding: json
+          outputPaths: [/dev/stdout]
+          errorOutputPaths: [/dev/stderr]
+        metrics:
+          level: detailed
+          address: ":8888"
+
+  extraVolumeMounts:
+    - name: varlogpods
+      mountPath: /var/log/pods
+      readOnly: true
+    - name: varlibcontainers
+      mountPath: /var/lib/docker/containers
+      readOnly: true
+    - name: varlog
+      mountPath: /var/log
+      readOnly: true
+
+  extraVolumes:
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+    - name: varlibcontainers
+      hostPath:
+        path: /var/lib/docker/containers
+    - name: varlog
+      hostPath:
+        path: /var/log
+
+  ports:
+    jaeger-grpc:
+      enabled: true
+      containerPort: 14250
+      servicePort: 14250
+      protocol: TCP
+    zipkin:
+      enabled: true
+      containerPort: 9411
+      servicePort: 9411
+      protocol: TCP
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+  # Node tolerations for collector pods
+  nodeSelector: {}
+  tolerations:
+    - operator: Exists
+      effect: NoSchedule
+
+  podSecurityContext:
+    enabled: true
+
+  securityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 10001
+
+  serviceMonitor:
+    enabled: true
+    prometheusInstance: kube-prometheus-stack-prometheus
+
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8888"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+              - opentelemetry-collector
+          topologyKey: kubernetes.io/hostname
+
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+  # Health check and readiness
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 13133
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 13133
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3

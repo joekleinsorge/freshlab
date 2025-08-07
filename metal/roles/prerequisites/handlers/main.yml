@@ -4,3 +4,4 @@
     name: k3s
     state: restarted
     daemon_reload: true
+  when: ansible_facts.services['k3s'] is defined

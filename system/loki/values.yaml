@@ -2,3 +2,46 @@ loki-stack:
   loki:
     serviceMonitor:
       enabled: true
+    config:
+      limits_config:
+        retention_period: 7d
+        ingestion_rate_mb: 4
+        ingestion_burst_size_mb: 6
+      table_manager:
+        retention_deletes_enabled: true
+        retention_period: 168h
+  
+  promtail:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+    config:
+      snippets:
+        extraScrapeConfigs: |
+          - job_name: journal
+            journal:
+              json: false
+              max_age: 12h
+              path: /var/log/journal
+              labels:
+                job: systemd-journal
+            relabel_configs:
+              - source_labels: ['__journal__systemd_unit']
+                target_label: 'unit'
+              - source_labels: ['__journal__hostname']
+                target_label: 'hostname'
+    extraVolumes:
+      - name: journal
+        hostPath:
+          path: /var/log/journal
+    extraVolumeMounts:
+      - name: journal
+        mountPath: /var/log/journal
+        readOnly: true
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
