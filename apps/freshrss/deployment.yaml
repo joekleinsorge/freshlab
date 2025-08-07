@@ -63,11 +63,11 @@ spec:
             timeoutSeconds: 1
           volumeMounts:
             - mountPath: /config
-              name: config
+              name: freshrss-data
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       serviceAccountName: default
       volumes:
-        - name: config
+        - name: freshrss-data
           persistentVolumeClaim:
             claimName: freshrss-pvc

@@ -3,8 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: freshrss-pvc
   namespace: freshrss
+  labels:
+    app.kubernetes.io/instance: freshrss
+    app.kubernetes.io/name: freshrss
 spec:
-  storageClassName: rook-ceph-block
+  storageClassName: standard-rwo
   accessModes:
     - ReadWriteOnce
   resources:
