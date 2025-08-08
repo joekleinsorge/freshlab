@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import requests
+import urllib3
 
 from kubernetes import client, config
 from rich.console import Console
@@ -43,7 +44,7 @@ def wait_app(name: str, fullname: str, namespace: str) -> None:
 def main() -> None:
     Console().rule("Waiting for essential applications")
     config.load_kube_config(config_file='./metal/kubeconfig.yaml')
-    requests.urllib3.disable_warnings()
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     for ingress in ingresses:
         wait_app(ingress['name'], ingress['fullname'], ingress['namespace'])
