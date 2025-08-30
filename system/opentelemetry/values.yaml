@@ -2,20 +2,6 @@ opentelemetry-operator:
   admissionWebhooks:
     certManager:
       enabled: true
-  resources:
-    limits:
-      cpu: 500m
-      memory: 256Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
-  presets:
-    # Enable Kubernetes events collection
-    kubernetesEvents:
-      enabled: true
-      allNamespaces: true
-      verbosity: detailed
 
 opentelemetry-collector:
   mode: daemonset
@@ -30,7 +16,6 @@ opentelemetry-collector:
           http:
             endpoint: 0.0.0.0:4318
       
-      # Add kubeletstats receiver
       kubeletstats:
         collection_interval: 20s
         auth_type: serviceAccount
@@ -42,7 +27,6 @@ opentelemetry-collector:
           - node
           - volume
         
-      # Add container logs receiver
       filelog:
         include: [/var/log/pods/**/*.log]
         exclude: []
@@ -65,40 +49,7 @@ opentelemetry-collector:
             id: extract_metadata_from_filepath
             regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<pod_uid>[a-f0-9\-]+)\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
             parse_from: attributes["file.path"]
-            
-    processors:
-      batch:
-        timeout: 1s
-        send_batch_size: 1024
-      memory_limiter:
-        check_interval: 1s
-        limit_mib: 400
-        spike_limit_mib: 100
-      resourcedetection:
-        detectors: [env, system, kubernetes]
-        timeout: 2s
-      k8sattributes:
-        auth_type: "serviceAccount"
-        passthrough: false
-        extract:
-          metadata:
-            - k8s.pod.name
-            - k8s.pod.uid
-            - k8s.deployment.name
-            - k8s.namespace.name
-            - k8s.node.name
-            - container.image.name
-        pod_association:
-          - sources:
-            - from: resource_attribute
-              name: k8s.pod.uid
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: 'otel-collector'
-              scrape_interval: 10s
-              static_configs:
-                - targets: [ '${MY_POD_IP}:8888' ]
+      
       hostmetrics:
         collection_interval: 30s
         scrapers:
@@ -112,14 +63,6 @@ opentelemetry-collector:
           filesystem:
           network:
           process:
-      jaeger:
-        protocols:
-          grpc:
-            endpoint: 0.0.0.0:14250
-          thrift_http:
-            endpoint: 0.0.0.0:14268
-      zipkin:
-        endpoint: 0.0.0.0:9411
 
     processors:
       batch:
@@ -256,10 +199,13 @@ opentelemetry-collector:
       cpu: 100m
       memory: 256Mi
 
-  # Node tolerations for collector pods
   nodeSelector: {}
+  
   tolerations:
     - operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
       effect: NoSchedule
 
   podSecurityContext:
@@ -300,11 +246,6 @@ opentelemetry-collector:
               values:
               - opentelemetry-collector
           topologyKey: kubernetes.io/hostname
-
-  tolerations:
-    - key: node-role.kubernetes.io/control-plane
-      operator: Exists
-      effect: NoSchedule
 
   # Health check and readiness
   livenessProbe:

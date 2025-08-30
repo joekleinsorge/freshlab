@@ -7,46 +7,14 @@ rook-ceph-cluster:
     createPrometheusRules: true
   cephClusterSpec:
     mon:
-      count: 1
-      allowMultiplePerNode: true
+      count: 3
     mgr:
-      count: 1
+      count: 2
     dashboard:
       ssl: false
-      enabled: true
-      port: 7000
-    crashCollector:
-      disable: false
     logCollector:
       enabled: false
     removeOSDsIfOutAndSafeToRemove: true
-    storage:
-      useAllNodes: true
-      useAllDevices: false
-      config:
-        osdsPerDevice: "1"
-      storageClassDeviceSets:
-        - name: set1
-          count: 1
-          portable: false
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "2Gi"
-            limits:
-              cpu: "2"
-              memory: "4Gi"
-          volumeClaimTemplates:
-            - metadata:
-                name: data
-              spec:
-                resources:
-                  requests:
-                    storage: 10Gi
-                storageClassName: standard-rwo
-                volumeMode: Block
-                accessModes:
-                  - ReadWriteOnce
     resources:
       mgr:
         limits:
@@ -56,13 +24,13 @@ rook-ceph-cluster:
           memory: "512Mi"
       mon:
         limits:
-          memory: "1Gi"
+          memory: "2Gi"
         requests:
           cpu: "100m"
           memory: "100Mi"
       osd:
         limits:
-          memory: "2Gi"
+          memory: "4Gi"
         requests:
           cpu: "100m"
           memory: "512Mi"
@@ -71,7 +39,6 @@ rook-ceph-cluster:
       spec:
         replicated:
           size: 2
-          requireSafeReplicaSize: false
       storageClass:
         enabled: true
         name: standard-rwo
@@ -88,19 +55,16 @@ rook-ceph-cluster:
   cephBlockPoolsVolumeSnapshotClass:
     enabled: true
     isDefault: true
-    apiVersion: snapshot.storage.k8s.io/v1
   cephFileSystems:
     - name: standard-rwx
       spec:
         metadataPool:
           replicated:
             size: 2
-            requireSafeReplicaSize: false
         dataPools:
           - name: data0
             replicated:
               size: 2
-              requireSafeReplicaSize: false
         metadataServer:
           activeCount: 1
           activeStandby: true
@@ -127,5 +91,4 @@ rook-ceph-cluster:
   cephFileSystemVolumeSnapshotClass:
     enabled: true
     isDefault: false
-    apiVersion: snapshot.storage.k8s.io/v1
   cephObjectStores: []
