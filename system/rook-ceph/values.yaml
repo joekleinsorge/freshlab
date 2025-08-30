@@ -91,4 +91,8 @@ rook-ceph-cluster:
   cephFileSystemVolumeSnapshotClass:
     enabled: true
     isDefault: false
+  volumeGroupSnapshotClass:
+    enabled: true
+    isDefault: true
+    apiVersion: v1alpha1
   cephObjectStores: []
