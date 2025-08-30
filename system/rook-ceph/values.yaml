@@ -72,15 +72,16 @@ rook-ceph-cluster:
         requests:
           cpu: "100m"
           memory: "512Mi"
-  cephBlockPools:
-    - name: standard-rwo
-      spec:
-        replicated:
-          size: 2
-      storageClass:
-        enabled: true
-        name: standard-rwo
-        isDefault: true
+  cephBlockPools: []
+    # Temporarily disabled for cluster reconciliation
+    # - name: standard-rwo
+    #   spec:
+    #     replicated:
+    #       size: 2
+    #   storageClass:
+    #     enabled: true
+    #     name: standard-rwo
+    #     isDefault: true
         allowVolumeExpansion: true
         parameters:
           imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
@@ -101,16 +102,17 @@ rook-ceph-cluster:
       csi.storage.k8s.io/snapshotter-secret-namespace: "{{ .Release.Namespace }}"
     driver: rook-ceph.rbd.csi.ceph.com
     deletionPolicy: Delete
-  cephFileSystems:
-    - name: standard-rwx
-      spec:
-        metadataPool:
-          replicated:
-            size: 2
-        dataPools:
-          - name: data0
-            replicated:
-              size: 2
+  cephFileSystems: []
+    # Temporarily disabled for cluster reconciliation
+    # - name: standard-rwx
+    #   spec:
+    #     metadataPool:
+    #       replicated:
+    #         size: 2
+    #     dataPools:
+    #       - name: data0
+    #         replicated:
+    #           size: 2
         metadataServer:
           activeCount: 1
           activeStandby: true
