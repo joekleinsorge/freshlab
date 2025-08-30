@@ -1,6 +1,44 @@
 rook-ceph:
   monitoring:
     enabled: true
+  enableDiscoveryDaemon: false
+  csi:
+    enableCephfsSnapshotter: true
+    enableRbdSnapshotter: true
+    enableCephfsDriver: true
+    enableRbdDriver: true
+    provisionerTolerations:
+      - operator: "Exists"
+    pluginTolerations:
+      - operator: "Exists"
+    volumeReplication:
+      enabled: false
+    csiRBDProvisionerResource: |
+      - name: csi-provisioner
+        resource:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 200m
+    csiRBDPluginResource: |
+      - name: driver-registrar
+        resource:
+          requests:
+            memory: 128Mi
+            cpu: 50m
+          limits:
+            memory: 256Mi
+            cpu: 100m
+      - name: csi-rbdplugin
+        resource:
+          requests:
+            memory: 512Mi
+            cpu: 250m
+          limits:
+            memory: 1Gi
+            cpu: 500m
 rook-ceph-cluster:
   monitoring:
     enabled: true
@@ -108,3 +146,32 @@ rook-ceph-cluster:
     driver: rook-ceph.cephfs.csi.ceph.com
     deletionPolicy: Delete
   cephObjectStores: []
+
+snapshot-controller:
+  replicaCount: 2
+  webhook:
+    enabled: true
+    certDir: /tmp/k8s-webhook-server/serving-certs
+    failurePolicy: Fail
+    timeoutSeconds: 2
+    # Disable certificate validation for the webhook
+    certManager:
+      enabled: false
+    service:
+      annotations: {}
+    # Use self-signed certificates
+    certificates:
+      create: true
+      caBundle: ""
+      server:
+        create: true
+      certKeySize: 2048
+      duration: 8760h
+      renewBefore: 360h
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
