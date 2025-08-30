@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budget
+  labels:
+    app: budget
+spec:
+  selector:
+    matchLabels:
+      app: budget
+  template:
+    metadata:
+      labels:
+        app: budget
+    spec:
+      containers:
+      - name: budget
+        image: docker.io/actualbudget/actual-server:25.8.0-alpine
+        ports:
+        - containerPort: 5006
+          name: http
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: budget-data
