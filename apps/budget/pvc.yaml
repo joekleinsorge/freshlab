@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: budget-data
 spec:
+  storageClassName: ""
+  volumeName: budget-data-pv
   accessModes:
     - ReadWriteOnce
   resources:
