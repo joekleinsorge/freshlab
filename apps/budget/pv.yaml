@@ -8,5 +8,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   nfs:
-    server: 192.168.1.208 
-    path: /kube/budget
+    server: 192.168.1.208
+    path: /volume1/kube/budget
