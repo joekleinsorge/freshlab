@@ -1,44 +1,6 @@
 rook-ceph:
   monitoring:
     enabled: true
-  enableDiscoveryDaemon: false
-  csi:
-    enableCephfsSnapshotter: true
-    enableRbdSnapshotter: true
-    enableCephfsDriver: true
-    enableRbdDriver: true
-    provisionerTolerations:
-      - operator: "Exists"
-    pluginTolerations:
-      - operator: "Exists"
-    volumeReplication:
-      enabled: false
-    csiRBDProvisionerResource: |
-      - name: csi-provisioner
-        resource:
-          requests:
-            memory: 128Mi
-            cpu: 100m
-          limits:
-            memory: 256Mi
-            cpu: 200m
-    csiRBDPluginResource: |
-      - name: driver-registrar
-        resource:
-          requests:
-            memory: 128Mi
-            cpu: 50m
-          limits:
-            memory: 256Mi
-            cpu: 100m
-      - name: csi-rbdplugin
-        resource:
-          requests:
-            memory: 512Mi
-            cpu: 250m
-          limits:
-            memory: 1Gi
-            cpu: 500m
 rook-ceph-cluster:
   monitoring:
     enabled: true
@@ -72,57 +34,61 @@ rook-ceph-cluster:
         requests:
           cpu: "100m"
           memory: "512Mi"
-  cephBlockPools: []
+  cephBlockPools:
+    - name: standard-rwo
+      spec:
+        replicated:
+          size: 2
+      storageClass:
+        enabled: true
+        name: standard-rwo
+        isDefault: true
+        allowVolumeExpansion: true
+        parameters:
+          imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
+          csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+          csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
+          csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+          csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
+          csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+          csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
   cephBlockPoolsVolumeSnapshotClass:
     enabled: true
     isDefault: true
-    annotations:
-      snapshot.storage.kubernetes.io/is-default-class: "true"
-    parameters:
-      clusterID: "{{ .Release.Namespace }}"
-      csi.storage.k8s.io/snapshotter-secret-name: rook-csi-rbd-provisioner
-      csi.storage.k8s.io/snapshotter-secret-namespace: "{{ .Release.Namespace }}"
-    driver: rook-ceph.rbd.csi.ceph.com
-    deletionPolicy: Delete
-  cephFileSystems: []
+  cephFileSystems:
+    - name: standard-rwx
+      spec:
+        metadataPool:
+          replicated:
+            size: 2
+        dataPools:
+          - name: data0
+            replicated:
+              size: 2
+        metadataServer:
+          activeCount: 1
+          activeStandby: true
+          resources:
+            limits:
+              memory: "4Gi"
+            requests:
+              cpu: "100m"
+              memory: "100Mi"
+          priorityClassName: system-cluster-critical
+      storageClass:
+        enabled: true
+        name: standard-rwx
+        isDefault: false
+        allowVolumeExpansion: true
+        pool: data0
+        parameters:
+          csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+          csi.storage.k8s.io/provisioner-secret-namespace: "{{ .Release.Namespace }}"
+          csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+          csi.storage.k8s.io/controller-expand-secret-namespace: "{{ .Release.Namespace }}"
+          csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+          csi.storage.k8s.io/node-stage-secret-namespace: "{{ .Release.Namespace }}"
   cephFileSystemVolumeSnapshotClass:
     enabled: true
     isDefault: false
-    annotations:
-      snapshot.storage.kubernetes.io/is-default-class: "false"
-    parameters:
-      clusterID: "{{ .Release.Namespace }}"
-      csi.storage.k8s.io/snapshotter-secret-name: rook-csi-cephfs-provisioner
-      csi.storage.k8s.io/snapshotter-secret-namespace: "{{ .Release.Namespace }}"
-    driver: rook-ceph.cephfs.csi.ceph.com
-    deletionPolicy: Delete
   cephObjectStores: []
-
-snapshot-controller:
-  replicaCount: 2
-  webhook:
-    enabled: true
-    certDir: /tmp/k8s-webhook-server/serving-certs
-    failurePolicy: Fail
-    timeoutSeconds: 2
-    # Disable certificate validation for the webhook
-    certManager:
-      enabled: false
-    service:
-      annotations: {}
-    # Use self-signed certificates
-    certificates:
-      create: true
-      caBundle: ""
-      server:
-        create: true
-      certKeySize: 2048
-      duration: 8760h
-      renewBefore: 360h
-  resources:
-    requests:
-      cpu: 10m
-      memory: 32Mi
-    limits:
-      cpu: 100m
-      memory: 64Mi
