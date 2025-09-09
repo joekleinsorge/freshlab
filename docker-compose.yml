@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  safari-watcher:
+    image: python:3.11-slim
+    volumes:
+      - ./scripts:/app
+    working_dir: /app
+    command: ["python", "starlight_safari_watcher.py"]
+    environment:
+      - NTFY_TOPIC=${NTFY_TOPIC}
