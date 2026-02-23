@@ -51,7 +51,7 @@ frigate:
             - path: rtsp://frigated:Frigated@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
               roles:
                 - detect
-                - rtmp
+                - audio
             - path: rtsp://frigated:Frigated@192.168.1.110:554/live
               roles:
                 - record
@@ -70,7 +70,7 @@ frigate:
             - path: rtsp://frigated:Frigated@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
               roles:
                 - detect
-                - rtmp
+                - audio
             - path: rtsp://frigated:Frigated@192.168.1.111:554/live
               roles:
                 - record
@@ -214,4 +214,3 @@ frigate:
 
   # -- Set Pod affinity rules
   affinity: {}
-

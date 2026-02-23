@@ -1,5 +1,6 @@
 kube-prometheus-stack:
   prometheus-node-exporter:
+    hostNetwork: false
     extraArgs:
       - --collector.systemd
       - --collector.processes
@@ -111,8 +112,8 @@ kube-prometheus-stack:
             module: [http_2xx]
           static_configs:
             - targets:
-                - https://grafana.kleinsorge.dev
-                - https://kindle-weather.kleinsorge.dev
+                - grafana.kleinsorge.dev
+                - kindle-weather.kleinsorge.dev
           relabel_configs:
             - source_labels: [__address__]
               target_label: __param_target

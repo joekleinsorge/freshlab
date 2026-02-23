@@ -25,9 +25,9 @@ spec:
             - name: DB_USER
               value: romm-user
             - name: DB_PASSWD
-              value: ""
+              value: "romm-db-pass"
             - name: ROMM_AUTH_SECRET_KEY
-              value: ""
+              value: "romm-auth-key"
             - name: IGDB_CLIENT_ID
               value: ""
             - name: IGDB_CLIENT_SECRET
@@ -63,12 +63,15 @@ spec:
         - name: library
           hostPath:
             path: /path/to/library
+            type: DirectoryOrCreate
         - name: assets
           hostPath:
             path: /path/to/assets
+            type: DirectoryOrCreate
         - name: config
           hostPath:
             path: /path/to/config
+            type: DirectoryOrCreate
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -89,13 +92,13 @@ spec:
           image: mariadb:latest
           env:
             - name: MARIADB_ROOT_PASSWORD
-              value: ""
+              value: "romm-root-pass"
             - name: MARIADB_DATABASE
               value: romm
             - name: MARIADB_USER
               value: romm-user
             - name: MARIADB_PASSWORD
-              value: ""
+              value: "romm-db-pass"
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql

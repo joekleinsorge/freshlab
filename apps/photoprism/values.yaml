@@ -12,7 +12,7 @@ photoprism:
       volumeMounts:
       - name: originals
         mountPath: *originalsPath
-      - name: photoprism
+      - name: import
         mountPath: *importPath
       volumes:
       - name: originals

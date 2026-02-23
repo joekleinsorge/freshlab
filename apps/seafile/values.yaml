@@ -18,6 +18,10 @@ seafile:
             - *host
   mariadb:
     enabled: true
+    image:
+      registry: docker.io
+      repository: bitnami/mariadb
+      tag: latest
   persistence:
     data:
       enabled: true
