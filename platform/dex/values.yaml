@@ -7,6 +7,12 @@ dex:
         inCluster: true
     oauth2:
       skipApprovalScreen: true
+    enablePasswordDB: true
+    staticPasswords:
+      - email: admin@kleinsorge.dev
+        hash: "$2y$10$KI/Be/7SkUHIKbmdNQLoAOHpKXZgy/3a.Z8oWwqfoz6rI7Q5MW0EO"
+        username: admin
+        userID: "1"
     staticClients:
       - id: grafana-sso
         name: Grafana
