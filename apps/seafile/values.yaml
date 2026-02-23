@@ -22,6 +22,11 @@ seafile:
       registry: docker.io
       repository: bitnami/mariadb
       tag: latest
+    primary:
+      image:
+        registry: docker.io
+        repository: bitnami/mariadb
+        tag: latest
   persistence:
     data:
       enabled: true

@@ -136,7 +136,7 @@ frigate:
     ipFamilies: []
 
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: cilium
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
