@@ -16,6 +16,7 @@ argo-cd:
       ingressClassName: cilium
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: 192.168.1.200
       tls: true
     metrics: &metrics
       enabled: true
@@ -75,6 +76,7 @@ argo-workflows:
       className: cilium
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
+        external-dns.alpha.kubernetes.io/target: 192.168.1.200
       hosts:
         - workflows.kleinsorge.dev
       tls:
