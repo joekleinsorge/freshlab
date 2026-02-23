@@ -21,6 +21,14 @@ spec:
           value: "1800"
         - name: CACHE_CLEANUP_INTERVAL
           value: "3600"
+        - name: OTEL_SERVICE_NAME
+          value: kindle-weather
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://opentelemetry-collector.opentelemetry.svc.cluster.local:4318
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: http/protobuf
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: service.namespace=apps,deployment.environment=homelab
         ports:
         - containerPort: 8080
         resources:
@@ -50,4 +58,3 @@ spec:
       - name: secrets
         secret:
           secretName: api-keys
-

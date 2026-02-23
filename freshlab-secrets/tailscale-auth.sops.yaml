@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: tailscale-auth
+    namespace: tailscale
+type: Opaque
+stringData:
+    TS_AUTHKEY: ENC[AES256_GCM,data:vTgdbkqADFzAuSgCXImn+/a2QPAj6g==,iv:Ga9MWcwQZL1Nutn0Culg6yhtVb3rHjUI4UQo7s1/2Eg=,tag:Fd6xkmtjm+HhbiUwjp+AHg==,type:str]
+sops:
+    age:
+        - recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBIcVRSTjNmRHRRM25hMHY0
+            QnBOemdDZ2JSTGV4ZVRtOTRMb1greFFqdlg0CkJabWh0RjdKam5GcGxocWVORisx
+            NHR0UFpiK0hyNVNxeEdqb1duekR4ZHcKLS0tIHZYQnd1c1NObTFMT0xoTGRYbm1k
+            dlNXZXVZOS8yTXV4clVNWmo1Y2ZMaE0KUs5IBH3qSOfN/VsKfcIzvWXz+gBwcZcp
+            G+Oi2sQW0R6t342aOKoulDqUKty5AG80CbPYxDHhy/inq8PESoPZJg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-02-23T00:24:40Z"
+    mac: ENC[AES256_GCM,data:ESecTX8gZQfg88655GSP8Dc4D1JHjF5ueVj9/GGqXs9jC0B1xRN3gOUd1hpLGMSCFqgyaAM+gW0D5yBSlsAElH55FGPsl32/InoLwkCdVeqoR/twvaBTrovEobw4bvMAuOJWQk/l14vJb7dcScoZaQpt5B1iKpYkm9k8iOxyicQ=,iv:tnpF4HZ7PtDvU1vW/0TWq4A2Ex+HUf4q7WiptLaTuW4=,tag:2KfG/tzb5n5zpjcLj5iRxQ==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

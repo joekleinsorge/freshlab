@@ -73,12 +73,18 @@ kube-prometheus-stack:
       enabled: true
       size: 10Gi
       storageClassName: longhorn
+  prometheus-blackbox-exporter:
+    enabled: true
   prometheus:
     prometheusSpec:
       ruleSelectorNilUsesHelmValues: false
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
       probeSelectorNilUsesHelmValues: false
+      ruleNamespaceSelector: {}
+      serviceMonitorNamespaceSelector: {}
+      podMonitorNamespaceSelector: {}
+      probeNamespaceSelector: {}
       retention: 15d
       retentionSize: "10GB"
       resources:
@@ -99,10 +105,18 @@ kube-prometheus-stack:
       enableFeatures:
         - remote-write-receiver
       additionalScrapeConfigs:
-        - job_name: 'blackbox'
+        - job_name: blackbox-http
           metrics_path: /probe
           params:
             module: [http_2xx]
           static_configs:
             - targets:
-              - https://grafana.kleinsorge.dev
+                - https://grafana.kleinsorge.dev
+                - https://kindle-weather.kleinsorge.dev
+          relabel_configs:
+            - source_labels: [__address__]
+              target_label: __param_target
+            - source_labels: [__param_target]
+              target_label: instance
+            - target_label: __address__
+              replacement: kube-prometheus-stack-prometheus-blackbox-exporter.kube-prometheus-stack.svc.cluster.local:9115

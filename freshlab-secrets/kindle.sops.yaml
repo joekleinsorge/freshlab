@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: api-keys
+    namespace: kindle-weather
+type: Opaque
+stringData:
+    openweather-api-key: ENC[AES256_GCM,data:7954ZM7CT1Y6x9hWQ1EiWyK8BkoHDZSeToHTLEsbdc0=,iv:63/F2kfsRXIEeyQhSPqQGM+x5+Y5sKs66ALNZkJO6mo=,tag:0O4lwKAiLU5kNiz7ErR92w==,type:str]
+sops:
+    age:
+        - recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBhS1NWVExjaE5QZHdqb2hP
+            L21tZmU5UmYvdFQ4b3FNSEo4dVp0UlJmS2gwCks3cXVKUVRDOFcxTlFJTWlQVVNl
+            NkNaeGV0cHREbTdqdm14RHhiL2gvcVUKLS0tIHRWWVlhL2ZLdEhrVG52OEp5ODZP
+            VXoxWlg4QXZNU0J1bm1LK2hkL2tjcUEK62gMxuyWWnng5QerRoSa2SCbzOxSlUvX
+            Gzj+cj/e1UNPLI4D5g9XT6RzT2LGBPcUG53AivoAosnV8WTqRjJQhA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-02-23T00:24:40Z"
+    mac: ENC[AES256_GCM,data:BF83Cw2pPVH6Tro9ALSWcka3qvB2itBjsE5PwEFcpdkxKV94TGHhlu+Lw8IPJ43mNCftU6/NYNYNXPaXV+15YTrGGBxNCe7VqnD9lcrHHIDBUOGkyBXroAMQRUSmC9NOSxePO1CrXfSgF/fWeaCIhwA7u/WoqaszpbKj+LolUhg=,iv:+NcYE4e0KvafR2BzPAL1eGw72hben3pM1y0gMYBRC2U=,tag:4RpOg+dYB1ubCNPRAx3gIw==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

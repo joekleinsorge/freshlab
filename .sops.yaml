@@ -1,0 +1,6 @@
+creation_rules:
+  - path_regex: ^freshlab-secrets/.*\.sops\.ya?ml$
+    encrypted_regex: ^(data|stringData)$
+    age: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+  - path_regex: ^freshlab-secrets/.*\.sops\.env$
+    age: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm

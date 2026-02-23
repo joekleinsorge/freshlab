@@ -5,6 +5,7 @@
     required_local_bins:
       - kubectl
       - helm
+      - uv
   tasks:
     - name: Ensure inventory defines required groups
       ansible.builtin.assert:
@@ -27,10 +28,32 @@
       loop: "{{ required_local_bins }}"
       changed_when: false
 
+    - name: Check if Python kubernetes client is available locally
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - -c
+          - import kubernetes
+      register: local_python_kubernetes_client
+      changed_when: false
+      failed_when: false
+
+    - name: Install Python kubernetes client locally
+      ansible.builtin.command:
+        argv:
+          - uv
+          - pip
+          - install
+          - --python
+          - "{{ ansible_playbook_python }}"
+          - --user
+          - kubernetes
+      when: local_python_kubernetes_client.rc != 0
+
     - name: Ensure Python kubernetes client is available locally
       ansible.builtin.command:
         argv:
-          - python3
+          - "{{ ansible_playbook_python }}"
           - -c
           - import kubernetes
       changed_when: false
