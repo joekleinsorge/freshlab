@@ -18,7 +18,7 @@ cilium_values:
     default: true
     loadbalancerMode: shared
     service:
-      loadBalancerIP: "{{ control_plane_endpoint }}"
+      loadBalancerIP: "{{ ingress_load_balancer_ip }}"
   l2announcements:
     enabled: true
   # TODO the host and port are k3s-specific, generic solution is in progress
