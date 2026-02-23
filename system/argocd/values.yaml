@@ -17,6 +17,8 @@ argo-cd:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         external-dns.alpha.kubernetes.io/target: 192.168.1.227
+        hajimari.io/appName: Argo CD
+        hajimari.io/icon: kubernetes
       tls: true
     metrics: &metrics
       enabled: true
@@ -77,6 +79,8 @@ argo-workflows:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         external-dns.alpha.kubernetes.io/target: 192.168.1.227
+        hajimari.io/appName: Argo Workflows
+        hajimari.io/icon: source-branch
       hosts:
         - workflows.kleinsorge.dev
       tls:

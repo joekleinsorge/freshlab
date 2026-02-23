@@ -5,6 +5,8 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: cilium
+    hajimari.io/appName: Actual Budget
+    hajimari.io/icon: wallet
 spec:
   tls:
     - hosts:

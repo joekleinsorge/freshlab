@@ -6,8 +6,8 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: cilium
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    hajimari.io/appName: hammer
-    hajimari.io/icon: hammer
+    hajimari.io/appName: Tools
+    hajimari.io/icon: tools
 spec:
   rules:
     - host: &host tools.kleinsorge.dev

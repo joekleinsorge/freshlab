@@ -5,8 +5,8 @@ kube-ops-view:
       ingressClassName: cilium
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        hajimari.io/appName: view
-        hajimari.io/icon: magnify
+        hajimari.io/appName: Kube Ops View
+        hajimari.io/icon: kubernetes
       hosts:
         - host: &host view.kleinsorge.dev
           paths:

@@ -6,8 +6,8 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: cilium
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    hajimari.io/appName: web
-    hajimari.io/icon: web
+    hajimari.io/appName: Kindle Weather
+    hajimari.io/icon: weather-partly-cloudy
 spec:
   rules:
     - host: &host kindle-weather.kleinsorge.dev

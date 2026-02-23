@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: rss
+    hajimari.io/appName: FreshRSS
     hajimari.io/icon: rss
   labels:
     app.kubernetes.io/instance: freshrss
@@ -30,4 +30,3 @@ spec:
     - hosts:
         - rss.kleinsorge.dev
       secretName: freshrss-tls-certificate
-

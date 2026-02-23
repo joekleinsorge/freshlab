@@ -4,7 +4,7 @@ metadata:
   name: excalidraw
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: draw
+    hajimari.io/appName: Excalidraw
     hajimari.io/icon: pencil
 spec:
   ingressClassName: cilium

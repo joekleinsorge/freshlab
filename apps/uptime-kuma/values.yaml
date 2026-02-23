@@ -6,8 +6,8 @@ uptime-kuma:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         uptime-kuma.io/enable: 'true'
-        hajimari.io/appName: uptime-kuma
-        hajimari.io/icon: arrow-up-bold-box
+        hajimari.io/appName: Uptime Kuma
+        hajimari.io/icon: pulse
       hosts:
         - host: &host status.kleinsorge.dev
           paths:

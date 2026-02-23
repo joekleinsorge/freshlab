@@ -33,7 +33,7 @@ kube-prometheus-stack:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Grafana
-        hajimari.io/icon: chart-bar
+        hajimari.io/icon: chart-line
       hosts:
         - &host grafana.kleinsorge.dev
       tls:

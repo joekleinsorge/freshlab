@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    hajimari.io/appName: plex 
-    hajimari.io/icon: video 
+    hajimari.io/appName: Plex
+    hajimari.io/icon: movie-open
   labels:
-    app.kubernetes.io/instance: plex 
+    app.kubernetes.io/instance: plex
   name: plex
   namespace: plex
 spec:
