@@ -78,6 +78,8 @@ kube-prometheus-stack:
     enabled: true
   prometheus:
     prometheusSpec:
+      # Allow slow WAL replay on restart without startup probe flapping.
+      maximumStartupDurationSeconds: 3600
       ruleSelectorNilUsesHelmValues: false
       serviceMonitorSelectorNilUsesHelmValues: false
       podMonitorSelectorNilUsesHelmValues: false
