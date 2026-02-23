@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: immich-db
+    namespace: immich
+type: Opaque
+stringData:
+    postgres-password: ENC[AES256_GCM,data:qNKcRYLCw+u81W8VeI6ig477gPiJYJ3AEYi8a5zZxlNeNI015jQo/j5FQ/Y=,iv:tqYK2RykROj5/Ckba7TMd8rD+hEiPRe9iGW3pGMiZqA=,tag:Mu/Na2mGBNqA6y6Ozn997Q==,type:str]
+sops:
+    age:
+        - recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBWUXU0Q09YN1hDUUdvVWty
+            bW1XN0JudzE2SWg0eG91aVNyMHFudFR5cjBvCkw1Y09Ca3JlZFRIbnpVdVVteEZw
+            SmR2QnY3cmlLWnZkRUNQeUZlaTRVV1kKLS0tIE82anF3WTlTVXBHanRuY2NFREJy
+            U1l1ZUkxZjlwbEthSVA5dkRCM0ZpalEK0uHtSlH9li2MAvMoDtAQAKHjy9nU6a9b
+            1TQOFYEW0Ptbh+JrnnpBsDg99/PWzaQV2ATTjonPLGoYopzC8Wr4rw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-02-23T02:16:47Z"
+    mac: ENC[AES256_GCM,data:s9C2Z7A82em/mLLOeT5FwKjxKATTrldrgkllRCtEpnOGdfTqCuHi0tPJgYnvUtq5vlVBWFB2vdCM0FbaAr/DeIgEVTjAk0OqRT8H9/4djV+BinS+whISyZvlLwjvfUR8v4skrTR/ZRZoen3vrXPiGMWCLtWpm70DMalB/k3iXw8=,iv:kwvXn5fHgAt+20mi87qusqlz6qI9NIrdBRr0e1I/ExU=,tag:EwhmBe/X+H0pENMX5WS+FA==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0

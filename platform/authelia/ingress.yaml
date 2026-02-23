@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authelia
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: Authelia
+    hajimari.io/icon: shield-account
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: authelia.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: authelia
+                port:
+                  name: http
+  tls:
+    - hosts:
+        - authelia.kleinsorge.dev
+      secretName: authelia-tls-certificate

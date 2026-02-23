@@ -73,6 +73,9 @@ argocd-apps:
               - ServerSideApply=true
 argo-workflows:
   server:
+    authModes:
+      - server
+      - client
     ingress:
       enabled: true
       className: cilium

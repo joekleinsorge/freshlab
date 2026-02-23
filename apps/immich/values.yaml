@@ -1,0 +1,41 @@
+env:
+  TZ: America/New_York
+  DB_HOSTNAME: immich-postgres
+  DB_PORT: 5432
+  DB_USERNAME: immich
+  DB_DATABASE_NAME: immich
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: immich-db
+        key: postgres-password
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library
+
+server:
+  ingress:
+    main:
+      enabled: true
+      ingressClassName: cilium
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        hajimari.io/appName: Immich
+        hajimari.io/icon: image
+      hosts:
+        - host: &host photos.kleinsorge.dev
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: immich-tls-certificate
+          hosts:
+            - *host
+
+valkey:
+  enabled: true
+
+postgresql:
+  enabled: false
