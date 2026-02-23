@@ -33,7 +33,7 @@ dex:
         name: dex-secrets
   ingress:
     enabled: true
-    className: nginx
+    className: cilium
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:

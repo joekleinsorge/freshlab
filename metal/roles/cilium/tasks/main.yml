@@ -1,11 +1,77 @@
+- name: Wait for Kubernetes API server
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Namespace
+    name: kube-system
+  register: kube_api_ready
+  until: kube_api_ready is succeeded and (kube_api_ready.resources | length) > 0
+  retries: 60
+  delay: 5
+
+- name: Install Gateway API CRDs
+  when:
+    - gateway_api_install_crds | bool
+    - (cilium_values.gatewayAPI.enabled | default(false)) | bool
+  kubernetes.core.k8s:
+    src: "https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gateway_api_crd_version }}/standard-install.yaml"
+    state: present
+
 - name: Install Cilium
-  kubernetes.core.helm:
-    name: cilium
-    chart_ref: cilium
-    chart_repo_url: "{{ cilium_repo_url }}"
-    chart_version: "{{ cilium_version }}"
-    release_namespace: "{{ cilium_namespace }}"
-    values: "{{ cilium_values }}"
+  block:
+    - name: Create temporary values file for Cilium
+      ansible.builtin.tempfile:
+        state: file
+        suffix: -cilium-values.yaml
+      register: cilium_values_file
+
+    - name: Write Cilium values
+      ansible.builtin.copy:
+        dest: "{{ cilium_values_file.path }}"
+        content: "{{ cilium_values | to_nice_yaml }}"
+        mode: "0600"
+
+    - name: Build Helm arguments for Cilium install
+      ansible.builtin.set_fact:
+        cilium_helm_argv: >-
+          {{
+            [
+              cilium_helm_binary,
+              'upgrade',
+              '--install',
+              'cilium',
+              'cilium',
+              '--repo',
+              cilium_repo_url,
+              '--namespace',
+              cilium_namespace,
+              '--create-namespace',
+              '--values',
+              cilium_values_file.path,
+              '--wait',
+              '--timeout',
+              cilium_helm_timeout
+            ] + (
+              ['--version', (cilium_version | default('', true) | string | trim)]
+              if (cilium_version | default('', true) | string | trim | length) > 0
+              else []
+            )
+          }}
+
+    - name: Install or upgrade Cilium chart
+      ansible.builtin.command:
+        argv: "{{ cilium_helm_argv }}"
+      register: cilium_helm_install
+      failed_when: false
+      retries: "{{ cilium_helm_retries | int }}"
+      delay: "{{ cilium_helm_retry_delay | int }}"
+      until: cilium_helm_install.rc == 0
+      changed_when: "'has been upgraded' in cilium_helm_install.stdout or 'has been installed' in cilium_helm_install.stdout"
+  always:
+    - name: Remove temporary values file for Cilium
+      ansible.builtin.file:
+        path: "{{ cilium_values_file.path }}"
+        state: absent
+      when: cilium_values_file is defined and cilium_values_file.path is defined
 
 - name: Wait for Cilium CRDs
   kubernetes.core.k8s_info:
@@ -20,8 +86,31 @@
   delay: 10
 
 - name: Apply Cilium resources
-  kubernetes.core.k8s:
-    template: "{{ item }}"
-  loop:
-    - ciliuml2announcementpolicy.yaml
-    - ciliumloadbalancerippool.yaml
+  block:
+    - name: Create temporary manifest directory for Cilium resources
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: -cilium-resources
+      register: cilium_resources_dir
+
+    - name: Render Cilium resources
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "{{ cilium_resources_dir.path }}/{{ item }}"
+        mode: "0600"
+      loop:
+        - ciliuml2announcementpolicy.yaml
+        - ciliumloadbalancerippool.yaml
+
+    - name: Apply rendered Cilium resources
+      kubernetes.core.k8s:
+        src: "{{ cilium_resources_dir.path }}/{{ item }}"
+      loop:
+        - ciliuml2announcementpolicy.yaml
+        - ciliumloadbalancerippool.yaml
+  always:
+    - name: Remove temporary manifest directory for Cilium resources
+      ansible.builtin.file:
+        path: "{{ cilium_resources_dir.path }}"
+        state: absent
+      when: cilium_resources_dir is defined and cilium_resources_dir.path is defined

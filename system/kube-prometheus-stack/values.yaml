@@ -28,7 +28,7 @@ kube-prometheus-stack:
     adminPassword: password
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: cilium
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Grafana
@@ -72,7 +72,7 @@ kube-prometheus-stack:
     persistence:
       enabled: true
       size: 10Gi
-      storageClassName: rook-ceph-block
+      storageClassName: longhorn
   prometheus:
     prometheusSpec:
       ruleSelectorNilUsesHelmValues: false
@@ -91,7 +91,7 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: rook-ceph-block
+            storageClassName: longhorn
             resources:
               requests:
                 storage: 50Gi

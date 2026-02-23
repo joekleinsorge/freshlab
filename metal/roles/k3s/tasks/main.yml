@@ -47,22 +47,32 @@
       notify: Restart k3s service
   tags: ['resources']
 
-- name: Check if k3s token file exists on the first node
+- name: Ensure at least one master is reachable for bootstrap operations
   run_once: true
+  ansible.builtin.assert:
+    that:
+      - (groups['masters'] | intersect(ansible_play_hosts) | length) > 0
+    fail_msg: "No reachable masters available. Reachable hosts in this play: {{ ansible_play_hosts }}"
+
+- name: Check if k3s token file exists on the bootstrap master
+  run_once: true
+  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
   ansible.builtin.stat:
     path: "{{ k3s_token_file }}"
   register: k3s_token_file_stat
 
-- name: Generate k3s token file on the first node if not exist yet
+- name: Generate k3s token file on the bootstrap master if not exist yet
   run_once: true
+  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
   when: not k3s_token_file_stat.stat.exists
   ansible.builtin.copy:
     content: "{{ lookup('community.general.random_string', length=32) }}"
     dest: "{{ k3s_token_file }}"
     mode: 0600
 
-- name: Get k3s token from the first node
+- name: Get k3s token from the bootstrap master
   run_once: true
+  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
   ansible.builtin.slurp:
     src: "{{ k3s_token_file }}"
   register: k3s_token_base64
@@ -103,15 +113,23 @@
   until: k3s_service is succeeded
   retries: 5
 
+- name: Wait for Kubernetes config file on the bootstrap master
+  run_once: true
+  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  ansible.builtin.wait_for:
+    path: "{{ k3s_kubeconfig_file }}"
+    timeout: 120
+
 - name: Get Kubernetes config file
   run_once: true
+  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
   ansible.builtin.slurp:
-    src: /etc/rancher/k3s/k3s.yaml
+    src: "{{ k3s_kubeconfig_file }}"
   register: kubeconfig_base64
 
 - name: Write Kubernetes config file with the correct cluster address
   ansible.builtin.copy:
-    content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', hostvars[groups['masters'][0]].ansible_host) }}"
+    content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', hostvars[(groups['masters'] | intersect(ansible_play_hosts) | first)].ansible_host) }}"
     dest: "{{ playbook_dir }}/kubeconfig.yaml"
     mode: 0600
   delegate_to: localhost

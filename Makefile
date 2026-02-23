@@ -11,11 +11,10 @@ git-hooks:
 	pre-commit install
 
 metal:
-	make -C metal
+	make -C metal $(if $(ANSIBLE_LIMIT),ANSIBLE_LIMIT='$(ANSIBLE_LIMIT)')
 
 system:
 	make -C system
 
 clean:
-	make -C metal teardown
-	./scripts/waitforssh metal1
+	make -C metal teardown $(if $(ANSIBLE_LIMIT),ANSIBLE_LIMIT='$(ANSIBLE_LIMIT)')

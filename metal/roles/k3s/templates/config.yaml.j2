@@ -1,4 +1,4 @@
-{% if inventory_hostname == groups['masters'][0] %}
+{% if inventory_hostname == (groups['masters'] | intersect(ansible_play_hosts) | first) %}
 cluster-init: true
 {% else %}
 server: https://{{ control_plane_endpoint }}:6443

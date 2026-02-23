@@ -2,7 +2,7 @@ seafile:
   ingress:
     main:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: cilium
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Seafile

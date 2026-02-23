@@ -1,7 +1,0 @@
-apiVersion: v2
-name: tdarr
-version: 0.0.0
-dependencies:
-  - name: tdarr
-    version: 4.6.2
-    repository: https://k8s-at-home.com/charts/

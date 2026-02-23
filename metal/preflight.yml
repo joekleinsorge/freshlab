@@ -1,0 +1,65 @@
+- name: Validate inventory and local dependencies
+  hosts: localhost
+  gather_facts: false
+  vars:
+    required_local_bins:
+      - kubectl
+      - helm
+  tasks:
+    - name: Ensure inventory defines required groups
+      ansible.builtin.assert:
+        that:
+          - groups["metal"] is defined
+          - (groups["metal"] | length) > 0
+          - groups["masters"] is defined
+          - (groups["masters"] | length) > 0
+        fail_msg: "Inventory must define non-empty metal and masters groups."
+
+    - name: Ensure control plane endpoint is defined
+      ansible.builtin.assert:
+        that:
+          - control_plane_endpoint is defined
+          - (control_plane_endpoint | string | length) > 0
+        fail_msg: "control_plane_endpoint must be set in inventory/group vars."
+
+    - name: Ensure required local binaries are available
+      ansible.builtin.shell: "command -v {{ item }} >/dev/null 2>&1"
+      loop: "{{ required_local_bins }}"
+      changed_when: false
+
+    - name: Ensure Python kubernetes client is available locally
+      ansible.builtin.command:
+        argv:
+          - python3
+          - -c
+          - import kubernetes
+      changed_when: false
+
+- name: Validate host reachability and node prerequisites
+  hosts: metal
+  gather_facts: false
+  become: false
+  vars:
+    required_node_bins:
+      - systemctl
+      - modprobe
+      - ip
+  tasks:
+    - name: Check SSH reachability
+      ansible.builtin.wait_for_connection:
+        timeout: 10
+        connect_timeout: 5
+        sleep: 1
+
+    - name: Ensure required host variables are present
+      ansible.builtin.assert:
+        that:
+          - ansible_host is defined
+          - network_interface is defined
+          - disk is defined
+        fail_msg: "Host vars must include ansible_host, network_interface, and disk."
+
+    - name: Ensure required node binaries are available
+      ansible.builtin.shell: "command -v {{ item }} >/dev/null 2>&1"
+      loop: "{{ required_node_bins }}"
+      changed_when: false

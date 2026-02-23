@@ -167,6 +167,9 @@
 
 - name: Verify network connectivity
   block:
+    - name: Gather service facts for k3s port validation
+      ansible.builtin.service_facts:
+
     - name: Check k3s port availability
       ansible.builtin.wait_for:
         port: 6443
@@ -178,6 +181,6 @@
     - name: Verify port is available
       ansible.builtin.assert:
         that:
-          - port_check is success
-        msg: "Port 6443 is already in use. Please ensure it's available for k3s."
+          - port_check is success or ((ansible_facts.services.get('k3s.service', {}).state | default(ansible_facts.services.get('k3s', {}).state | default(''))) == 'running')
+        msg: "Port 6443 is already in use by a non-k3s process. Please ensure it's available for k3s."
   tags: ['network']

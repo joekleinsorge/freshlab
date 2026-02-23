@@ -24,4 +24,5 @@
         resource_definition: "{{ argocd_manifests.stdout }}"
         apply: true
         server_side_apply:
-          field_manager: argocd-controller
+          field_manager: argocd-application-controller
+          force_conflicts: true

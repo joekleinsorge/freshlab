@@ -1,10 +1,24 @@
 cilium_repo_url: https://helm.cilium.io
-cilium_version: 1.16.1
+cilium_version: ""
 cilium_namespace: kube-system
+cilium_helm_binary: helm
+cilium_helm_timeout: 15m
+cilium_helm_retries: 2
+cilium_helm_retry_delay: 15
+gateway_api_install_crds: true
+gateway_api_crd_version: v1.2.0
 cilium_values:
   operator:
     replicas: 1
   kubeProxyReplacement: true
+  gatewayAPI:
+    enabled: true
+  ingressController:
+    enabled: true
+    default: true
+    loadbalancerMode: shared
+    service:
+      loadBalancerIP: "{{ control_plane_endpoint }}"
   l2announcements:
     enabled: true
   # TODO the host and port are k3s-specific, generic solution is in progress

@@ -1,52 +1,140 @@
 - name: Teardown Kubernetes cluster
   hosts: metal
+  become: true
+  gather_facts: false
+  ignore_unreachable: true
+  vars:
+    teardown_reboot: true
+    teardown_reboot_timeout: 900
+    teardown_flush_iptables: true
+    teardown_services:
+      - k3s
+      - k3s-agent
+    teardown_uninstall_scripts:
+      - /usr/local/bin/k3s-uninstall.sh
+      - /usr/local/bin/k3s-agent-uninstall.sh
+      - /usr/local/bin/k3s-killall.sh
+    teardown_paths:
+      - /etc/cni/net.d
+      - /var/lib/cni
+      - /var/lib/rancher
+      - /var/lib/longhorn
+      - /var/lib/kubelet
+      - /etc/rancher
+      - /run/k3s
+      - /run/flannel
+      - /var/lib/etcd
+    teardown_systemd_units:
+      - /etc/systemd/system/k3s.service
+      - /etc/systemd/system/k3s-agent.service
+      - /etc/systemd/system/k3s.service.env
+      - /etc/systemd/system/k3s-agent.service.env
+      - /etc/systemd/system/k3s.service.d
+      - /etc/systemd/system/k3s-agent.service.d
+    teardown_binary_paths:
+      - /usr/local/bin/k3s
+      - /usr/local/bin/kubectl
+      - /usr/local/bin/crictl
+      - /usr/local/bin/ctr
+      - /usr/local/bin/k3s-uninstall.sh
+      - /usr/local/bin/k3s-agent-uninstall.sh
+      - /usr/local/bin/k3s-killall.sh
+    teardown_interfaces:
+      - cilium_host
+      - cilium_net
+      - cilium_vxlan
+      - flannel.1
+      - kube-ipvs0
+      - nodelocaldns
+
   tasks:
-  - name: Stop k3s service
-    systemd:
-      name: k3s
-      state: stopped
-    ignore_errors: true
+    - name: Stop and disable k3s services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: false
+      loop: "{{ teardown_services }}"
+      failed_when: false
 
-  - name: Run k3s uninstall script
-    shell: |
-      if [ -f /usr/local/bin/k3s-uninstall.sh ]; then
-        /usr/local/bin/k3s-uninstall.sh
-      fi
-    ignore_errors: true
+    - name: Check if uninstall scripts exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop: "{{ teardown_uninstall_scripts }}"
+      register: teardown_script_stats
 
-  - name: Cleanup CNI configurations
-    shell: |
-      rm -rf /etc/cni/net.d/*
-      rm -rf /var/lib/cni/
-    ignore_errors: true
+    - name: Run uninstall scripts when present
+      ansible.builtin.command: "{{ item.stat.path }}"
+      loop: "{{ teardown_script_stats.results }}"
+      when: item.stat.exists
+      changed_when: true
+      failed_when: false
 
-  - name: Remove k3s data directories
-    shell: |
-      rm -rf /var/lib/rancher
-      rm -rf /var/lib/longhorn
-      rm -rf /var/lib/kubelet
-      rm -rf /etc/rancher
-    ignore_errors: true
+    - name: Kill remaining k3s processes
+      ansible.builtin.command: pkill -9 -f k3s
+      changed_when: false
+      failed_when: false
 
-  - name: Clean up iptables
-    shell: |
-      iptables -F
-      iptables -X
-      ip6tables -F
-      ip6tables -X
-    ignore_errors: true
+    - name: Remove CNI and k3s data paths
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ teardown_paths }}"
 
-  - name: Kill any remaining k3s processes
-    shell: |
-      pkill -9 -f k3s || true
-    ignore_errors: true
+    - name: Remove k3s binaries and helper scripts
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ teardown_binary_paths }}"
 
-  - name: Remove systemd service files
-    shell: |
-      rm -f /etc/systemd/system/k3s*.service
-      systemctl daemon-reload
-    ignore_errors: true
+    - name: Remove k3s systemd units
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ teardown_systemd_units }}"
 
-  - name: Reboot system
-    reboot:
-    ignore_errors: true
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Delete CNI interfaces when present
+      ansible.builtin.command:
+        argv:
+          - ip
+          - link
+          - delete
+          - "{{ item }}"
+      loop: "{{ teardown_interfaces }}"
+      changed_when: false
+      failed_when: false
+
+    - name: Flush iptables and ip6tables
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - iptables -F
+        - iptables -X
+        - iptables -t nat -F
+        - iptables -t nat -X
+        - ip6tables -F
+        - ip6tables -X
+        - ip6tables -t nat -F
+        - ip6tables -t nat -X
+      when: teardown_flush_iptables | bool
+      changed_when: false
+      failed_when: false
+
+    - name: Reboot nodes after teardown
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ teardown_reboot_timeout }}"
+      when: teardown_reboot | bool
+
+- name: Remove local kubeconfig after teardown
+  hosts: localhost
+  gather_facts: false
+  vars:
+    teardown_remove_local_kubeconfig: true
+  tasks:
+    - name: Remove generated kubeconfig
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/kubeconfig.yaml"
+        state: absent
+      when: teardown_remove_local_kubeconfig | bool

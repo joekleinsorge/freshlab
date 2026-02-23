@@ -7,7 +7,7 @@ metadata:
     hajimari.io/appName: draw
     hajimari.io/icon: pencil
 spec:
-  ingressClassName: nginx
+  ingressClassName: cilium
   rules:
     - host: &host draw.kleinsorge.dev
       http:

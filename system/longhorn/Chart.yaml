@@ -1,0 +1,10 @@
+apiVersion: v2
+name: longhorn
+version: 0.0.0
+dependencies:
+  - name: longhorn
+    version: ">=1.6.0 <2.0.0"
+    repository: https://charts.longhorn.io
+  - name: snapshot-controller
+    version: 2.2.1
+    repository: https://piraeus.io/helm-charts

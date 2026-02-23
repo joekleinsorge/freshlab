@@ -26,7 +26,7 @@ photoprism:
           path: /volume1/photo
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: cilium
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       photoprism.io/enable: 'true'
