@@ -9,7 +9,7 @@ spec:
     - ReadWriteMany
   nfs:
     server: 192.168.1.208
-    path: /volume1/kube/immich/library
+    path: /volume1/photo
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -25,27 +25,13 @@ spec:
       storage: 2Ti
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: immich-postgres-data-pv
-spec:
-  capacity:
-    storage: 100Gi
-  accessModes:
-    - ReadWriteOnce
-  nfs:
-    server: 192.168.1.208
-    path: /volume1/kube/immich/postgres
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: immich-postgres-data
 spec:
-  storageClassName: ""
-  volumeName: immich-postgres-data-pv
+  storageClassName: immich-rwo
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 20Gi
