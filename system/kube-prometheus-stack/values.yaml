@@ -29,6 +29,7 @@ kube-prometheus-stack:
     adminPassword: password
     deploymentStrategy:
       type: Recreate
+      rollingUpdate: null
     ingress:
       enabled: true
       ingressClassName: cilium
