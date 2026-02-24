@@ -27,6 +27,8 @@ kube-prometheus-stack:
       interval: 30s
   grafana:
     adminPassword: password
+    deploymentStrategy:
+      type: Recreate
     ingress:
       enabled: true
       ingressClassName: cilium
