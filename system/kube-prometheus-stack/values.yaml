@@ -35,7 +35,7 @@ kube-prometheus-stack:
         hajimari.io/appName: Grafana
         hajimari.io/icon: chart-line
       hosts:
-        - &host grafana.kleinsorge.dev
+        - &host grafana-monitoring.kleinsorge.dev
       tls:
         - secretName: grafana-general-tls
           hosts:
@@ -46,7 +46,7 @@ kube-prometheus-stack:
         url: http://loki.loki:3100
     grafana.ini:
       server:
-        root_url: https://grafana.kleinsorge.dev
+        root_url: https://grafana-monitoring.kleinsorge.dev
       auth:
         disable_login_form: false
         oauth_auto_login: false
