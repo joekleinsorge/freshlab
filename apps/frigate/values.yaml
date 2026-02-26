@@ -136,7 +136,7 @@ frigate:
     ipFamilies: []
 
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: cilium
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -146,7 +146,7 @@ frigate:
       - host: &host frigate.kleinsorge.dev
         paths:
           - path: /
-            pathType: Prefix
+            portName: http-auth
 
     tls:
       - secretName: frigate-tls-certificate
@@ -156,7 +156,7 @@ frigate:
   persistence:
     config:
       # -- Enables persistence for the config directory
-      enabled: false
+      enabled: true
       ## frigate data Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -179,10 +179,12 @@ frigate:
 
       # -- Do not delete the pvc upon helm uninstall
       skipuninstall: false
+      # -- Copy config into writable storage for Frigate migrations/startup updates
+      ephemeralWritableConfigYaml: true
 
     media:
       # -- Enables persistence for the media directory
-      enabled: false 
+      enabled: true
       ## frigate data Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -205,6 +207,15 @@ frigate:
 
       # -- Do not delete the pvc upon helm uninstall
       skipuninstall: false
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+      ephemeral-storage: 2Gi
+    limits:
+      memory: 4Gi
+      ephemeral-storage: 20Gi
 
    # -- Node Selector configuration
   nodeSelector: {}
