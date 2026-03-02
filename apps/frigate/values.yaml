@@ -146,7 +146,7 @@ frigate:
       - host: &host frigate.kleinsorge.dev
         paths:
           - path: /
-            portName: http-auth
+            portName: http
 
     tls:
       - secretName: frigate-tls-certificate
