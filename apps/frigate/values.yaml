@@ -99,26 +99,26 @@ frigate:
     record:
       enabled: True
       retain:
-        days: 7
+        days: 2
         mode: motion
       events:
         retain:
-          default: 20
+          default: 5
           mode: motion
           objects:
-            person: 30
-            cat: 14
-            dog: 14
-            bird: 7
+            person: 7
+            cat: 5
+            dog: 5
+            bird: 3
     snapshots:
       enabled: True
       retain:
-        default: 20
+        default: 5
         objects:
-          person: 30
-          cat: 14
-          dog: 14
-          bird: 7
+          person: 7
+          cat: 5
+          dog: 5
+          bird: 3
   probes:
     liveness:
       enabled: true
@@ -231,7 +231,7 @@ frigate:
       accessMode: ReadWriteOnce
 
       # -- size/capacity of the PVC
-      size: 10Gi
+      size: 20Gi
 
       # -- Do not delete the pvc upon helm uninstall
       skipuninstall: false
