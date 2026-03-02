@@ -34,6 +34,19 @@ frigate:
         - cat
         - dog
         - bird
+      filters:
+        person:
+          min_score: 0.6
+          threshold: 0.75
+        cat:
+          min_score: 0.55
+          threshold: 0.7
+        dog:
+          min_score: 0.55
+          threshold: 0.7
+        bird:
+          min_score: 0.55
+          threshold: 0.7
     detectors:
       ov:
         type: openvino
@@ -89,10 +102,20 @@ frigate:
         retain:
           default: 20
           mode: motion
+          objects:
+            person: 30
+            cat: 14
+            dog: 14
+            bird: 7
     snapshots:
       enabled: True
       retain:
         default: 20
+        objects:
+          person: 30
+          cat: 14
+          dog: 14
+          bird: 7
   probes:
     liveness:
       enabled: true
