@@ -24,7 +24,7 @@ immich:
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-prod
           hajimari.io/appName: Immich
-          hajimari.io/icon: image
+          hajimari.io/icon: simple-icons:immich
         hosts:
           - host: &host photos.kleinsorge.dev
             paths:

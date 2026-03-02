@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grocy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: Grocy
+    hajimari.io/icon: cart
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - grocy.kleinsorge.dev
+      secretName: grocy-tls-certificate
+  rules:
+    - host: grocy.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grocy
+                port:
+                  name: http

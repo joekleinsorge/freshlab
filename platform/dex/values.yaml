@@ -27,6 +27,8 @@ dex:
     className: cilium
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/appName: Dex
+      hajimari.io/icon: mdi:key-chain
     hosts:
       - host: &host dex.kleinsorge.dev
         paths:

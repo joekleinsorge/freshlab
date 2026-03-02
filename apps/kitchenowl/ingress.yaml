@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kitchenowl
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: KitchenOwl
+    hajimari.io/icon: food-apple
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - kitchenowl.kleinsorge.dev
+      secretName: kitchenowl-tls-certificate
+  rules:
+    - host: kitchenowl.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kitchenowl
+                port:
+                  name: http

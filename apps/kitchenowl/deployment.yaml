@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kitchenowl
+  labels:
+    app: kitchenowl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kitchenowl
+  template:
+    metadata:
+      labels:
+        app: kitchenowl
+    spec:
+      containers:
+        - name: kitchenowl
+          image: tombursch/kitchenowl:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: FRONT_URL
+              value: https://kitchenowl.kleinsorge.dev
+            - name: OPEN_REGISTRATION
+              value: "true"
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kitchenowl-secret
+                  key: JWT_SECRET_KEY
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: kitchenowl-data

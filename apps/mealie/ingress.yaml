@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mealie
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: Mealie
+    hajimari.io/icon: silverware-fork-knife
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - mealie.kleinsorge.dev
+      secretName: mealie-tls-certificate
+  rules:
+    - host: mealie.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: mealie
+                port:
+                  name: http

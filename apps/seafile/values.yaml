@@ -6,7 +6,7 @@ seafile:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Seafile
-        hajimari.io/icon: folder-multiple
+        hajimari.io/icon: simple-icons:seafile
       hosts:
         - host: &host files.kleinsorge.dev
           paths:
