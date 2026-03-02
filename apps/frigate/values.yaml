@@ -15,7 +15,10 @@ frigate:
     sizeLimit: 1Gi
   config: |
     mqtt:
-      enabled: False
+      enabled: True
+      host: mqtt.mqtt.svc.cluster.local
+      topic_prefix: frigate
+      client_id: frigate
     auth:
       enabled: false
     # mqtt:

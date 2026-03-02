@@ -1,0 +1,28 @@
+automation:
+  - id: frigate_people_animals_phone_alerts
+    alias: Frigate People And Animals Phone Alerts
+    mode: queued
+    trigger:
+      - platform: mqtt
+        topic: frigate/events
+    variables:
+      event: "{{ trigger.payload_json }}"
+      event_type: "{{ event.type | default('') }}"
+      after: "{{ event.after | default({}) }}"
+      camera: "{{ after.camera | default('unknown') }}"
+      label: "{{ after.label | default('unknown') }}"
+      event_id: "{{ after.id | default('') }}"
+    condition:
+      - condition: template
+        value_template: >
+          {{ event_type == 'new' and label in ['person', 'cat', 'dog', 'bird'] }}
+    action:
+      # Use notify.notify for all registered HA devices.
+      # If you want only one phone, replace with notify.mobile_app_<device_name>.
+      - service: notify.notify
+        data:
+          title: "Frigate: {{ label | title }} detected"
+          message: "{{ camera | title }} camera detected a {{ label }}"
+          data:
+            image: "https://frigate.kleinsorge.dev/api/events/{{ event_id }}/snapshot.jpg"
+            clickAction: "https://frigate.kleinsorge.dev/review?id={{ event_id }}"
