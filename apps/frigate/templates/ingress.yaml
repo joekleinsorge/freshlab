@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frigate
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    hajimari.io/appName: Frigate
+    hajimari.io/icon: cctv
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: frigate.kleinsorge.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frigate
+                port:
+                  name: http
+  tls:
+    - secretName: frigate-tls-certificate
+      hosts:
+        - frigate.kleinsorge.dev
