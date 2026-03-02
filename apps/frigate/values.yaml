@@ -16,7 +16,7 @@ frigate:
   config: |
     mqtt:
       enabled: True
-      host: mqtt.mqtt.svc.cluster.local
+      host: mqtt-mosquitto.mqtt.svc.cluster.local
       topic_prefix: frigate
       client_id: frigate
     auth:
