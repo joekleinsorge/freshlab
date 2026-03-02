@@ -16,6 +16,8 @@ frigate:
   config: |
     mqtt:
       enabled: False
+    auth:
+      enabled: false
     # mqtt:
     #   host: mqtt.server.com
     #   port: 1883
