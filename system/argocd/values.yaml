@@ -11,6 +11,12 @@ argo-cd:
         jsonPointers:
           - /status
   server:
+    replicas: 2
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 5
+      targetCPUUtilizationPercentage: 80
     ingress:
       enabled: true
       ingressClassName: cilium
@@ -20,6 +26,13 @@ argo-cd:
         hajimari.io/appName: Argo CD
         hajimari.io/icon: kubernetes
       tls: true
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
     metrics: &metrics
       enabled: true
       serviceMonitor:
@@ -27,10 +40,69 @@ argo-cd:
   dex:
     enabled: false
   controller:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
     metrics: *metrics
   repoServer:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+    existingVolumes:
+      gpgKeyring:
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-cache
+      helmWorkingDir:
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-cache
+      tmp:
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-cache
+      varFiles:
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-cache
+      plugins:
+        persistentVolumeClaim:
+          claimName: argocd-repo-server-cache
     metrics: *metrics
   redis:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    metrics: *metrics
+  applicationSet:
+    replicas: 2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    metrics: *metrics
+  notifications:
+    enabled: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
     metrics: *metrics
 argocd-apps:
   applicationsets:
@@ -90,6 +162,28 @@ argo-workflows:
         - hosts:
             - workflows.kleinsorge.dev
           secretName: argo-workflows-tls-certificate
+
+argocdGateway:
+  enabled: true
+  host: argocd.kleinsorge.dev
+  serviceName: argocd-server
+  servicePort: 80
+  tlsSecretName: argocd-gateway-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  loadBalancerPool: ""
+
+argoWorkflowsGateway:
+  enabled: true
+  host: workflows.kleinsorge.dev
+  serviceName: argocd-argo-workflows-server
+  servicePort: 2746
+  tlsSecretName: argo-workflows-gateway-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  loadBalancerPool: ""
 # argo-rollouts:
 #   server:
 #     ingress:

@@ -1,0 +1,12 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPAdvertisement
+metadata:
+  name: advertise-lb
+  labels:
+    advertise: {{ cilium_bgp.advertisementLabel | quote }}
+spec:
+  advertisements:
+    - advertisementType: Service
+      service:
+        addresses:
+          - LoadBalancerIP

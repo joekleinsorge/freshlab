@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: grafana-admin-credentials
+    namespace: kube-prometheus-stack
+type: Opaque
+stringData:
+    admin-user: ENC[AES256_GCM,data:MGB+TC4=,iv:SOed4HenYUg00AO7LR2/SfPRgkLqDOnLLIfxbO7NQBE=,tag:h3lqKWhq9U7X+ZztCSj96w==,type:str]
+    admin-password: ENC[AES256_GCM,data:Rv9NB55wmPn4LrRnPKVRtOzjrOD5s4ZtOw0KcdOUDFk=,iv:tc83xvfBRPruYoste20Ce9Th181k63GFXiW7meXaNTE=,tag:IT1s6CovAy0EeMqF9b3HSA==,type:str]
+sops:
+    age:
+        - recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAyeUkwSm80djREazZQVi9F
+            bnVpNjJMU01CZmpqTnVWT0UxcmF5aHV0a0VFClhTV015WnlFL0tYZ3lSZG1ySTZW
+            aHpJWlhwUCsxcmx4WlN6YTNKRi83Wk0KLS0tIG1ia3RCVVl5OFEvVHY3UStZVU5a
+            clJtb2JVZGhqbjNUS05GdGp3SWpvWWsKnaS+K5OJ7k29KvAu5Q1/OWBCuf7LSk8w
+            jcWSpO7hHttbfUMjH2mSrwZfJ5EvhQB4aBO8+0TTueTmjLSA6vQ3mw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-03-13T14:02:09Z"
+    mac: ENC[AES256_GCM,data:68TeaucHgz9sPKjuwgt76Joa1RK9/CS+0sdr9JwefGneRL/zvg7KE+RRvek1s7LXI0nDaZFzbSof3NKYUUkSfYPCz3KIO0wa/9pvIkc9/2G5J2klvUy8WYqNb3IiepYvK2Bp9OHQyKPc39dmEypq1EI54GKMIIIZFPAYAHS+irU=,iv:TDXEavTGq7QxbkRCYHtQfuoxH8RY/Jn4IsJp2zto9O8=,tag:Zkrg1YzKqCQ1pIZ9v2pcpw==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.12.1

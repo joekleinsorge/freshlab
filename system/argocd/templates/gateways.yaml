@@ -1,0 +1,86 @@
+{{- $gateways := list .Values.argocdGateway .Values.argoWorkflowsGateway }}
+{{- range $gateway := $gateways }}
+{{- if $gateway.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ printf "%s-gateway" $gateway.serviceName }}
+spec:
+  secretName: {{ $gateway.tlsSecretName }}
+  dnsNames:
+    - {{ $gateway.host | quote }}
+  issuerRef:
+    name: {{ $gateway.issuerRef.name }}
+    kind: {{ $gateway.issuerRef.kind }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ printf "%s-gateway" $gateway.serviceName }}
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ $gateway.host | quote }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ $gateway.tlsSecretName }}
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: {{ $gateway.host | quote }}
+      allowedRoutes:
+        namespaces:
+          from: Same
+  {{- if $gateway.loadBalancerPool }}
+  infrastructure:
+    labels:
+      lb.cilium.io/pool: {{ $gateway.loadBalancerPool | quote }}
+  {{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ printf "%s-gateway-redirect" $gateway.serviceName }}
+spec:
+  parentRefs:
+    - name: {{ printf "%s-gateway" $gateway.serviceName }}
+      sectionName: http
+  hostnames:
+    - {{ $gateway.host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ printf "%s-gateway" $gateway.serviceName }}
+spec:
+  parentRefs:
+    - name: {{ printf "%s-gateway" $gateway.serviceName }}
+      sectionName: https
+  hostnames:
+    - {{ $gateway.host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ $gateway.serviceName }}
+          port: {{ $gateway.servicePort }}
+---
+{{- end }}
+{{- end }}

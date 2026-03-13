@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: dag-workflow-
+spec:
+  entrypoint: dag-main
+  templates:
+    - name: dag-main
+      dag:
+        tasks:
+          - name: fetch
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: fetching data
+          - name: process
+            dependencies: [fetch]
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: processing data
+          - name: publish
+            dependencies: [process]
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: publishing result
+
+    - name: echo
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: busybox:1.36
+        command: [sh, -c]
+        args: ["echo {{inputs.parameters.message}}"]

@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPPeerConfig
+metadata:
+  name: {{ cilium_bgp.peerConfig.name }}
+spec:
+  timers:
+    connectRetryTimeSeconds: {{ cilium_bgp.peerConfig.connectRetryTimeSeconds }}
+    holdTimeSeconds: {{ cilium_bgp.peerConfig.holdTimeSeconds }}
+    keepAliveTimeSeconds: {{ cilium_bgp.peerConfig.keepAliveTimeSeconds }}
+  ebgpMultihop: {{ cilium_bgp.peerConfig.ebgpMultihop }}
+  gracefulRestart:
+    enabled: {{ 'true' if (cilium_bgp.peerConfig.gracefulRestart.enabled | bool) else 'false' }}
+    restartTimeSeconds: {{ cilium_bgp.peerConfig.gracefulRestart.restartTimeSeconds }}
+  families:
+    - afi: ipv4
+      safi: unicast
+      advertisements:
+        matchLabels:
+          advertise: {{ cilium_bgp.advertisementLabel | quote }}

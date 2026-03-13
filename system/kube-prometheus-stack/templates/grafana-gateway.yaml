@@ -1,0 +1,84 @@
+{{- with .Values.grafanaGateway }}
+{{- if .enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-monitoring-gateway
+spec:
+  secretName: {{ .tlsSecretName }}
+  dnsNames:
+    - {{ .host | quote }}
+  issuerRef:
+    name: {{ .issuerRef.name }}
+    kind: {{ .issuerRef.kind }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: grafana-monitoring
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ .host | quote }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ .tlsSecretName }}
+    - name: http
+      protocol: HTTP
+      port: 80
+      hostname: {{ .host | quote }}
+      allowedRoutes:
+        namespaces:
+          from: Same
+  {{- if .loadBalancerPool }}
+  infrastructure:
+    labels:
+      lb.cilium.io/pool: {{ .loadBalancerPool | quote }}
+  {{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana-monitoring-redirect
+spec:
+  parentRefs:
+    - name: grafana-monitoring
+      sectionName: http
+  hostnames:
+    - {{ .host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana-monitoring
+spec:
+  parentRefs:
+    - name: grafana-monitoring
+      sectionName: https
+  hostnames:
+    - {{ .host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .serviceName }}
+          port: {{ .servicePort }}
+{{- end }}
+{{- end }}

@@ -1,8 +1,29 @@
 longhorn:
   preUpgradeChecker:
-    jobEnabled: false
+    jobEnabled: true
   defaultSettings:
     defaultReplicaCount: 2
+    replicaAutoBalance: best-effort
+    storageOverProvisioningPercentage: 200
+    storageMinimalAvailablePercentage: 25
+  csi:
+    attacherReplicaCount: 2
+    provisionerReplicaCount: 2
+    resizerReplicaCount: 2
+    snapshotterReplicaCount: 2
+  longhornManager:
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+  longhornDriver:
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+  metrics:
+    serviceMonitor:
+      enabled: true
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 2

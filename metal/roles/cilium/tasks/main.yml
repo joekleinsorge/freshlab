@@ -18,6 +18,21 @@
 
 - name: Install Cilium
   block:
+    - name: Build rendered Cilium values
+      ansible.builtin.set_fact:
+        cilium_rendered_values: >-
+          {{
+            cilium_values
+            | combine(
+                {
+                  'bgpControlPlane': {
+                    'enabled': (cilium_bgp.enabled | bool)
+                  }
+                },
+                recursive=True
+              )
+          }}
+
     - name: Create temporary values file for Cilium
       ansible.builtin.tempfile:
         state: file
@@ -27,7 +42,7 @@
     - name: Write Cilium values
       ansible.builtin.copy:
         dest: "{{ cilium_values_file.path }}"
-        content: "{{ cilium_values | to_nice_yaml }}"
+        content: "{{ cilium_rendered_values | to_nice_yaml }}"
         mode: "0600"
 
     - name: Build Helm arguments for Cilium install
@@ -77,9 +92,21 @@
   kubernetes.core.k8s_info:
     kind: CustomResourceDefinition
     name: "{{ item }}"
-  loop:
-    - ciliuml2announcementpolicies.cilium.io
-    - ciliumloadbalancerippools.cilium.io
+  loop: >-
+    {{
+      [
+        'ciliuml2announcementpolicies.cilium.io',
+        'ciliumloadbalancerippools.cilium.io'
+      ] + (
+        [
+          'ciliumbgpadvertisements.cilium.io',
+          'ciliumbgppeerconfigs.cilium.io',
+          'ciliumbgpclusterconfigs.cilium.io'
+        ]
+        if (cilium_bgp.enabled | bool)
+        else []
+      )
+    }}
   register: crd
   until: crd.resources | length > 0
   retries: 5
@@ -98,16 +125,40 @@
         src: "{{ item }}"
         dest: "{{ cilium_resources_dir.path }}/{{ item }}"
         mode: "0600"
-      loop:
-        - ciliuml2announcementpolicy.yaml
-        - ciliumloadbalancerippool.yaml
+      loop: >-
+        {{
+          [
+            'ciliuml2announcementpolicy.yaml',
+            'ciliumloadbalancerippool.yaml'
+          ] + (
+            [
+              'ciliumbgpadvertisement.yaml',
+              'ciliumbgppeerconfig.yaml',
+              'ciliumbgpclusterconfig.yaml'
+            ]
+            if (cilium_bgp.enabled | bool)
+            else []
+          )
+        }}
 
     - name: Apply rendered Cilium resources
       kubernetes.core.k8s:
         src: "{{ cilium_resources_dir.path }}/{{ item }}"
-      loop:
-        - ciliuml2announcementpolicy.yaml
-        - ciliumloadbalancerippool.yaml
+      loop: >-
+        {{
+          [
+            'ciliuml2announcementpolicy.yaml',
+            'ciliumloadbalancerippool.yaml'
+          ] + (
+            [
+              'ciliumbgpadvertisement.yaml',
+              'ciliumbgppeerconfig.yaml',
+              'ciliumbgpclusterconfig.yaml'
+            ]
+            if (cilium_bgp.enabled | bool)
+            else []
+          )
+        }}
   always:
     - name: Remove temporary manifest directory for Cilium resources
       ansible.builtin.file:

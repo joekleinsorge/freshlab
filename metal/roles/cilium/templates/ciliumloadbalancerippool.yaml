@@ -4,6 +4,25 @@ metadata:
   name: default
 spec:
   blocks:
-    {% for cidr in load_balancer_ip_pool %}
+{% for cidr in load_balancer_ip_pool %}
     - cidr: {{ cidr }}
-    {% endfor %}
+{% endfor %}
+{% for pool in cilium_additional_load_balancer_pools %}
+---
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: {{ pool.name }}
+spec:
+  {% if pool.allowFirstLastIPs is defined %}
+  allowFirstLastIPs: {{ pool.allowFirstLastIPs | quote }}
+  {% endif %}
+  blocks:
+{% for cidr in pool.cidrs %}
+    - cidr: {{ cidr }}
+{% endfor %}
+{% if pool.serviceSelector is defined %}
+  serviceSelector:
+{{ pool.serviceSelector | to_nice_yaml(indent=2) | indent(4, true) }}
+{% endif %}
+{% endfor %}

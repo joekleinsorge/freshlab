@@ -1,0 +1,23 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: cilium-bgp
+spec:
+{% if cilium_bgp.nodeSelector.matchLabels %}
+  nodeSelector:
+    matchLabels:
+{% for key, value in cilium_bgp.nodeSelector.matchLabels.items() %}
+      {{ key }}: {{ value | quote }}
+{% endfor %}
+{% endif %}
+  bgpInstances:
+    - name: instance-{{ cilium_bgp.localASN }}
+      localASN: {{ cilium_bgp.localASN }}
+      peers:
+{% for peer in cilium_bgp.peers %}
+        - name: {{ peer.name | quote }}
+          peerASN: {{ peer.peerASN }}
+          peerAddress: {{ peer.peerAddress | quote }}
+          peerConfigRef:
+            name: {{ cilium_bgp.peerConfig.name | quote }}
+{% endfor %}

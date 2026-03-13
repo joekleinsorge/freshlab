@@ -7,12 +7,37 @@ cilium_helm_retries: 2
 cilium_helm_retry_delay: 15
 gateway_api_install_crds: true
 gateway_api_crd_version: v1.2.0
+cilium_additional_load_balancer_pools: []
+cilium_bgp:
+  enabled: false
+  nodeSelector:
+    matchLabels: {}
+  localASN: 65000
+  advertisementLabel: bgp
+  peerConfig:
+    name: cilium-peer
+    connectRetryTimeSeconds: 5
+    holdTimeSeconds: 90
+    keepAliveTimeSeconds: 30
+    ebgpMultihop: 4
+    gracefulRestart:
+      enabled: true
+      restartTimeSeconds: 15
+  peers: []
 cilium_values:
   operator:
     replicas: 1
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
   kubeProxyReplacement: true
+  bgpControlPlane:
+    enabled: false
   gatewayAPI:
     enabled: true
+    gatewayClass:
+      create: auto
   ingressController:
     enabled: true
     default: true
@@ -21,13 +46,39 @@ cilium_values:
       loadBalancerIP: "{{ ingress_load_balancer_ip }}"
   l2announcements:
     enabled: true
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      trustCRDsExist: true
   # TODO the host and port are k3s-specific, generic solution is in progress
   # https://github.com/cilium/cilium/issues/19038
   # https://github.com/cilium/cilium/pull/28741
   k8sServiceHost: 127.0.0.1
   k8sServicePort: 6444
   hubble:
+    enabled: true
+    metrics:
+      enableOpenMetrics: true
+      enabled:
+        - "dns:query;ignoreAAAA"
+        - drop
+        - tcp
+        - flow
+        - port-distribution
+        - icmp
+        - "httpV2:exemplars=true;labelsContext=source_namespace,source_workload,destination_namespace,destination_workload,traffic_direction"
+      serviceMonitor:
+        enabled: true
     relay:
       enabled: true
+      prometheus:
+        enabled: true
+        serviceMonitor:
+          enabled: true
     ui:
       enabled: true
+  envoy:
+    prometheus:
+      serviceMonitor:
+        enabled: true

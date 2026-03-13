@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: hello-steps-
+spec:
+  entrypoint: main
+  templates:
+    - name: main
+      steps:
+        - - name: say-hello
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: hello from step 1
+        - - name: say-goodbye
+            template: echo
+            arguments:
+              parameters:
+                - name: message
+                  value: goodbye from step 2
+
+    - name: echo
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: busybox:1.36
+        command: [sh, -c]
+        args: ["echo {{inputs.parameters.message}}"]

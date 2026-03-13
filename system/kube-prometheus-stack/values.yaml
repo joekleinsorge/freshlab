@@ -26,7 +26,8 @@ kube-prometheus-stack:
       scrapeTimeout: 30s
       interval: 30s
   grafana:
-    adminPassword: password
+    admin:
+      existingSecret: grafana-admin-credentials
     deploymentStrategy:
       type: RollingUpdate
       rollingUpdate:
@@ -78,7 +79,7 @@ kube-prometheus-stack:
     persistence:
       enabled: true
       size: 10Gi
-      storageClassName: rook-ceph-block
+      storageClassName: longhorn-retain
   prometheus-blackbox-exporter:
     enabled: true
   prometheus:
@@ -105,7 +106,7 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: rook-ceph-block
+            storageClassName: longhorn-retain
             resources:
               requests:
                 storage: 50Gi
@@ -128,3 +129,14 @@ kube-prometheus-stack:
               target_label: instance
             - target_label: __address__
               replacement: kube-prometheus-stack-prometheus-blackbox-exporter.kube-prometheus-stack.svc.cluster.local:9115
+
+grafanaGateway:
+  enabled: true
+  host: grafana-monitoring.kleinsorge.dev
+  serviceName: kube-prometheus-stack-grafana
+  servicePort: 80
+  tlsSecretName: grafana-monitoring-gateway-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  loadBalancerPool: ""
