@@ -58,22 +58,6 @@ argo-cd:
       limits:
         cpu: "1"
         memory: 1Gi
-    existingVolumes:
-      gpgKeyring:
-        persistentVolumeClaim:
-          claimName: argocd-repo-server-cache
-      helmWorkingDir:
-        persistentVolumeClaim:
-          claimName: argocd-repo-server-cache
-      tmp:
-        persistentVolumeClaim:
-          claimName: argocd-repo-server-cache
-      varFiles:
-        persistentVolumeClaim:
-          claimName: argocd-repo-server-cache
-      plugins:
-        persistentVolumeClaim:
-          claimName: argocd-repo-server-cache
     metrics: *metrics
   redis:
     resources:
