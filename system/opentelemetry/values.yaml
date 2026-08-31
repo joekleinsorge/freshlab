@@ -215,10 +215,12 @@ opentelemetry-collector:
       effect: NoSchedule
 
   podSecurityContext:
-    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
 
   securityContext:
-    enabled: true
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     runAsNonRoot: true
