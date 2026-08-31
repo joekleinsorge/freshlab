@@ -27,26 +27,6 @@
     - /etc/rancher/node
     - "{{ k3s_data_dir }}/agent/pod-manifests"
 
-- name: Mount dedicated k3s datastore volume
-  when: k3s_datastore_mount_src is defined
-  block:
-    - name: Ensure the datastore mount point exists
-      ansible.builtin.file:
-        path: "{{ k3s_data_dir }}/server/db"
-        state: directory
-        owner: root
-        group: root
-        mode: '0700'
-
-    - name: Mount and persist the dedicated datastore volume
-      ansible.posix.mount:
-        path: "{{ k3s_data_dir }}/server/db"
-        src: "{{ k3s_datastore_mount_src }}"
-        fstype: ext4
-        opts: defaults,nofail
-        state: mounted
-  tags: ['storage']
-
 - name: Remove unsafe whole-runtime resource limits
   block:
     - name: Create container resources configuration directory

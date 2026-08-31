@@ -15,12 +15,7 @@ metal:
   children:
     masters:
       hosts:
-        metal1:
-          ansible_host: 192.168.1.101
-          disk: nvme0n1
-          network_interface: enp2s0
-          # The former Fedora LV is now a dedicated low-latency etcd volume.
-          k3s_datastore_mount_src: LABEL=k3s-etcd
+        metal1: {ansible_host: 192.168.1.101, disk: nvme0n1, network_interface: enp2s0}
         metal2: {ansible_host: 192.168.1.102, disk: nvme0n1, network_interface: enp2s0}
         metal3: {ansible_host: 192.168.1.103, disk: nvme0n1, network_interface: enp2s0}
     workers:
