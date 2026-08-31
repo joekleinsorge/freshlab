@@ -101,7 +101,7 @@ opentelemetry-collector:
           encoding: json
         metrics:
           level: detailed
-          address: ":8888"
+          address: "0.0.0.0:8888"
 
   extraVolumeMounts:
     - name: varlogpods
