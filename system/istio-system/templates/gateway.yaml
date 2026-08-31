@@ -1,0 +1,44 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: freshlab-wildcard
+  namespace: istio-system
+spec:
+  secretName: freshlab-wildcard-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.kleinsorge.dev"
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: freshlab
+  namespace: istio-system
+spec:
+  gatewayClassName: istio
+  addresses:
+    - type: IPAddress
+      value: 192.168.1.228
+  listeners:
+    - name: http
+      hostname: "*.kleinsorge.dev"
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      hostname: "*.kleinsorge.dev"
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: freshlab-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All

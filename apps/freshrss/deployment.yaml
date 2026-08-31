@@ -43,6 +43,13 @@ spec:
               port: 80
             timeoutSeconds: 1
           name: freshrss
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
           ports:
             - containerPort: 80
               name: http
@@ -55,7 +62,10 @@ spec:
               port: 80
             timeoutSeconds: 1
           startupProbe:
-            failureThreshold: 30
+            # The LinuxServer image updates ownership across the persistent
+            # config volume before nginx starts.  Longhorn recovery or a cold
+            # node cache can make that take several minutes.
+            failureThreshold: 180
             initialDelaySeconds: 0
             periodSeconds: 5
             tcpSocket:

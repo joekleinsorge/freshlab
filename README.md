@@ -47,6 +47,8 @@ Supporting components:
 
 See the docs for detailed information on the architecture, installation and use of the platform.
 
+For Ubuntu node installation and provisioning, see [metal/README.md](metal/README.md).
+
 ## Acknowledgements
 
 This design was inspired by the following projects:

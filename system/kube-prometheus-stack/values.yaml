@@ -1,4 +1,22 @@
 kube-prometheus-stack:
+  alertmanager:
+    alertmanagerSpec:
+      retention: 120h
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 384Mi
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: longhorn-retain
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 5Gi
   prometheus-node-exporter:
     hostNetwork: false
     extraArgs:
@@ -35,7 +53,7 @@ kube-prometheus-stack:
         maxUnavailable: 1
     ingress:
       enabled: true
-      ingressClassName: cilium
+      ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Grafana
@@ -50,6 +68,21 @@ kube-prometheus-stack:
       - name: Loki
         type: loki
         url: http://loki.loki:3100
+      - name: Tempo
+        type: tempo
+        url: http://tempo.tempo:3200
+        access: proxy
+        basicAuth: false
+        jsonData:
+          httpMethod: GET
+          serviceMap:
+            datasourceUid: prometheus
+          tracesToLogsV2:
+            datasourceUid: Loki
+            filterByTraceID: true
+            filterBySpanID: false
+          tracesToMetrics:
+            datasourceUid: prometheus
     grafana.ini:
       server:
         root_url: https://grafana-monitoring.kleinsorge.dev
@@ -120,8 +153,29 @@ kube-prometheus-stack:
             module: [http_2xx]
           static_configs:
             - targets:
-                - grafana.kleinsorge.dev
-                - kindle-weather.kleinsorge.dev
+                - https://argocd.kleinsorge.dev
+                - https://authelia.kleinsorge.dev
+                - https://budget.kleinsorge.dev
+                - https://dex.kleinsorge.dev
+                - https://draw.kleinsorge.dev
+                - https://files.kleinsorge.dev
+                - https://flask.kleinsorge.dev
+                - https://frigate.kleinsorge.dev
+                - https://grafana-monitoring.kleinsorge.dev
+                - https://grocy.kleinsorge.dev
+                - https://home.kleinsorge.dev
+                - https://kindle-weather.kleinsorge.dev
+                - https://kitchenowl.kleinsorge.dev
+                - https://mealie.kleinsorge.dev
+                - https://photos.kleinsorge.dev
+                - https://plex.kleinsorge.dev
+                - https://rss.kleinsorge.dev
+                - https://speed.kleinsorge.dev
+                - https://status.kleinsorge.dev
+                - https://tools.kleinsorge.dev
+                - https://view.kleinsorge.dev
+                - https://web.kleinsorge.dev
+                - https://workflows.kleinsorge.dev
           relabel_configs:
             - source_labels: [__address__]
               target_label: __param_target

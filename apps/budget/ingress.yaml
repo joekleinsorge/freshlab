@@ -4,7 +4,7 @@ metadata:
   name: budget
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: cilium
+    kubernetes.io/ingress.class: istio
     hajimari.io/appName: Actual Budget
     hajimari.io/icon: wallet
 spec:

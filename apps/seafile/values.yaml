@@ -2,7 +2,7 @@ seafile:
   ingress:
     main:
       enabled: true
-      ingressClassName: cilium
+      ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Seafile
@@ -20,13 +20,13 @@ seafile:
     enabled: true
     image:
       registry: docker.io
-      repository: bitnami/mariadb
-      tag: latest
+      repository: bitnamilegacy/mariadb
+      tag: 10.6.8-debian-11-r9
     primary:
-      image:
-        registry: docker.io
-        repository: bitnami/mariadb
-        tag: latest
+      persistence:
+        enabled: true
+        storageClass: longhorn
+        size: 10Gi
   persistence:
     data:
       enabled: true

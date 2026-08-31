@@ -1,0 +1,8 @@
+---
+- name: Prepare Ubuntu hosts for Freshlab
+  hosts: metal
+  become: true
+  roles:
+    - prerequisites
+    - automatic_upgrade
+    - mount_nfs

@@ -10,7 +10,7 @@ metadata:
   name: plex
   namespace: plex
 spec:
-  ingressClassName: cilium
+  ingressClassName: istio
   rules:
     - host: plex.kleinsorge.dev
       http:

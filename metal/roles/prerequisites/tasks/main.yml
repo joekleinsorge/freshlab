@@ -1,31 +1,163 @@
+---
+- name: Verify Ubuntu 26.04 LTS
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution'] == 'Ubuntu'
+      - ansible_facts['distribution_version'] is version('26.04', '==')
+      - ansible_facts['architecture'] == 'x86_64'
+    fail_msg: >-
+      Freshlab supports Ubuntu Server 26.04 LTS on amd64 only.
+      Found {{ ansible_facts['distribution'] }}
+      {{ ansible_facts['distribution_version'] }} on
+      {{ ansible_facts['architecture'] }}.
+  tags: ['preflight']
+
+- name: Install Ubuntu host dependencies
+  ansible.builtin.apt:
+    name:
+      - apparmor
+      - apparmor-utils
+      - ca-certificates
+      - conntrack
+      - cryptsetup
+      - curl
+      - dmsetup
+      - ethtool
+      - ipset
+      - iptables
+      - logrotate
+      - nfs-common
+      - open-iscsi
+      - socat
+      - ufw
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+    lock_timeout: 120
+  tags: ['packages']
+
+- name: Enable iSCSI for Longhorn volumes
+  ansible.builtin.systemd_service:
+    name: iscsid
+    state: started
+    enabled: true
+  tags: ['storage']
+
+- name: Check for active multipath devices
+  ansible.builtin.command: multipath -ll
+  register: multipath_devices
+  changed_when: false
+  check_mode: false
+  tags: ['storage']
+
+- name: Refuse to disable multipath when devices are configured
+  ansible.builtin.assert:
+    that:
+      - multipath_devices.stdout | trim == ''
+    fail_msg: >-
+      Multipath devices are configured on this host. Review its storage layout
+      before disabling multipathd for Longhorn.
+  tags: ['storage']
+
+- name: Disable multipath services that conflict with Longhorn
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+    masked: true
+  loop:
+    - multipathd.service
+    - multipathd.socket
+  tags: ['storage']
+
 - name: Pre-flight system checks
   block:
     - name: Check system memory
       ansible.builtin.shell: free -b | awk '/^Mem:/{print $2}'
       register: total_memory
       changed_when: false
-      check_mode: no
+      check_mode: false
 
     - name: Check CPU cores
-      ansible.builtin.shell: nproc
+      ansible.builtin.command: nproc
       register: cpu_cores
       changed_when: false
-      check_mode: no
+      check_mode: false
 
     - name: Check available disk space
       ansible.builtin.shell: df -B1 / | awk 'NR==2 {print $4}'
       register: available_space
       changed_when: false
-      check_mode: no
+      check_mode: false
 
     - name: Verify minimum system requirements
       ansible.builtin.assert:
         that:
-          - total_memory.stdout|int >= 4294967296  # 4GB in bytes
-          - cpu_cores.stdout|int >= 2
-          - available_space.stdout|int >= 21474836480  # 20GB in bytes
-        msg: "System does not meet minimum requirements: 4GB RAM, 2 CPU cores, 20GB disk space"
+          - total_memory.stdout | int >= 4294967296
+          - cpu_cores.stdout | int >= 2
+          - available_space.stdout | int >= 21474836480
+        fail_msg: "System does not meet minimum requirements: 4GB RAM, 2 CPU cores, 20GB free disk space."
   tags: ['preflight']
+
+- name: Disable UFW for Cilium-managed cluster networking
+  community.general.ufw:
+    state: disabled
+  tags: ['security', 'network']
+
+- name: Seed Cilium CNI configuration for new nodes
+  block:
+    - name: Ensure the host CNI configuration directory exists
+      ansible.builtin.file:
+        path: /etc/cni/net.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Install the initial Cilium CNI configuration if missing
+      ansible.builtin.copy:
+        dest: /etc/cni/net.d/05-cilium.conflist
+        owner: root
+        group: root
+        mode: '0644'
+        force: false
+        content: |
+          {
+            "cniVersion": "1.0.0",
+            "name": "cilium",
+            "plugins": [
+              {
+                "enable-debug": false,
+                "log-file": "/var/run/cilium/cilium-cni.log",
+                "type": "cilium-cni"
+              }
+            ]
+          }
+  tags: ['network', 'kubernetes']
+
+- name: Load required Kubernetes kernel modules
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - br_netfilter
+    - dm_crypt
+    - iscsi_tcp
+    - overlay
+  tags: ['kernel', 'kubernetes']
+
+- name: Ensure Kubernetes kernel modules load at boot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      br_netfilter
+      dm_crypt
+      iscsi_tcp
+      overlay
+    owner: root
+    group: root
+    mode: '0644'
+  tags: ['kernel', 'kubernetes']
 
 - name: Configure sysctl for Kubernetes
   ansible.builtin.sysctl:
@@ -60,117 +192,67 @@
       ansible.builtin.command: swapon --show
       register: swap_status
       changed_when: false
-      check_mode: no
+      check_mode: false
 
-    - name: Disable swap in running system
+    - name: Disable swap in the running system
       ansible.builtin.command: swapoff -a
-      when: swap_status.stdout != ""
-      register: swapoff_result
-      changed_when: swapoff_result.rc == 0
+      when: swap_status.stdout != ''
+      changed_when: true
 
-    - name: Remove swap from fstab
+    - name: Disable swap entries in fstab
       ansible.builtin.replace:
         path: /etc/fstab
         regexp: '^([^#].*?\sswap\s.*)'
         replace: '# \1'
-        backup: yes
+        backup: true
   tags: ['swap']
 
-- name: Disable SELinux
-  ansible.builtin.selinux:
-    state: disabled
-  tags: ['security']
-
-- name: Disable firewalld
-  ansible.builtin.systemd:
-    name: firewalld
-    state: stopped
-    enabled: false
-  tags: ['security']
-
-- name: Load required kernel modules
-  community.general.modprobe:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - br_netfilter
-    - overlay
-  tags: ['kernel']
-
-- name: Ensure kernel modules load at boot
-  ansible.builtin.copy:
-    dest: /etc/modules-load.d/k8s.conf
-    content: |
-      br_netfilter
-      overlay
-    mode: '0644'
-  tags: ['kernel']
-
-- name: Configure system logging
+- name: Configure persistent system logging
   block:
-    - name: Ensure journald config directory exists
+    - name: Ensure persistent journal storage exists
+      ansible.builtin.file:
+        path: /var/log/journal
+        state: directory
+        owner: root
+        group: systemd-journal
+        mode: '2755'
+
+    - name: Ensure journald configuration directory exists
       ansible.builtin.file:
         path: /etc/systemd/journald.conf.d
         state: directory
+        owner: root
+        group: root
         mode: '0755'
 
-    - name: Set persistent log size limits for journald
+    - name: Set persistent journal size limits
       ansible.builtin.copy:
         dest: /etc/systemd/journald.conf.d/limit-size.conf
         content: |
           [Journal]
+          Storage=persistent
           SystemMaxUse=200M
           RuntimeMaxUse=100M
           MaxRetentionSec=1week
           SystemMaxFileSize=50M
+        owner: root
+        group: root
         mode: '0644'
+      register: journald_config
 
-    - name: Configure logrotate for system and K3s logs
-      ansible.builtin.copy:
-        dest: /etc/logrotate.d/system-logs
-        content: |
-          /var/log/* {
-            rotate 7
-            daily
-            missingok
-            notifempty
-            compress
-            delaycompress
-            sharedscripts
-            size 50M
-            postrotate
-              /bin/kill -HUP `cat /var/run/syslogd.pid 2>/dev/null` 2>/dev/null || true
-            endscript
-          }
-
-          /var/log/k3s.log /var/log/containers/*.log {
-            rotate 7
-            daily
-            missingok
-            notifempty
-            compress
-            maxsize 50M
-            create 0644 root root
-            sharedscripts
-            postrotate
-              systemctl kill -s HUP k3s.service >/dev/null 2>&1 || true
-            endscript
-          }
-        mode: '0644'
-
-    - name: Restart journald to apply log limits
-      ansible.builtin.systemd:
+    - name: Restart journald when its configuration changes
+      ansible.builtin.systemd_service:
         name: systemd-journald
         state: restarted
-        daemon_reload: true
+      when: journald_config.changed
   tags: ['logs']
 
-- name: Verify network connectivity
+- name: Verify Kubernetes API port availability
   block:
     - name: Gather service facts for k3s port validation
       ansible.builtin.service_facts:
 
-    - name: Check k3s port availability
+    - name: Check whether port 6443 is available
       ansible.builtin.wait_for:
         port: 6443
         timeout: 1
@@ -178,9 +260,11 @@
       register: port_check
       ignore_errors: true
 
-    - name: Verify port is available
+    - name: Reject a non-k3s process on port 6443
       ansible.builtin.assert:
         that:
-          - port_check is success or ((ansible_facts.services.get('k3s.service', {}).state | default(ansible_facts.services.get('k3s', {}).state | default(''))) == 'running')
-        msg: "Port 6443 is already in use by a non-k3s process. Please ensure it's available for k3s."
+          - >-
+            port_check is success or
+            (ansible_facts.services.get('k3s.service', {}).state | default('')) == 'running'
+        msg: "Port 6443 is already in use by a non-k3s process."
   tags: ['network']

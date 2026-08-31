@@ -1,7 +1,7 @@
 grafana:
   ingress:
     enabled: true
-    ingressClassName: cilium
+    ingressClassName: istio
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
@@ -17,6 +17,22 @@ grafana:
     datasources:
       enabled: true
       searchNamespace: monitoring-system
+  additionalDataSources:
+    - name: Tempo
+      type: tempo
+      url: http://tempo.tempo:3200
+      access: proxy
+      basicAuth: false
+      jsonData:
+        httpMethod: GET
+        serviceMap:
+          datasourceUid: prometheus
+        tracesToLogsV2:
+          datasourceUid: Loki
+          filterByTraceID: true
+          filterBySpanID: false
+        tracesToMetrics:
+          datasourceUid: prometheus
   envFromSecret: grafana-secrets
   grafana.ini:
     server:

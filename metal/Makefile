@@ -4,6 +4,7 @@ default: cluster
 
 ANSIBLE_INVENTORY ?= inventories/prod.yml
 ANSIBLE_LIMIT ?=
+ANSIBLE_EXTRA_ARGS ?=
 CLUSTER_ALLOW_UNREACHABLE ?= true
 CLUSTER_RUN_PREFLIGHT ?= true
 TEARDOWN_ALLOW_UNREACHABLE ?= true
@@ -14,17 +15,26 @@ preflight:
 	ansible-playbook \
 		--inventory $(ANSIBLE_INVENTORY) \
 		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT)) \
+		$(ANSIBLE_EXTRA_ARGS) \
 		preflight.yml
+
+prepare:
+	ansible-playbook \
+		--inventory $(ANSIBLE_INVENTORY) \
+		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT)) \
+		$(ANSIBLE_EXTRA_ARGS) \
+		prepare.yml
 
 cluster:
 	@set -e; \
 	if [ "$(CLUSTER_RUN_PREFLIGHT)" = "true" ]; then \
-		$(MAKE) preflight ANSIBLE_INVENTORY="$(ANSIBLE_INVENTORY)" ANSIBLE_LIMIT="$(ANSIBLE_LIMIT)"; \
+		$(MAKE) preflight ANSIBLE_INVENTORY="$(ANSIBLE_INVENTORY)" ANSIBLE_LIMIT="$(ANSIBLE_LIMIT)" ANSIBLE_EXTRA_ARGS="$(ANSIBLE_EXTRA_ARGS)"; \
 	fi; \
 	rc=0; \
 	ansible-playbook \
 		--inventory $(ANSIBLE_INVENTORY) \
 		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT)) \
+		$(ANSIBLE_EXTRA_ARGS) \
 		cluster.yml || rc=$$?; \
 	if [ "$$rc" -eq 4 ] && [ "$(CLUSTER_ALLOW_UNREACHABLE)" = "true" ]; then \
 		echo "cluster: unreachable hosts detected (exit code 4), treating as non-fatal"; \
@@ -62,7 +72,8 @@ cluster:
 console:
 	ansible-console \
 		--inventory $(ANSIBLE_INVENTORY) \
-		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT))
+		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT)) \
+		$(ANSIBLE_EXTRA_ARGS)
 
 teardown:
 	@set -e; \
@@ -70,6 +81,7 @@ teardown:
 	ansible-playbook \
 		--inventory $(ANSIBLE_INVENTORY) \
 		$(if $(ANSIBLE_LIMIT),--limit $(ANSIBLE_LIMIT)) \
+		$(ANSIBLE_EXTRA_ARGS) \
 		teardown.yml || rc=$$?; \
 	if [ "$$rc" -eq 4 ] && [ "$(TEARDOWN_ALLOW_UNREACHABLE)" = "true" ]; then \
 		echo "teardown: unreachable hosts detected (exit code 4), treating as non-fatal"; \

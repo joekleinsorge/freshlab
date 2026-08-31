@@ -4,7 +4,13 @@ opentelemetry-operator:
       enabled: true
 
 opentelemetry-collector:
+  fullnameOverride: opentelemetry-collector
   mode: daemonset
+  image:
+    repository: otel/opentelemetry-collector-contrib
+  service:
+    enabled: true
+    internalTrafficPolicy: Cluster
   serviceAccount:
     create: true
   config:
@@ -90,11 +96,11 @@ opentelemetry-collector:
           cluster: k3s
         resource_to_telemetry_conversion:
           enabled: true
-      
-      otlp:
-        endpoint: api.honeycomb.io:443
-        headers:
-          x-honeycomb-team: ${HONEYCOMB_API_KEY}
+
+      otlp/tempo:
+        endpoint: tempo.tempo.svc.cluster.local:4317
+        tls:
+          insecure: true
       
       loki:
         endpoint: http://loki.loki:3100/loki/api/v1/push
@@ -135,11 +141,11 @@ opentelemetry-collector:
       extensions: [health_check, memory_ballast, pprof, zpages]
       pipelines:
         traces:
-          receivers: [otlp, jaeger, zipkin]
+          receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes, resourcedetection]
-          exporters: [otlp, debug]
+          exporters: [otlp/tempo, debug]
         metrics:
-          receivers: [otlp, prometheus, hostmetrics, kubeletstats]
+          receivers: [otlp, hostmetrics, kubeletstats]
           processors: [memory_limiter, batch, k8sattributes, resourcedetection]
           exporters: [prometheus, debug]
         logs:

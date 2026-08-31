@@ -165,7 +165,7 @@ frigate:
 
   ingress:
     enabled: false
-    ingressClassName: cilium
+    ingressClassName: istio
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       hajimari.io/appName: Frigate

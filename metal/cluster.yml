@@ -1,19 +1,15 @@
-- name: Setup Operating system
-  hosts: metal
-  roles:
-    - prerequisites
-    - automatic_upgrade
-    - mount_nfs
+---
+- import_playbook: prepare.yml
 
 - name: Create Kubernetes cluster
   hosts: metal
+  become: true
   roles:
     - k3s
 
 - name: Install Kubernetes addons
   hosts: localhost
   environment:
-    KUBECONFIG: ./kubeconfig.yaml
+    KUBECONFIG: "{{ playbook_dir }}/kubeconfig.yaml"
   roles:
     - cilium
-

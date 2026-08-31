@@ -2,7 +2,7 @@ librespeed:
   ingress:
     main:
       enabled: true
-      ingressClassName: cilium
+      ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         librespeed.io/enable: 'true'

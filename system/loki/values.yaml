@@ -12,7 +12,9 @@ loki-stack:
         retention_period: 168h
   
   promtail:
-    enabled: true
+    # Alloy collects node and application logs; keep a single collector to
+    # avoid duplicate streams and needless disk/CPU use.
+    enabled: false
     serviceMonitor:
       enabled: true
     config:

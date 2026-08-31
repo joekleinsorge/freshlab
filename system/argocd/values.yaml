@@ -19,10 +19,9 @@ argo-cd:
       targetCPUUtilizationPercentage: 80
     ingress:
       enabled: true
-      ingressClassName: cilium
+      ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: 192.168.1.227
         hajimari.io/appName: Argo CD
         hajimari.io/icon: kubernetes
       tls: true
@@ -134,10 +133,9 @@ argo-workflows:
       - client
     ingress:
       enabled: true
-      className: cilium
+      className: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
-        external-dns.alpha.kubernetes.io/target: 192.168.1.227
         hajimari.io/appName: Argo Workflows
         hajimari.io/icon: source-branch
       hosts:
@@ -172,7 +170,7 @@ argoWorkflowsGateway:
 #   server:
 #     ingress:
 #       enabled: true
-#       className: cilium
+#       className: istio
 #       annotations:
 #         cert-manager.io/cluster-issuer: letsencrypt-prod
 #       hosts:

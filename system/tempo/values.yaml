@@ -1,0 +1,56 @@
+tempo:
+  replicas: 1
+  tempo:
+    reportingEnabled: false
+    retention: 72h
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 1Gi
+    memBallastSizeMbs: 128
+    metricsGenerator:
+      enabled: true
+      remoteWriteUrl: http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090/api/v1/write
+      processor:
+        service_graphs: {}
+        span_metrics: {}
+      registry:
+        external_labels:
+          cluster: freshlab
+      storage:
+        path: /var/tempo/metrics
+      traces_storage:
+        path: /var/tempo/generator-wal
+    overrides:
+      defaults:
+        metrics_generator:
+          processors:
+            - service-graphs
+            - span-metrics
+    storage:
+      trace:
+        backend: local
+        local:
+          path: /var/tempo/traces
+        wal:
+          path: /var/tempo/wal
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+  persistence:
+    enabled: true
+    storageClassName: longhorn-retain
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+  serviceMonitor:
+    enabled: true
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001

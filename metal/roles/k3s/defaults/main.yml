@@ -4,6 +4,13 @@ k3s_token_file: /etc/rancher/node/password
 k3s_service_file: /etc/systemd/system/k3s.service
 k3s_data_dir: /var/lib/rancher/k3s
 k3s_kubeconfig_file: /etc/rancher/k3s/k3s.yaml
+k3s_bootstrap_master: "{{ groups['masters'] | first }}"
+k3s_join_endpoint: "{{ control_plane_endpoint }}"
+# Set this only while creating a brand-new cluster.  Once the first control
+# plane exists, keeping the bootstrap host in join mode makes a local etcd
+# rebuild safely rejoin the surviving control plane instead of forming a
+# second cluster.
+k3s_initial_bootstrap: true
 k3s_server_config:
   tls-san:
     - "{{ control_plane_endpoint }}"
@@ -16,3 +23,18 @@ k3s_server_config:
   disable-network-policy: true
   flannel-backend: none
   secrets-encryption: true
+k3s_kubelet_args:
+  # Keep enough memory and local storage available for the operating system and
+  # Kubernetes daemons.  Eviction and image garbage collection protect the
+  # node without throttling the whole k3s cgroup (which also contains pods).
+  - system-reserved=cpu=500m,memory=1Gi,ephemeral-storage=5Gi
+  - kube-reserved=cpu=500m,memory=1Gi,ephemeral-storage=5Gi
+  - eviction-hard=memory.available<1Gi,nodefs.available<10%,nodefs.inodesFree<5%,imagefs.available<10%,imagefs.inodesFree<5%
+  - eviction-soft=memory.available<2Gi,nodefs.available<15%,nodefs.inodesFree<10%,imagefs.available<15%,imagefs.inodesFree<10%
+  - eviction-soft-grace-period=memory.available=90s,nodefs.available=2m,nodefs.inodesFree=2m,imagefs.available=2m,imagefs.inodesFree=2m
+  - eviction-minimum-reclaim=memory.available=512Mi,nodefs.available=2%,imagefs.available=2%
+  - eviction-max-pod-grace-period=60
+  - image-gc-high-threshold=75
+  - image-gc-low-threshold=60
+  - container-log-max-size=10Mi
+  - container-log-max-files=3

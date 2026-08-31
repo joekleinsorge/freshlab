@@ -7,7 +7,7 @@ metadata:
     hajimari.io/appName: Mealie
     hajimari.io/icon: silverware-fork-knife
 spec:
-  ingressClassName: cilium
+  ingressClassName: istio
   tls:
     - hosts:
         - mealie.kleinsorge.dev

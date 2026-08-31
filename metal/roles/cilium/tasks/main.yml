@@ -12,9 +12,28 @@
   when:
     - gateway_api_install_crds | bool
     - (cilium_values.gatewayAPI.enabled | default(false)) | bool
-  kubernetes.core.k8s:
-    src: "https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gateway_api_crd_version }}/standard-install.yaml"
-    state: present
+  ansible.builtin.command:
+    argv:
+      - kubectl
+      - apply
+      - --server-side
+      - --force-conflicts
+      - -f
+      - "https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/{{ gateway_api_crd_version }}/config/crd/standard/gateway.networking.k8s.io_{{ item }}.yaml"
+  loop: "{{ gateway_api_required_crds }}"
+  register: gateway_api_crd_apply
+  changed_when: "'configured' in gateway_api_crd_apply.stdout or 'created' in gateway_api_crd_apply.stdout"
+
+- name: Check whether Prometheus ServiceMonitor CRD is available
+  kubernetes.core.k8s_info:
+    api_version: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: servicemonitors.monitoring.coreos.com
+  register: cilium_service_monitor_crd
+
+- name: Set Cilium ServiceMonitor availability
+  ansible.builtin.set_fact:
+    cilium_service_monitors_available: "{{ (cilium_service_monitor_crd.resources | length) > 0 }}"
 
 - name: Install Cilium
   block:
@@ -27,6 +46,39 @@
                 {
                   'bgpControlPlane': {
                     'enabled': (cilium_bgp.enabled | bool)
+                  },
+                  'operator': {
+                    'prometheus': {
+                      'serviceMonitor': {
+                        'enabled': (cilium_service_monitors_available | bool)
+                      }
+                    }
+                  },
+                  'prometheus': {
+                    'serviceMonitor': {
+                      'enabled': (cilium_service_monitors_available | bool)
+                    }
+                  },
+                  'envoy': {
+                    'prometheus': {
+                      'serviceMonitor': {
+                        'enabled': (cilium_service_monitors_available | bool)
+                      }
+                    }
+                  },
+                  'hubble': {
+                    'metrics': {
+                      'serviceMonitor': {
+                        'enabled': (cilium_service_monitors_available | bool)
+                      }
+                    },
+                    'relay': {
+                      'prometheus': {
+                        'serviceMonitor': {
+                          'enabled': (cilium_service_monitors_available | bool)
+                        }
+                      }
+                    }
                   }
                 },
                 recursive=True
@@ -76,7 +128,7 @@
       ansible.builtin.command:
         argv: "{{ cilium_helm_argv }}"
       register: cilium_helm_install
-      failed_when: false
+      failed_when: cilium_helm_install.rc != 0
       retries: "{{ cilium_helm_retries | int }}"
       delay: "{{ cilium_helm_retry_delay | int }}"
       until: cilium_helm_install.rc == 0

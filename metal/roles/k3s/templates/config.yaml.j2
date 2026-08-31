@@ -1,10 +1,16 @@
-{% if inventory_hostname == (groups['masters'] | intersect(ansible_play_hosts) | first) %}
+{% if inventory_hostname == k3s_bootstrap_master and k3s_initial_bootstrap | bool %}
 cluster-init: true
 {% else %}
-server: https://{{ control_plane_endpoint }}:6443
+# Bootstrap against a real control-plane address.  The external VIP depends on
+# Kubernetes leader election and must not be a prerequisite for joining etcd.
+server: https://{{ k3s_join_endpoint }}:6443
 {% endif %}
 token-file: {{ k3s_token_file }}
 {% if 'masters' in group_names %}
 {{ k3s_server_config | to_nice_yaml }}
 {% endif %}
 snapshotter: stargz
+kubelet-arg:
+{% for arg in k3s_kubelet_args %}
+  - "{{ arg }}"
+{% endfor %}

@@ -5,6 +5,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ printf "%s-gateway" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   secretName: {{ $gateway.tlsSecretName }}
   dnsNames:
@@ -17,8 +18,9 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: {{ printf "%s-gateway" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
 spec:
-  gatewayClassName: cilium
+  gatewayClassName: istio
   listeners:
     - name: https
       protocol: HTTPS
@@ -36,16 +38,12 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
-  {{- if $gateway.loadBalancerPool }}
-  infrastructure:
-    labels:
-      lb.cilium.io/pool: {{ $gateway.loadBalancerPool | quote }}
-  {{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ printf "%s-gateway-redirect" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   parentRefs:
     - name: {{ printf "%s-gateway" $gateway.serviceName }}
@@ -67,6 +65,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: {{ printf "%s-gateway" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   parentRefs:
     - name: {{ printf "%s-gateway" $gateway.serviceName }}

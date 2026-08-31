@@ -7,7 +7,7 @@ metadata:
     hajimari.io/appName: Frigate
     hajimari.io/icon: cctv
 spec:
-  ingressClassName: cilium
+  ingressClassName: istio
   rules:
     - host: frigate.kleinsorge.dev
       http:

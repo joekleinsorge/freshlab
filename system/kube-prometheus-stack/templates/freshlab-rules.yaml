@@ -1,0 +1,61 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: freshlab-health
+  namespace: {{ .Release.Namespace }}
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: freshlab.capacity
+      rules:
+        - alert: FreshlabNodeMemoryLow
+          expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < 0.10
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node {{ `{{ $labels.instance }}` }} has less than 10% memory available"
+            description: "Memory pressure is approaching eviction thresholds."
+        - alert: FreshlabNodeFilesystemLow
+          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.15
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Filesystem on {{ `{{ $labels.instance }}` }} is below 15% free"
+            description: "Free space on {{ `{{ $labels.mountpoint }}` }} is approaching the node eviction threshold."
+        - alert: FreshlabNodeFilesystemWillFill
+          expr: predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs"}[6h], 24 * 3600) < 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Filesystem on {{ `{{ $labels.instance }}` }} may fill within 24 hours"
+            description: "Current growth on {{ `{{ $labels.mountpoint }}` }} will exhaust available space."
+    - name: freshlab.workloads
+      rules:
+        - alert: FreshlabApplicationEndpointDown
+          expr: probe_success{job="blackbox-http"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Application endpoint {{ `{{ $labels.instance }}` }} is unavailable"
+            description: "The HTTPS health probe has failed continuously for five minutes."
+        - alert: FreshlabPodCrashLooping
+          expr: max_over_time(kube_pod_container_status_waiting_reason{reason="CrashLoopBackOff"}[10m]) >= 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.pod }}` }} is crash-looping"
+            description: "Container {{ `{{ $labels.container }}` }} has remained in CrashLoopBackOff."
+        - alert: FreshlabPersistentVolumeDegraded
+          expr: kube_persistentvolumeclaim_status_phase{phase!="Bound"} == 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is not bound"
+            description: "Application storage has not been available for ten minutes."

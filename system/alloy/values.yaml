@@ -1,0 +1,68 @@
+alloy:
+  alloy:
+    enableReporting: false
+    mounts:
+      varlog: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 384Mi
+    configMap:
+      content: |-
+        logging {
+          level  = "info"
+          format = "logfmt"
+        }
+
+        local.file_match "kubernetes_pods" {
+          path_targets = [{
+            __path__ = "/var/log/pods/*/*/*.log",
+            job      = "kubernetes-pods",
+            cluster  = "freshlab",
+          }]
+          sync_period = "10s"
+        }
+
+        loki.source.file "kubernetes_pods" {
+          targets    = local.file_match.kubernetes_pods.targets
+          forward_to = [loki.process.kubernetes_pods.receiver]
+        }
+
+        loki.process "kubernetes_pods" {
+          stage.cri {}
+          stage.regex {
+            source     = "filename"
+            expression = "/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_[^/]+/(?P<container>[^/]+)/.*\\.log"
+          }
+          stage.labels {
+            values = {
+              namespace = "",
+              pod       = "",
+              container = "",
+            }
+          }
+          forward_to = [loki.write.cluster.receiver]
+        }
+
+        loki.write "cluster" {
+          endpoint {
+            url = "http://loki.loki.svc.cluster.local:3100/loki/api/v1/push"
+          }
+        }
+
+  controller:
+    type: daemonset
+    tolerations:
+      - operator: Exists
+
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: kube-prometheus-stack
+    interval: 30s
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_node_name]
+        targetLabel: instance

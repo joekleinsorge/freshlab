@@ -1,17 +1,23 @@
 immich:
-  env:
-    TZ: America/New_York
-    DB_HOSTNAME: immich-postgres
-    DB_PORT: 5432
-    DB_USERNAME: immich
-    DB_DATABASE_NAME: immich
-    DB_PASSWORD:
-      valueFrom:
-        secretKeyRef:
-          name: immich-db
-          key: postgres-password
+  controllers:
+    main:
+      containers:
+        main:
+          env:
+            TZ: America/New_York
+            DB_HOSTNAME: immich-postgres
+            DB_PORT: 5432
+            DB_USERNAME: immich
+            DB_DATABASE_NAME: immich
+            DB_PASSWORD:
+              valueFrom:
+                secretKeyRef:
+                  name: immich-db
+                  key: postgres-password
 
   immich:
+    metrics:
+      enabled: true
     persistence:
       library:
         existingClaim: immich-library
@@ -20,7 +26,7 @@ immich:
     ingress:
       main:
         enabled: true
-        ingressClassName: cilium
+        ingressClassName: istio
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-prod
           hajimari.io/appName: Immich

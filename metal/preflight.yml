@@ -61,7 +61,6 @@
 - name: Validate host reachability and node prerequisites
   hosts: metal
   gather_facts: false
-  become: false
   vars:
     required_node_bins:
       - systemctl
@@ -69,10 +68,26 @@
       - ip
   tasks:
     - name: Check SSH reachability
+      become: false
       ansible.builtin.wait_for_connection:
         timeout: 10
         connect_timeout: 5
         sleep: 1
+
+    - name: Ensure passwordless sudo is available for automation
+      become: false
+      ansible.builtin.command:
+        argv:
+          - sudo
+          - --non-interactive
+          - "true"
+      register: preflight_passwordless_sudo
+      changed_when: false
+      failed_when: preflight_passwordless_sudo.rc != 0
+
+    - name: Gather host facts after connectivity is confirmed
+      become: false
+      ansible.builtin.setup:
 
     - name: Ensure required host variables are present
       ansible.builtin.assert:
@@ -82,7 +97,45 @@
           - disk is defined
         fail_msg: "Host vars must include ansible_host, network_interface, and disk."
 
+    - name: Ensure host is running Ubuntu Server 26.04 LTS
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] == 'Ubuntu'
+          - ansible_facts['distribution_version'] is version('26.04', '==')
+          - ansible_facts['architecture'] == 'x86_64'
+        fail_msg: >-
+          {{ inventory_hostname }} must run Ubuntu Server 26.04 LTS on amd64;
+          found {{ ansible_facts['distribution'] }}
+          {{ ansible_facts['distribution_version'] }} on
+          {{ ansible_facts['architecture'] }}.
+
     - name: Ensure required node binaries are available
       ansible.builtin.shell: "command -v {{ item }} >/dev/null 2>&1"
       loop: "{{ required_node_bins }}"
       changed_when: false
+
+    - name: Check configured network interface
+      ansible.builtin.stat:
+        path: "/sys/class/net/{{ network_interface }}"
+      register: configured_network_interface
+
+    - name: Ensure configured network interface exists
+      ansible.builtin.assert:
+        that:
+          - configured_network_interface.stat.exists
+        fail_msg: >-
+          Configured interface {{ network_interface }} does not exist on
+          {{ inventory_hostname }}. Update inventories/prod.yml from `ip -br link`.
+
+    - name: Check configured system disk
+      ansible.builtin.stat:
+        path: "/dev/{{ disk }}"
+      register: configured_system_disk
+
+    - name: Ensure configured system disk exists
+      ansible.builtin.assert:
+        that:
+          - configured_system_disk.stat.exists
+        fail_msg: >-
+          Configured disk /dev/{{ disk }} does not exist on {{ inventory_hostname }}.
+          Update inventories/prod.yml from `lsblk`.

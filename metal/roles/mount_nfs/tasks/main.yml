@@ -1,7 +1,17 @@
-- name: Mount NFS volume
+---
+- name: Ensure NFS mount point exists
+  ansible.builtin.file:
+    path: /mnt/media
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Configure NFS volume as a non-blocking automount
   ansible.posix.mount:
     src: 192.168.1.208:/volume1/Media
     path: /mnt/media
-    opts: rw,sync,hard
-    state: mounted
+    opts: rw,hard,_netdev,nofail,x-systemd.automount,x-systemd.idle-timeout=600,x-systemd.mount-timeout=10s
+    state: present
     fstype: nfs
+  notify: Reload systemd

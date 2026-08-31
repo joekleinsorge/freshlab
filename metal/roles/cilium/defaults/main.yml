@@ -6,7 +6,15 @@ cilium_helm_timeout: 15m
 cilium_helm_retries: 2
 cilium_helm_retry_delay: 15
 gateway_api_install_crds: true
-gateway_api_crd_version: v1.2.0
+gateway_api_crd_version: v1.6.1
+gateway_api_required_crds:
+  - gatewayclasses
+  - gateways
+  - httproutes
+  - referencegrants
+  - grpcroutes
+  - backendtlspolicies
+  - tlsroutes
 cilium_additional_load_balancer_pools: []
 cilium_bgp:
   enabled: false
@@ -25,6 +33,20 @@ cilium_bgp:
       restartTimeSeconds: 15
   peers: []
 cilium_values:
+  # Required when Cilium runs kube-proxy-free beneath Istio ambient.  Keep
+  # socket load-balancing out of pod namespaces and preserve Istio's chained
+  # CNI configuration.
+  cni:
+    exclusive: false
+    # Istio ambient chains itself into 05-cilium.conflist.  If Cilium keeps
+    # managing that file, both agents continually replace each other's work.
+    # The prerequisites role seeds a valid Cilium-only config on new hosts;
+    # after that Istio is the sole owner of the chained file.
+    customConf: true
+  socketLB:
+    hostNamespaceOnly: true
+  bpf:
+    masquerade: false
   operator:
     replicas: 1
     prometheus:

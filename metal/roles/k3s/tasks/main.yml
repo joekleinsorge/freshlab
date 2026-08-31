@@ -5,6 +5,7 @@
     dest: "{{ role_path }}/files/bin/k3s"
     mode: 0755
   delegate_to: localhost
+  become: false
   run_once: true
   register: k3s_binary
 
@@ -26,7 +27,27 @@
     - /etc/rancher/node
     - "{{ k3s_data_dir }}/agent/pod-manifests"
 
-- name: Configure container runtime resource limits
+- name: Mount dedicated k3s datastore volume
+  when: k3s_datastore_mount_src is defined
+  block:
+    - name: Ensure the datastore mount point exists
+      ansible.builtin.file:
+        path: "{{ k3s_data_dir }}/server/db"
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Mount and persist the dedicated datastore volume
+      ansible.posix.mount:
+        path: "{{ k3s_data_dir }}/server/db"
+        src: "{{ k3s_datastore_mount_src }}"
+        fstype: ext4
+        opts: defaults,nofail
+        state: mounted
+  tags: ['storage']
+
+- name: Remove unsafe whole-runtime resource limits
   block:
     - name: Create container resources configuration directory
       ansible.builtin.file:
@@ -34,36 +55,30 @@
         state: directory
         mode: '0755'
 
-    - name: Configure container resource limits
-      ansible.builtin.copy:
+    - name: Remove legacy k3s CPU and memory cap
+      ansible.builtin.file:
         dest: /etc/systemd/system/k3s.service.d/resource-limits.conf
-        content: |
-          [Service]
-          CPUAccounting=true
-          MemoryAccounting=true
-          CPUQuota=80%
-          MemoryMax=80%
-        mode: '0644'
-      notify: Restart k3s service
+        state: absent
+      notify: Reload systemd
   tags: ['resources']
 
 - name: Ensure at least one master is reachable for bootstrap operations
   run_once: true
   ansible.builtin.assert:
     that:
-      - (groups['masters'] | intersect(ansible_play_hosts) | length) > 0
-    fail_msg: "No reachable masters available. Reachable hosts in this play: {{ ansible_play_hosts }}"
+      - k3s_bootstrap_master in groups['masters']
+    fail_msg: "k3s_bootstrap_master must name a host in the masters inventory group."
 
 - name: Check if k3s token file exists on the bootstrap master
   run_once: true
-  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  delegate_to: "{{ k3s_bootstrap_master }}"
   ansible.builtin.stat:
     path: "{{ k3s_token_file }}"
   register: k3s_token_file_stat
 
 - name: Generate k3s token file on the bootstrap master if not exist yet
   run_once: true
-  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  delegate_to: "{{ k3s_bootstrap_master }}"
   when: not k3s_token_file_stat.stat.exists
   ansible.builtin.copy:
     content: "{{ lookup('community.general.random_string', length=32) }}"
@@ -72,7 +87,7 @@
 
 - name: Get k3s token from the bootstrap master
   run_once: true
-  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  delegate_to: "{{ k3s_bootstrap_master }}"
   ansible.builtin.slurp:
     src: "{{ k3s_token_file }}"
   register: k3s_token_base64
@@ -93,6 +108,7 @@
       dest: "{{ k3s_config_file }}"
     - src: k3s.service.j2
       dest: "{{ k3s_service_file }}"
+  tags: ['config']
 
 - name: Copy kube-vip manifests
   when: "'masters' in group_names"
@@ -115,22 +131,23 @@
 
 - name: Wait for Kubernetes config file on the bootstrap master
   run_once: true
-  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  delegate_to: "{{ k3s_bootstrap_master }}"
   ansible.builtin.wait_for:
     path: "{{ k3s_kubeconfig_file }}"
     timeout: 120
 
 - name: Get Kubernetes config file
   run_once: true
-  delegate_to: "{{ (groups['masters'] | intersect(ansible_play_hosts) | first) }}"
+  delegate_to: "{{ k3s_bootstrap_master }}"
   ansible.builtin.slurp:
     src: "{{ k3s_kubeconfig_file }}"
   register: kubeconfig_base64
 
 - name: Write Kubernetes config file with the correct cluster address
   ansible.builtin.copy:
-    content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', hostvars[(groups['masters'] | intersect(ansible_play_hosts) | first)].ansible_host) }}"
+    content: "{{ kubeconfig_base64.content | b64decode | replace('127.0.0.1', control_plane_endpoint) }}"
     dest: "{{ playbook_dir }}/kubeconfig.yaml"
     mode: 0600
   delegate_to: localhost
+  become: false
   run_once: true

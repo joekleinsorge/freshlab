@@ -1,0 +1,63 @@
+base:
+  defaultRevision: default
+
+istiod:
+  profile: ambient
+  global:
+    hub: docker.io/istio
+    proxy:
+      holdApplicationUntilProxyStarts: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+  meshConfig:
+    accessLogFile: /dev/stdout
+    enablePrometheusMerge: true
+    ingressClass: istio
+    ingressSelector: istio
+    ingressService: istio-ingressgateway
+    defaultConfig:
+      tracing: {}
+    extensionProviders:
+      - name: otel
+        opentelemetry:
+          service: opentelemetry-collector.opentelemetry.svc.cluster.local
+          port: 4317
+  pilot:
+    cni:
+      enabled: true
+    autoscaleEnabled: true
+    autoscaleMin: 1
+    autoscaleMax: 3
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 1Gi
+
+cni:
+  profile: ambient
+  # Cilium's Helm-managed CNI files live in the standard host paths even on
+  # k3s. Istio must chain into that same conflist rather than k3s' bundled path.
+  cniBinDir: /opt/cni/bin
+  cniConfDir: /etc/cni/net.d
+  ambient:
+    enabled: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+ztunnel:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi

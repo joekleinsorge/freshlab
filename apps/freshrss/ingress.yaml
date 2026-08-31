@@ -14,7 +14,7 @@ metadata:
   name: freshrss
   namespace: freshrss
 spec:
-  ingressClassName: cilium
+  ingressClassName: istio
   rules:
     - host: rss.kleinsorge.dev
       http:

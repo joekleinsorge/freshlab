@@ -7,7 +7,7 @@ metadata:
     hajimari.io/appName: Authelia
     hajimari.io/icon: shield-account
 spec:
-  ingressClassName: cilium
+  ingressClassName: istio
   rules:
     - host: authelia.kleinsorge.dev
       http:
