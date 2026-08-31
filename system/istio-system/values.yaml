@@ -61,3 +61,28 @@ ztunnel:
       memory: 256Mi
     limits:
       memory: 512Mi
+
+# Public applications attached to the shared ambient-mode Gateway. Keeping
+# this inventory here gives every app the same routing and mesh policy.
+appRoutes:
+  - {namespace: authelia, name: authelia, hostname: authelia.kleinsorge.dev, service: authelia, port: 80}
+  - {namespace: budget, name: budget, hostname: budget.kleinsorge.dev, service: budget, port: 5006}
+  - {namespace: dex, name: dex, hostname: dex.kleinsorge.dev, service: dex, port: 5556}
+  - {namespace: excalidraw, name: excalidraw, hostname: draw.kleinsorge.dev, service: excalidraw, port: 80}
+  - {namespace: flask, name: flask, hostname: flask.kleinsorge.dev, service: flask-cache, port: 80}
+  - {namespace: freshrss, name: freshrss, hostname: rss.kleinsorge.dev, service: freshrss, port: 80}
+  - {namespace: frigate, name: frigate, hostname: frigate.kleinsorge.dev, service: frigate, port: 5000}
+  - {namespace: grafana, name: grafana, hostname: grafana.kleinsorge.dev, service: grafana, port: 80}
+  - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
+  - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000}
+  - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
+  - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
+  - {namespace: kitchenowl, name: kitchenowl, hostname: kitchenowl.kleinsorge.dev, service: kitchenowl, port: 80}
+  - {namespace: kube-ops-view, name: kube-ops-view, hostname: view.kleinsorge.dev, service: kube-ops-view, port: 8080}
+  - {namespace: librespeed, name: librespeed, hostname: speed.kleinsorge.dev, service: librespeed, port: 80}
+  - {namespace: mealie, name: mealie, hostname: mealie.kleinsorge.dev, service: mealie, port: 9000}
+  - {namespace: nginx, name: nginx, hostname: web.kleinsorge.dev, service: nginx-service, port: 80}
+  - {namespace: plex, name: plex, hostname: plex.kleinsorge.dev, service: plex, port: 32400}
+  - {namespace: seafile, name: seafile, hostname: files.kleinsorge.dev, service: seafile, port: 80}
+  - {namespace: tools, name: tools, hostname: tools.kleinsorge.dev, service: tools-service, port: 80}
+  - {namespace: uptime-kuma, name: uptime-kuma, hostname: status.kleinsorge.dev, service: uptime-kuma, port: 3001}
