@@ -2,12 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kitchenowl
+  annotations:
+    argocd.argoproj.io/sync-options: Replace=true
   labels:
     app: kitchenowl
 spec:
   replicas: 1
   strategy:
     type: Recreate
+    rollingUpdate: null
   selector:
     matchLabels:
       app: kitchenowl

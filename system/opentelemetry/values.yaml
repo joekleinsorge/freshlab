@@ -33,29 +33,6 @@ opentelemetry-collector:
           - node
           - volume
         
-      filelog:
-        include: [/var/log/pods/**/*.log]
-        exclude: []
-        start_at: beginning
-        include_file_path: true
-        include_file_name: false
-        operators:
-          - type: router
-            id: get-format
-            routes:
-              - output: parser-docker
-                expr: 'body matches "^\\{"'
-          - type: json_parser
-            id: parser-docker
-            output: extract_metadata_from_filepath
-            timestamp:
-              parse_from: time
-              layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-          - type: regex_parser
-            id: extract_metadata_from_filepath
-            regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<pod_uid>[a-f0-9\-]+)\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
-            parse_from: attributes["file.path"]
-      
       hostmetrics:
         collection_interval: 30s
         scrapers:
@@ -102,19 +79,6 @@ opentelemetry-collector:
         tls:
           insecure: true
       
-      loki:
-        endpoint: http://loki.loki:3100/loki/api/v1/push
-        format: json
-        labels:
-          resource:
-            container.name: "container_name"
-            k8s.namespace.name: "namespace"
-            k8s.pod.name: "pod_name"
-            k8s.container.name: "container_name"
-          attributes:
-            severity: "severity"
-            app: "app"
-      
       debug:
         verbosity: detailed
 
@@ -127,9 +91,6 @@ opentelemetry-collector:
           interval: 5s
           exporter_failure_threshold: 5
       
-      memory_ballast:
-        size_mib: 165
-      
       pprof:
         endpoint: 0.0.0.0:1777
         block_profile_fraction: 0
@@ -138,7 +99,7 @@ opentelemetry-collector:
         endpoint: 0.0.0.0:55679
 
     service:
-      extensions: [health_check, memory_ballast, pprof, zpages]
+      extensions: [health_check, pprof, zpages]
       pipelines:
         traces:
           receivers: [otlp]
@@ -148,17 +109,11 @@ opentelemetry-collector:
           receivers: [otlp, hostmetrics, kubeletstats]
           processors: [memory_limiter, batch, k8sattributes, resourcedetection]
           exporters: [prometheus, debug]
-        logs:
-          receivers: [otlp, filelog]
-          processors: [memory_limiter, batch, k8sattributes, resourcedetection]
-          exporters: [loki, debug]
       telemetry:
         logs:
           level: info
           development: false
           encoding: json
-          outputPaths: [/dev/stdout]
-          errorOutputPaths: [/dev/stderr]
         metrics:
           level: detailed
           address: ":8888"
@@ -173,6 +128,16 @@ opentelemetry-collector:
     - name: varlog
       mountPath: /var/log
       readOnly: true
+
+  extraEnvs:
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: KUBE_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
 
   extraVolumes:
     - name: varlogpods
