@@ -1,0 +1,5 @@
+volsync:
+  metrics:
+    # The chart's ServiceMonitor does not attach a bearer token, so its
+    # kube-rbac-proxy endpoint otherwise returns 401 to Prometheus.
+    disableAuth: true

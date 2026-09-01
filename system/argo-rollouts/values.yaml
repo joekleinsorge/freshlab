@@ -2,6 +2,11 @@ argo-rollouts:
   installCRDs: true
   clusterInstall: true
   controller:
+    # The legacy chart omitted this label from its immutable selector. Argo CD
+    # must replace only the Deployment during the one-time chart upgrade.
+    component: server
+    deploymentAnnotations:
+      argocd.argoproj.io/sync-options: Replace=true
     resources:
       requests:
         cpu: 50m
