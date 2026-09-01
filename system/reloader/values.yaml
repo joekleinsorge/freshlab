@@ -2,6 +2,10 @@ reloader:
   reloader:
     autoReloadAll: true
     watchGlobally: true
+    # Prometheus Operator and Grafana sidecars hot-reload their generated
+    # configuration. Restarting them for every Secret update causes needless
+    # Prometheus WAL replays and monitoring outages.
+    ignoreNamespaces: kube-prometheus-stack
     reloadOnCreate: true
     reloadOnDelete: true
     syncAfterRestart: true
