@@ -27,8 +27,11 @@
       - iptables
       - logrotate
       - nfs-common
+      - nvme-cli
       - open-iscsi
+      - smartmontools
       - socat
+      - sysstat
       - ufw
     state: present
     update_cache: true
