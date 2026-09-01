@@ -43,6 +43,12 @@ kube-prometheus-stack:
           targetLabel: instance
       scrapeTimeout: 30s
       interval: 30s
+  kube-state-metrics:
+    prometheus:
+      monitor:
+        # Full Kubernetes object-state scrapes can exceed the chart's default
+        # 10-second timeout while the cluster is reconciling many resources.
+        scrapeTimeout: 30s
   grafana:
     admin:
       existingSecret: grafana-admin-credentials
