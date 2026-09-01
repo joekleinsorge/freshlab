@@ -1,6 +1,6 @@
 # Freshlab hardware and cluster issue log
 
-Last updated: 2026-08-31 20:52 EDT
+Last updated: 2026-09-01 16:38 EDT
 
 This is the running record of confirmed faults, operational risks, and unresolved
 symptoms. Update the timestamp and relevant entry whenever an issue is found,
@@ -11,7 +11,7 @@ changes state, or is resolved. Do not record credentials or secret values here.
 | ID | Area | Severity | Status | Evidence / impact | Current mitigation | Permanent action |
 |---|---|---:|---|---|---|---|
 | HW-001 | metal1 NVMe | Critical | Failed; replacement required | The 128 GB SK hynix BC501 is visible on PCIe but reports a 0-byte namespace. `nvme list`, SMART, and controller-identify commands fail with `Resource temporarily unavailable`; the kernel logged namespace-identify and real filesystem write/journal failures. | The NVMe datastore was removed from `/etc/fstab` and Freshlab automation. K3s and etcd use the surviving root disk. | Replace it with an M.2 2280 NVMe SSD. Reinstall Ubuntu/K3s/etcd on the replacement, burn-in test it, then return metal1 to scheduling. Do not reuse the BC501. |
-| HW-002 | metal1 root HDD / etcd | High | Healthy media; unsuitable workload | The active Seagate ST500LM034 500 GB 7200 RPM HDD passes SMART and a new short self-test with zero reallocated, pending, or uncorrectable sectors. It nevertheless has 30,267 power-on hours. Historical I/O averaged about 119-131 ms write latency with 28% I/O wait, and etcd reads took 0.1-10+ seconds until metal1 became `NotReady`. | K3s was recovered and metal1 is `Ready` but cordoned (`SchedulingDisabled`). With metal3 now unreachable, etcd availability depends on metal1 and metal2, increasing the urgency of both node repairs. | Keep the HDD only for secondary/noncritical storage. Do not run etcd or latency-sensitive cluster state on it. |
+| HW-002 | metal1 root HDD / etcd | High | Healthy media; unsuitable workload | The active Seagate ST500LM034 500 GB 7200 RPM HDD passes SMART and a new short self-test with zero reallocated, pending, or uncorrectable sectors. It nevertheless has 30,267 power-on hours. Historical I/O averaged about 119-131 ms write latency with 28% I/O wait, and etcd reads took 0.1-10+ seconds until metal1 became `NotReady`. | K3s was recovered and metal1 is `Ready` but cordoned (`SchedulingDisabled`). The other three nodes are currently `Ready`. | Keep the HDD only for secondary/noncritical storage. Do not run etcd or latency-sensitive cluster state on it. |
 | HW-003 | metal1 storage cooling | Medium | Active | The Seagate HDD is currently 53°C, has repeatedly reached 60°C, and records 48 over-temperature-limit events. Its specified maximum is 44°C. | Reduced cluster workload by cordoning metal1. | Clean the OptiPlex airflow path, verify its fan and drive mounting, and recheck temperatures after installing the replacement SSD. |
 | HW-004 | metal0 Ethernet link | High | Active | The NIC and link partner advertise 1 Gb/s, but the live full-duplex link negotiated at only 100 Mb/s. This constrains Longhorn replication and all node/application traffic. Interface counters show no carrier or transmit errors, so the cable or switch port is the first suspect. | The node remains online; no link reset was forced while it is serving workloads. | Replace/reseat the Ethernet cable and try a known-good gigabit switch port, then confirm `ethtool enp1s0` reports 1000 Mb/s. Replace the NIC only if the fault follows the node. |
 | HW-005 | metal0 root HDD / Longhorn | Medium | Upgrade recommended | The node stores about 46 GiB of Longhorn replicas and 18 GiB of K3s data on a Seagate ST500LM034 mechanical HDD. Capacity can be expanded in place, but HDD latency and the 100 Mb/s link make this the cluster's slow storage path. SMART tooling is not yet installed, so media age/health is not certified. | Prometheus/Alertmanager monitor disk pressure and capacity. | Prefer a 500 GB-1 TB TLC SSD for the OS and Longhorn data. Until then, install SMART monitoring and avoid making this node the only replica location for important data. |
@@ -27,7 +27,7 @@ changes state, or is resolved. Do not record credentials or secret values here.
 
 | ID | Area | Status | Evidence / next check |
 |---|---|---|---|
-| OBS-001 | Prometheus | Recovering | Its healthy 50 GiB Longhorn volume moved from metal1 to metal0. Prometheus is running and replaying its TSDB; readiness remains 1/2 until replay completes. Do not delete the volume or WAL merely to accelerate startup. |
+| OBS-001 | Prometheus storage | Recovered, watch | A stale read-only Longhorn attachment on metal2 was cleared by moving the healthy 50 GiB volume to metal0. Prometheus recovered its retained WAL. Continue watching for filesystem or Longhorn attachment errors; do not delete the volume merely to accelerate a future startup. |
 | OBS-002 | Seafile MariaDB volume | Recovered, watch | The new 10 GiB Longhorn volume temporarily degraded after metal1 failed, then rebuilt to healthy. Confirm it stays healthy after the next node maintenance event. |
 | OBS-003 | Chassis LED patterns | Unclassified | metal1/2/3 were reported flashing white/orange sequences during initial recovery. No vendor-specific diagnostic mapping or continuing hardware fault has been confirmed from those patterns. Record the machine model and an exact video/pattern if they recur. |
 
@@ -42,15 +42,20 @@ changes state, or is resolved. Do not record credentials or secret values here.
 | RES-005 | Application routing | Application namespaces are enrolled in Istio ambient mode. Shared Gateway API HTTPRoutes are Accepted with resolved backends and ExternalDNS publishes the Gateway addresses. |
 | RES-006 | Observability agents | Grafana Alloy and OpenTelemetry agents run on all four nodes. Loki, Tempo, Grafana, and Alertmanager are operational with persistent storage where applicable. |
 | RES-007 | KitchenOwl RWO rollout | Deployment strategy changed to `Recreate`, preventing rolling updates from deadlocking on its single-writer Longhorn volume. |
+| RES-008 | Prometheus memory and restart loop | Prometheus now prefers 32 GiB metal0, requests 6 GiB, and has an 8 GiB limit. Stakater Reloader excludes the monitoring namespace so generated Prometheus Secrets hot-reload instead of forcing long WAL replays. |
+| RES-009 | Monitoring scrape health | Blackbox Exporter is installed; the stale duplicate kubelet service was removed; Longhorn allows Prometheus-only metrics ingress; VolSync metrics no longer return 401; invalid Kindle Weather metrics scraping was removed; and Argo Rollouts was upgraded from v1.0.2 to v1.10.0. |
+| RES-010 | Argo CD public DNS | Legacy Argo CD/Workflows Ingresses were removed, their Istio Gateways were pinned to 192.168.1.230 and 192.168.1.229, stale mixed-controller route status was cleared, and ExternalDNS now owns the corrected records. |
+| RES-011 | Shared application routing | Legacy Ingress definitions for FreshRSS, Immich, Kindle Weather, NGINX, Plex, and Seafile were removed so their Gateway API HTTPRoutes are the single routing source. Plex monitoring now uses its unauthenticated `/identity` health endpoint, and the NGINX index was restored to its shared NFS volume. |
+| RES-012 | k3s control-plane alerts | Upstream alerts for separately deployed kube-proxy, kube-scheduler, and kube-controller-manager were disabled because k3s embeds these components in its server process. Node, API server, and etcd monitoring remain enabled. |
 
 ## Current capacity baseline
 
 | Node | Root disk used | Kubernetes memory used | Scheduling |
 |---|---:|---:|---|
-| metal0 | about 81% of the 100 GiB root LV; 363 GiB unallocated in its VG | 15% | Enabled |
-| metal1 | 16% | 29% | Disabled while HW-001/HW-002 remain open |
-| metal2 | 51% | 86% of Kubernetes-allocatable memory | Enabled |
-| metal3 | 56% | 16% | Enabled; Ready |
+| metal0 | about 81% of the 100 GiB root LV; 363 GiB unallocated in its VG | 33% | Enabled |
+| metal1 | 16% | 34% | Disabled while HW-001/HW-002 remain open |
+| metal2 | 51% | 67% of Kubernetes-allocatable memory | Enabled |
+| metal3 | 56% | 35% | Enabled; Ready |
 
 The capacity percentages are point-in-time observations, not guarantees. Grafana
 and Alertmanager are the authoritative ongoing view.

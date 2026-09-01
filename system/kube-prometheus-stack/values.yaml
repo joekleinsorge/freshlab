@@ -1,4 +1,13 @@
 kube-prometheus-stack:
+  # k3s runs these control-plane components inside the server process rather
+  # than as separately scrapeable pods. Disable the upstream alerts that
+  # would otherwise report them as down even while the cluster is healthy.
+  kubeProxy:
+    enabled: false
+  kubeControllerManager:
+    enabled: false
+  kubeScheduler:
+    enabled: false
   alertmanager:
     alertmanagerSpec:
       retention: 120h
@@ -185,7 +194,7 @@ kube-prometheus-stack:
                 - https://kitchenowl.kleinsorge.dev
                 - https://mealie.kleinsorge.dev
                 - https://photos.kleinsorge.dev
-                - https://plex.kleinsorge.dev
+                - https://plex.kleinsorge.dev/identity
                 - https://rss.kleinsorge.dev
                 - https://speed.kleinsorge.dev
                 - https://status.kleinsorge.dev

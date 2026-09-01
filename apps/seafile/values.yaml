@@ -1,7 +1,7 @@
 seafile:
   ingress:
     main:
-      enabled: true
+      enabled: false
       ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
