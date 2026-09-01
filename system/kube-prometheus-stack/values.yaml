@@ -113,8 +113,6 @@ kube-prometheus-stack:
       enabled: true
       size: 10Gi
       storageClassName: longhorn-retain
-  prometheus-blackbox-exporter:
-    enabled: true
   prometheus:
     prometheusSpec:
       # Allow slow WAL replay on restart without startup probe flapping.
@@ -142,13 +140,13 @@ kube-prometheus-stack:
       resources:
         requests:
           cpu: 500m
-          # Prometheus currently holds about 3.8 GiB for the active series.
-          # Request its real footprint so the scheduler does not overpack a
-          # 16 GiB control-plane node.
-          memory: 4Gi
+          # Prometheus settles above 5 GiB and can peak higher while replaying
+          # its WAL. Reserve its real footprint so the scheduler cannot
+          # overpack a 16 GiB control-plane node.
+          memory: 6Gi
         limits:
           cpu: 1000m
-          memory: 6Gi
+          memory: 8Gi
       storageSpec:
         volumeClaimTemplate:
           spec:
@@ -207,3 +205,6 @@ grafanaGateway:
     name: letsencrypt-prod
     kind: ClusterIssuer
   loadBalancerPool: ""
+
+prometheus-blackbox-exporter:
+  enabled: true
