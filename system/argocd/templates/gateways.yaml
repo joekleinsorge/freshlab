@@ -19,6 +19,9 @@ kind: Gateway
 metadata:
   name: {{ printf "%s-gateway" $gateway.serviceName }}
   namespace: {{ $.Release.Namespace }}
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ $gateway.host | quote }}
+    external-dns.alpha.kubernetes.io/target: {{ $gateway.address | quote }}
 spec:
   gatewayClassName: istio
   addresses:
