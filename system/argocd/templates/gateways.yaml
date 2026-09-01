@@ -21,6 +21,9 @@ metadata:
   namespace: {{ $.Release.Namespace }}
 spec:
   gatewayClassName: istio
+  addresses:
+    - type: IPAddress
+      value: {{ $gateway.address | quote }}
   listeners:
     - name: https
       protocol: HTTPS

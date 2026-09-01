@@ -18,7 +18,7 @@ argo-cd:
       maxReplicas: 5
       targetCPUUtilizationPercentage: 80
     ingress:
-      enabled: true
+      enabled: false
       ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -132,7 +132,7 @@ argo-workflows:
       - server
       - client
     ingress:
-      enabled: true
+      enabled: false
       className: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -148,6 +148,7 @@ argo-workflows:
 argocdGateway:
   enabled: true
   host: argocd.kleinsorge.dev
+  address: 192.168.1.230
   serviceName: argocd-server
   servicePort: 80
   tlsSecretName: argocd-gateway-tls
@@ -159,6 +160,7 @@ argocdGateway:
 argoWorkflowsGateway:
   enabled: true
   host: workflows.kleinsorge.dev
+  address: 192.168.1.229
   serviceName: argocd-argo-workflows-server
   servicePort: 2746
   tlsSecretName: argo-workflows-gateway-tls
