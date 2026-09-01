@@ -129,13 +129,26 @@ kube-prometheus-stack:
       probeNamespaceSelector: {}
       retention: 15d
       retentionSize: "10GB"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - metal0
       resources:
         requests:
           cpu: 500m
-          memory: 2Gi
+          # Prometheus currently holds about 3.8 GiB for the active series.
+          # Request its real footprint so the scheduler does not overpack a
+          # 16 GiB control-plane node.
+          memory: 4Gi
         limits:
           cpu: 1000m
-          memory: 4Gi
+          memory: 6Gi
       storageSpec:
         volumeClaimTemplate:
           spec:
