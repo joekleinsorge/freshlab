@@ -10,6 +10,13 @@ argo-cd:
       resource.customizations.ignoreResourceUpdates.all: |
         jsonPointers:
           - /status
+      # istiod deliberately fills in CA data and tightens its validators after
+      # Helm creates them. Treat those runtime-owned webhook bodies as live
+      # controller state instead of permanent Git drift.
+      resource.customizations.ignoreDifferences.admissionregistration.k8s.io_ValidatingWebhookConfiguration: |
+        jqPathExpressions:
+          - '.webhooks[]? | select(.name == "rev.validation.istio.io")'
+          - '.webhooks[]? | select(.name == "validation.istio.io")'
   server:
     replicas: 2
     autoscaling:
