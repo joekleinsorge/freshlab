@@ -1,0 +1,95 @@
+name: Supply chain
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-and-sbom:
+    name: Scan repository and generate SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1
+
+      - name: Trivy Kubernetes configuration scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: 1
+
+      - name: Generate SPDX SBOM with Syft
+        uses: anchore/sbom-action@v0.20.6
+        with:
+          path: .
+          format: spdx-json
+          output-file: freshlab.spdx.json
+          upload-artifact: false
+
+      - name: Report image digest pinning
+        run: ./scripts/check-image-pinning.sh
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: freshlab-sbom
+          path: freshlab.spdx.json
+          if-no-files-found: error
+
+  sign-sbom:
+    name: Sign SBOM on main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: scan-and-sbom
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Download SBOM
+        uses: actions/download-artifact@v5
+        with:
+          name: freshlab-sbom
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.8.1
+
+      - name: Sign and verify SBOM
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign sign-blob --yes \
+            --output-signature freshlab.spdx.json.sig \
+            --output-certificate freshlab.spdx.json.pem \
+            freshlab.spdx.json
+          cosign verify-blob \
+            --certificate freshlab.spdx.json.pem \
+            --signature freshlab.spdx.json.sig \
+            --certificate-identity-regexp 'https://github.com/joekleinsorge/freshlab/.github/workflows/supply-chain.yml@refs/heads/main' \
+            --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+            freshlab.spdx.json
+
+      - name: Upload signed SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: freshlab-signed-sbom
+          path: |
+            freshlab.spdx.json
+            freshlab.spdx.json.sig
+            freshlab.spdx.json.pem

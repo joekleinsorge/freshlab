@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: argo-server-sso
+    namespace: argocd
+type: Opaque
+stringData:
+    client-id: ENC[AES256_GCM,data:64PHnBtI72NZx+MHc3nSkaJK,iv:BSr9OBkWhuaSjUdY2Nh/3ciJCImshFpmd3Tisr5nQXI=,tag:0E44rd0GeP2EPheG0+mPkw==,type:str]
+    client-secret: ENC[AES256_GCM,data:L3n+M6VWht5HpPxUneKG58qnXLyg+Eo0n3iL3p1K05Kb+BKLuWdPl1eu3EDXO+xWNCxy3nBZ+1hsemurQ0cvTA==,iv:mMJLH+DuzQA+Kuf7zq5OjXSrKUsdOIkMyoh9vJfU6jA=,tag:TSc3TAxAU8bJQCuPdNhxRg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBFai9jMyt1TkFvMGxtd1o2
+            RFZRQzY3ZFMrd3c1cmZEOTA0SThocFBqT3pjCkhmMG04akJwbTN5R0xLd00vK2VM
+            Y25PcndWSzNYMTJiS0J6cTBuenVMQVUKLS0tIG5WZE9GcmYyazVMeHVib2doaDIy
+            R3FBaFdjRWpmSll2WURpbzNveE1JMHMKJ9ko/iyQ85vHURK60DCCCXcuKvDXBBVA
+            DwkqQbLXNOMEwgWnBCGc2s6QaZ0imJGRwMTkU1/j3sKlWEfAQUB9Mw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-02T00:54:55Z"
+    mac: ENC[AES256_GCM,data:Vi4yG1a71dLy6klG4969aUpnTrWT5kNLmV24NKnOr0jO3VKN70Dnnfjv+hMTi1bkMoxfdbY4InNsWJHlXqgBs3XTjOAhNLE6mZzirNgzs8RXAb6uwBvmtcEA6GoNMSc3Vh4LTskjBJa9KxTJ1ZfWn3YjrzJ1wFqXRDBbfCUsxIo=,iv:NdXBcvtdYwsP1QFjfSGIXsqeIrSWvIvlkSyMpa5YYMI=,tag:evH9uMPS+2zmJ7x0Oe+ERA==,type:str]
+    version: 3.13.3

@@ -11,7 +11,6 @@
 - name: Install Gateway API CRDs
   when:
     - gateway_api_install_crds | bool
-    - (cilium_values.gatewayAPI.enabled | default(false)) | bool
   ansible.builtin.command:
     argv:
       - kubectl

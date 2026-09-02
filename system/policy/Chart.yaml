@@ -1,0 +1,4 @@
+apiVersion: v2
+name: policy
+version: 0.0.0
+description: Freshlab baseline admission and network policy

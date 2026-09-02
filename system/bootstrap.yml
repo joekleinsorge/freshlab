@@ -8,6 +8,35 @@
         name: argocd
         state: present
 
+    - name: Check for the local SOPS age identity
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/../key.txt"
+      register: sops_age_identity
+
+    - name: Require the local SOPS age identity
+      ansible.builtin.assert:
+        that:
+          - sops_age_identity.stat.exists
+          - sops_age_identity.stat.isreg
+        fail_msg: >-
+          Missing key.txt. Restore the gitignored SOPS age identity before
+          bootstrapping the cluster.
+
+    - name: Seed the Argo CD SOPS age identity
+      kubernetes.core.k8s:
+        state: present
+        apply: true
+        resource_definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: sops-age
+            namespace: argocd
+          type: Opaque
+          stringData:
+            keys.txt: "{{ lookup('ansible.builtin.file', playbook_dir + '/../key.txt') }}"
+      no_log: true
+
     - name: Render ArgoCD manifests from Helm chart
       kubernetes.core.helm_template:
         chart_ref: ./argocd

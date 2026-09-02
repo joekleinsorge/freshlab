@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: freshlab-cluster-readiness
+spec:
+  entrypoint: readiness
+  serviceAccountName: freshlab-ops-readonly
+  podGC:
+    strategy: OnWorkflowCompletion
+  ttlStrategy:
+    secondsAfterCompletion: 3600
+  arguments:
+    parameters:
+      - name: timeout
+        value: 5m
+  templates:
+    - name: readiness
+      inputs:
+        parameters:
+          - name: timeout
+      container:
+        image: registry.k8s.io/kubectl:v1.32.2@sha256:b48ea9c7a5306ad509987009af385561476e4a4c4c75de99bd4b4efbe4d66332
+        command:
+          - /bin/sh
+          - -ec
+        args:
+          - |
+            kubectl wait nodes --all --for=condition=Ready --timeout="$TIMEOUT"
+            kubectl wait applications.argoproj.io --all --namespace=argocd \
+              --for=jsonpath='{.status.health.status}'=Healthy --timeout="$TIMEOUT"
+        env:
+          - name: TIMEOUT
+            value: '{{ "{{inputs.parameters.timeout}}" }}'
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault

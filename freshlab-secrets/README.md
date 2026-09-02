@@ -1,6 +1,9 @@
 # Freshlab SOPS Secrets
 
-This directory stores Kubernetes secrets encrypted with SOPS.
+This directory stores Kubernetes secrets encrypted with SOPS. Argo CD renders
+the directory with KSOPS and continuously reconciles the decrypted Kubernetes
+Secrets. The age identity is seeded once during cluster bootstrap and remains
+gitignored.
 
 ## Prerequisites
 
@@ -22,7 +25,14 @@ sops freshlab-secrets/kindle.sops.yaml
 sops -d freshlab-secrets/kindle.sops.yaml | kubectl apply -f -
 ```
 
-## Apply all secrets
+## Reconcile through GitOps
+
+Commit the encrypted file. The `freshlab-secrets` Argo CD Application detects
+the change and reconciles it automatically.
+
+## Recovery: apply secrets manually
+
+The helper remains available for bootstrap recovery or when Argo CD is down.
 
 ```bash
 cd freshlab-secrets

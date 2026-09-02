@@ -1,4 +1,6 @@
 dex:
+  image:
+    tag: v2.45.1
   config:
     issuer: https://dex.kleinsorge.dev
     storage:
@@ -10,8 +12,13 @@ dex:
     enablePasswordDB: true
     staticPasswords:
       - email: admin@kleinsorge.dev
-        hash: "$2y$10$KI/Be/7SkUHIKbmdNQLoAOHpKXZgy/3a.Z8oWwqfoz6rI7Q5MW0EO"
+        hashFromEnv: DEX_ADMIN_PASSWORD_HASH
         username: admin
+        name: Freshlab Administrator
+        preferredUsername: admin
+        emailVerified: true
+        groups:
+          - freshlab-admins
         userID: "1"
     staticClients:
       - id: grafana-sso
@@ -19,6 +26,16 @@ dex:
         redirectURIs:
           - 'https://grafana.kleinsorge.dev/login/generic_oauth'
         secretEnv: GRAFANA_SSO_CLIENT_SECRET
+      - id: argocd-sso
+        name: Argo CD
+        redirectURIs:
+          - 'https://argocd.kleinsorge.dev/auth/callback'
+        secretEnv: ARGOCD_SSO_CLIENT_SECRET
+      - id: argo-workflows-sso
+        name: Argo Workflows
+        redirectURIs:
+          - 'https://workflows.kleinsorge.dev/oauth2/callback'
+        secretEnv: ARGO_WORKFLOWS_SSO_CLIENT_SECRET
   envFrom:
     - secretRef:
         name: dex-secrets

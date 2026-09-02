@@ -1,0 +1,67 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: freshlab-pod-baseline
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+        scope: Namespaced
+  validations:
+    - expression: "!has(object.spec.hostNetwork) || object.spec.hostNetwork == false"
+      message: "Application pods must not use the host network."
+    - expression: "!has(object.spec.hostPID) || object.spec.hostPID == false"
+      message: "Application pods must not use the host PID namespace."
+    - expression: "!has(object.spec.hostIPC) || object.spec.hostIPC == false"
+      message: "Application pods must not use the host IPC namespace."
+    - expression: "object.spec.containers.all(container, !has(container.securityContext) || !has(container.securityContext.privileged) || container.securityContext.privileged == false)"
+      message: "Application containers must not be privileged."
+    - expression: "!has(object.spec.initContainers) || object.spec.initContainers.all(container, !has(container.securityContext) || !has(container.securityContext.privileged) || container.securityContext.privileged == false)"
+      message: "Application init containers must not be privileged."
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: freshlab-pod-baseline
+spec:
+  policyName: freshlab-pod-baseline
+  validationActions: [Deny]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: freshlab-container-hardening
+spec:
+  failurePolicy: Ignore
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+        scope: Namespaced
+  validations:
+    - expression: "object.spec.containers.all(container, has(container.securityContext) && has(container.securityContext.allowPrivilegeEscalation) && container.securityContext.allowPrivilegeEscalation == false)"
+      message: "Containers should set allowPrivilegeEscalation=false."
+    - expression: "object.spec.containers.all(container, has(container.securityContext) && has(container.securityContext.seccompProfile) && container.securityContext.seccompProfile.type == 'RuntimeDefault')"
+      message: "Containers should use the RuntimeDefault seccomp profile."
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: freshlab-container-hardening
+spec:
+  policyName: freshlab-container-hardening
+  validationActions: [Audit, Warn]
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        pod-security.kubernetes.io/enforce: baseline

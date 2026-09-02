@@ -1,0 +1,52 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: audit-image-digests
+spec:
+  background: false
+  validationFailureAction: Audit
+  rules:
+    - name: require-image-digests
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchLabels:
+                  pod-security.kubernetes.io/enforce: baseline
+      validate:
+        message: "Container images should be pinned by digest."
+        foreach:
+          - list: "request.object.spec.containers[]"
+            pattern:
+              image: "*@sha256:*"
+          - list: "request.object.spec.initContainers[]"
+            pattern:
+              image: "*@sha256:*"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: audit-freshlab-image-signatures
+spec:
+  background: false
+  validationFailureAction: Audit
+  rules:
+    - name: verify-freshlab-images
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaceSelector:
+                matchLabels:
+                  pod-security.kubernetes.io/enforce: baseline
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/joekleinsorge/*"
+          attestors:
+            - entries:
+                - keyless:
+                    issuer: https://token.actions.githubusercontent.com
+                    subject: "https://github.com/joekleinsorge/*"

@@ -1,0 +1,43 @@
+protectedNamespaces:
+  - policy
+  - argo-rollouts
+  - arc
+  - runners
+  - budget
+  - excalidraw
+  - flask
+  - freshrss
+  - grocy
+  - hajimari
+  - kube-ops-view
+  - librespeed
+  - mealie
+  - nginx
+  - plex
+  - romm
+  - seafile
+  - tools
+  - uptime-kuma
+  - arc-system2
+  - arc-runners
+
+networkPolicyNamespaces:
+  - budget
+  - excalidraw
+  - flask
+  - freshrss
+  - frigate
+  - grocy
+  - hajimari
+  - immich
+  - kindle-weather
+  - kitchenowl
+  - kube-ops-view
+  - librespeed
+  - mealie
+  - nginx
+  - plex
+  - romm
+  - seafile
+  - tools
+  - uptime-kuma

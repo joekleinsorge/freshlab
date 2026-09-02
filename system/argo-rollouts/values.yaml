@@ -24,3 +24,15 @@ argo-rollouts:
     capabilities:
       drop:
         - ALL
+  dashboard:
+    enabled: true
+    httproute:
+      enabled: true
+      annotations:
+        link.argocd.argoproj.io/external-link: "Open app|https://rollouts.kleinsorge.dev"
+      parentRefs:
+        - name: freshlab
+          namespace: istio-system
+          sectionName: https
+      hostnames:
+        - rollouts.kleinsorge.dev

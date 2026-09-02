@@ -5,7 +5,15 @@ argo-cd:
     params:
       server.insecure: true
       controller.diff.server.side: false
+      applicationsetcontroller.enable.progressive.syncs: true
     cm:
+      kustomize.buildOptions: --enable-alpha-plugins --enable-exec
+      oidc.config: |
+        name: Dex
+        issuer: https://dex.kleinsorge.dev
+        clientID: argocd-sso
+        clientSecret: $argocd-oidc:clientSecret
+        requestedScopes: ["openid", "profile", "email", "groups"]
       resource.ignoreResourceUpdatesEnabled: true
       resource.customizations.ignoreResourceUpdates.all: |
         jsonPointers:
@@ -17,6 +25,11 @@ argo-cd:
         jqPathExpressions:
           - '.webhooks[]? | select(.name == "rev.validation.istio.io")'
           - '.webhooks[]? | select(.name == "validation.istio.io")'
+    rbac:
+      policy.default: role:readonly
+      policy.csv: |
+        g, freshlab-admins, role:admin
+      scopes: '[groups, email]'
   server:
     replicas: 2
     autoscaling:
@@ -57,6 +70,45 @@ argo-cd:
     metrics: *metrics
   repoServer:
     replicas: 2
+    env:
+      - name: SOPS_AGE_KEY_FILE
+        value: /home/argocd/.config/sops/age/keys.txt
+    initContainers:
+      - name: install-ksops
+        image: viaductoss/ksops:v4.5.1@sha256:4def9fdd4e2f850265740ebe9592c5455d19b76891e88e602df8b52d74b95334
+        command:
+          - /usr/local/bin/ksops
+          - install
+          - --with-kustomize
+          - /custom-tools
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 999
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+          - name: custom-tools
+            mountPath: /custom-tools
+    volumeMounts:
+      - name: custom-tools
+        mountPath: /usr/local/bin/kustomize
+        subPath: kustomize
+      - name: custom-tools
+        mountPath: /usr/local/bin/ksops
+        subPath: ksops
+      - name: sops-age
+        mountPath: /home/argocd/.config/sops/age
+        readOnly: true
+    volumes:
+      - name: custom-tools
+        emptyDir: {}
+      - name: sops-age
+        secret:
+          secretName: sops-age
     resources:
       requests:
         cpu: 250m
@@ -95,26 +147,170 @@ argo-cd:
         memory: 512Mi
     metrics: *metrics
 argocd-apps:
+  projects:
+    system:
+      namespace: argocd
+      description: Trusted cluster controllers and cluster-scoped infrastructure
+      sourceRepos:
+        - https://github.com/joekleinsorge/freshlab
+      destinations:
+        - namespace: '*'
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: '*'
+          kind: '*'
+    platform:
+      namespace: argocd
+      description: Shared identity, observability, and automation services
+      sourceRepos:
+        - https://github.com/joekleinsorge/freshlab
+      destinations:
+        - namespace: arc
+          server: https://kubernetes.default.svc
+        - namespace: authelia
+          server: https://kubernetes.default.svc
+        - namespace: dex
+          server: https://kubernetes.default.svc
+        - namespace: grafana
+          server: https://kubernetes.default.svc
+        - namespace: runners
+          server: https://kubernetes.default.svc
+        - namespace: tailscale
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: rbac.authorization.k8s.io
+          kind: ClusterRole
+        - group: rbac.authorization.k8s.io
+          kind: ClusterRoleBinding
+    apps:
+      namespace: argocd
+      description: User-facing homelab workloads
+      sourceRepos:
+        - https://github.com/joekleinsorge/freshlab
+      destinations:
+        - namespace: '*'
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: ''
+          kind: PersistentVolume
+        - group: rbac.authorization.k8s.io
+          kind: ClusterRole
+        - group: rbac.authorization.k8s.io
+          kind: ClusterRoleBinding
+        - group: storage.k8s.io
+          kind: StorageClass
+    freshlab-secrets:
+      namespace: argocd
+      description: SOPS-encrypted Secrets reconciled by KSOPS
+      sourceRepos:
+        - https://github.com/joekleinsorge/freshlab
+      destinations:
+        - namespace: '*'
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: ''
+          kind: Namespace
+      namespaceResourceWhitelist:
+        - group: ''
+          kind: Secret
   applicationsets:
     root:
       namespace: argocd
+      strategy:
+        type: RollingSync
+        rollingSync:
+          steps:
+            - matchExpressions:
+                - key: freshlab.kleinsorge.dev/application
+                  operator: In
+                  values:
+                    - argocd
+                    - gateway-api-crds
+              maxUpdate: 100%
+            - matchExpressions:
+                - key: freshlab.kleinsorge.dev/layer
+                  operator: In
+                  values:
+                    - freshlab-secrets
+              maxUpdate: 100%
+            - matchExpressions:
+                - key: freshlab.kleinsorge.dev/layer
+                  operator: In
+                  values:
+                    - system
+                - key: freshlab.kleinsorge.dev/application
+                  operator: NotIn
+                  values:
+                    - argocd
+                    - gateway-api-crds
+              maxUpdate: 100%
+            - matchExpressions:
+                - key: freshlab.kleinsorge.dev/layer
+                  operator: In
+                  values:
+                    - platform
+              maxUpdate: 100%
+            - matchExpressions:
+                - key: freshlab.kleinsorge.dev/layer
+                  operator: In
+                  values:
+                    - apps
+              maxUpdate: 100%
       generators:
-        - git:
-            repoURL: &repoURL https://github.com/joekleinsorge/freshlab
-            revision: &revision main 
-            directories:
-              - path: system/*
-              - path: platform/*
-              - path: global/*
-              - path: apps/*
+        - merge:
+            mergeKeys:
+              - path.basename
+            generators:
+              - git:
+                  repoURL: &repoURL https://github.com/joekleinsorge/freshlab
+                  revision: &revision main
+                  directories:
+                    - path: system/*
+                    - path: platform/*
+                    - path: global/*
+                    - path: apps/*
+                    - path: freshlab-secrets
+              # Gateway API routes do not produce the Ingress metadata Argo
+              # uses for automatic external links. Add the public URL to the
+              # matching generated Application instead.
+              - list:
+                  elements:
+                    - {path.basename: argocd, appURL: "Open app|https://argocd.kleinsorge.dev"}
+                    - {path.basename: argo-rollouts, appURL: "Open app|https://rollouts.kleinsorge.dev"}
+                    - {path.basename: authelia, appURL: "Open app|https://authelia.kleinsorge.dev"}
+                    - {path.basename: budget, appURL: "Open app|https://budget.kleinsorge.dev"}
+                    - {path.basename: dex, appURL: "Open app|https://dex.kleinsorge.dev"}
+                    - {path.basename: excalidraw, appURL: "Open app|https://draw.kleinsorge.dev"}
+                    - {path.basename: flask, appURL: "Open app|https://flask.kleinsorge.dev"}
+                    - {path.basename: freshrss, appURL: "Open app|https://rss.kleinsorge.dev"}
+                    - {path.basename: frigate, appURL: "Open app|https://frigate.kleinsorge.dev"}
+                    - {path.basename: grafana, appURL: "Open app|https://grafana.kleinsorge.dev"}
+                    - {path.basename: grocy, appURL: "Open app|https://grocy.kleinsorge.dev"}
+                    - {path.basename: hajimari, appURL: "Open app|https://home.kleinsorge.dev"}
+                    - {path.basename: immich, appURL: "Open app|https://photos.kleinsorge.dev"}
+                    - {path.basename: kindle-weather, appURL: "Open app|https://kindle-weather.kleinsorge.dev"}
+                    - {path.basename: kitchenowl, appURL: "Open app|https://kitchenowl.kleinsorge.dev"}
+                    - {path.basename: kube-ops-view, appURL: "Open app|https://view.kleinsorge.dev"}
+                    - {path.basename: librespeed, appURL: "Open app|https://speed.kleinsorge.dev"}
+                    - {path.basename: mealie, appURL: "Open app|https://mealie.kleinsorge.dev"}
+                    - {path.basename: nginx, appURL: "Open app|https://web.kleinsorge.dev"}
+                    - {path.basename: plex, appURL: "Open app|https://plex.kleinsorge.dev"}
+                    - {path.basename: seafile, appURL: "Open app|https://files.kleinsorge.dev"}
+                    - {path.basename: tools, appURL: "Open app|https://tools.kleinsorge.dev"}
+                    - {path.basename: uptime-kuma, appURL: "Open app|https://status.kleinsorge.dev"}
       template:
         metadata:
           name: '{{path.basename}}'
+          labels:
+            freshlab.kleinsorge.dev/application: '{{path.basename}}'
+            freshlab.kleinsorge.dev/layer: '{{path[0]}}'
+          annotations:
+            link.argocd.argoproj.io/external-link: '{{appURL}}'
         spec:
           destination:
             name: in-cluster
             namespace: '{{path.basename}}'
-          project: default 
+          project: '{{path[0]}}'
           # Reloader intentionally injects content-hash environment variables
           # to trigger rolling restarts. They are controller-owned runtime
           # state, not configuration drift from Git.
@@ -146,11 +342,32 @@ argocd-apps:
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
               - RespectIgnoreDifferences=true
+      syncPolicy:
+        preserveResourcesOnDeletion: true
 argo-workflows:
   server:
     authModes:
-      - server
-      - client
+      - sso
+    sso:
+      enabled: true
+      issuer: https://dex.kleinsorge.dev
+      clientId:
+        name: argo-server-sso
+        key: client-id
+      clientSecret:
+        name: argo-server-sso
+        key: client-secret
+      redirectUrl: https://workflows.kleinsorge.dev/oauth2/callback
+      rbac:
+        enabled: true
+        secretWhitelist:
+          - argo-workflows-sso-admin.service-account-token
+          - argo-workflows-sso-readonly.service-account-token
+      scopes:
+        - openid
+        - profile
+        - email
+        - groups
     ingress:
       enabled: false
       className: istio

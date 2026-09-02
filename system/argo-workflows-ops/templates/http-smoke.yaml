@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: freshlab-http-smoke
+spec:
+  entrypoint: check
+  serviceAccountName: freshlab-ops-readonly
+  podGC:
+    strategy: OnWorkflowCompletion
+  ttlStrategy:
+    secondsAfterCompletion: 3600
+  arguments:
+    parameters:
+      - name: url
+      - name: expected-status
+        value: "200"
+  templates:
+    - name: check
+      inputs:
+        parameters:
+          - name: url
+          - name: expected-status
+      container:
+        image: curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6
+        command:
+          - /bin/sh
+          - -ec
+        args:
+          - |
+            status="$(curl --location --silent --show-error --retry 3 \
+              --connect-timeout 10 --max-time 30 --output /dev/null \
+              --write-out '%{http_code}' "$TARGET_URL")"
+            test "$status" = "$EXPECTED_STATUS"
+        env:
+          - name: TARGET_URL
+            value: '{{ "{{inputs.parameters.url}}" }}'
+          - name: EXPECTED_STATUS
+            value: '{{ "{{inputs.parameters.expected-status}}" }}'
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault

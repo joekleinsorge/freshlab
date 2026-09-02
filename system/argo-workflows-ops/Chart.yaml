@@ -1,0 +1,5 @@
+apiVersion: v2
+name: argo-workflows-ops
+description: Least-privilege reusable operational workflows for Freshlab
+type: application
+version: 0.1.0

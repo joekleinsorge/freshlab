@@ -1,0 +1,41 @@
+name: Validate GitOps manifests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-gitops-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Validate Renovate configuration
+        run: npx --yes renovate@42.0.0 renovate-config-validator
+
+      - name: Reject plaintext Kubernetes secret values
+        run: |
+          ! rg --glob '!freshlab-secrets/*.sops.yaml' \
+            'JWT_SECRET_KEY:[[:space:]]*[0-9a-f]{64,}' .
+
+      - name: Render and lint Helm charts
+        run: |
+          while IFS= read -r chart; do
+            chart_dir="$(dirname "$chart")"
+            helm dependency build "$chart_dir"
+            helm lint "$chart_dir"
+            helm template validation "$chart_dir" --namespace validation >/dev/null
+          done < <(find apps platform system -name Chart.yaml -not -path '*/charts/*' | sort)
+
+      - name: Check Ansible syntax
+        run: ansible-playbook --syntax-check metal/cluster.yml

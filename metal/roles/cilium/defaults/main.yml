@@ -57,15 +57,14 @@ cilium_values:
   bgpControlPlane:
     enabled: false
   gatewayAPI:
-    enabled: true
+    # Istio ambient owns Gateway API north-south routing. Cilium remains the
+    # CNI, network-policy engine, and Hubble provider.
+    enabled: false
     gatewayClass:
       create: auto
   ingressController:
-    enabled: true
-    default: true
-    loadbalancerMode: shared
-    service:
-      loadBalancerIP: "{{ ingress_load_balancer_ip }}"
+    # Prevent a second Gateway/Ingress controller from competing with Istio.
+    enabled: false
   l2announcements:
     enabled: true
   prometheus:
