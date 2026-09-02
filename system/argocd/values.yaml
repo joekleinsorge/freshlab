@@ -73,6 +73,10 @@ argo-cd:
     env:
       - name: SOPS_AGE_KEY_FILE
         value: /home/argocd/.config/sops/age/keys.txt
+      # KSOPS invokes its executable by name, so make the shared plugin
+      # directory explicit in the repo-server's executable search path.
+      - name: PATH
+        value: /usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
     initContainers:
       - name: install-ksops
         image: viaductoss/ksops:v4.5.1@sha256:4def9fdd4e2f850265740ebe9592c5455d19b76891e88e602df8b52d74b95334
