@@ -1,1 +1,2 @@
-gateway-api-crds: {}
+gateway-api-crds:
+  enabled: false
