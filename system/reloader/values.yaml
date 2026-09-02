@@ -8,7 +8,7 @@ reloader:
     # Seafile's MariaDB is stateful and credential changes require deliberate
     # maintenance; automatic hash injection causes needless database restarts
     # and permanent Git drift there as well.
-    ignoreNamespaces: kube-prometheus-stack,seafile
+    ignoreNamespaces: kube-prometheus-stack,seafile,kiali
     reloadOnCreate: true
     reloadOnDelete: true
     syncAfterRestart: true
