@@ -8,6 +8,10 @@ kiali-server:
   deployment:
     view_only_mode: true
     cluster_wide_access: true
+    # The upstream policy omits Istio ambient's HBONE transport port. A
+    # replacement policy in this wrapper permits HBONE plus Kiali's ports.
+    network_policy:
+      enabled: false
     resources:
       requests:
         cpu: 50m
@@ -39,4 +43,3 @@ kiali-server:
     web_schema: https
 
   istio_namespace: istio-system
-
