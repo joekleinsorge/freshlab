@@ -229,7 +229,6 @@ argocd-apps:
                   operator: In
                   values:
                     - argocd
-                    - gateway-api-crds
               maxUpdate: 100%
             - matchExpressions:
                 - key: freshlab.kleinsorge.dev/layer
@@ -246,7 +245,6 @@ argocd-apps:
                   operator: NotIn
                   values:
                     - argocd
-                    - gateway-api-crds
               maxUpdate: 100%
             - matchExpressions:
                 - key: freshlab.kleinsorge.dev/layer
@@ -270,6 +268,8 @@ argocd-apps:
                   revision: &revision main
                   directories:
                     - path: system/*
+                    - path: system/gateway-api-crds
+                      exclude: true
                     - path: platform/*
                     - path: global/*
                     - path: apps/*
