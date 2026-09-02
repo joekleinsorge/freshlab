@@ -12,7 +12,11 @@ spec:
   hostnames:
     - "*.kleinsorge.dev"
   rules:
-    - filters:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
         - type: RequestRedirect
           requestRedirect:
             scheme: https

@@ -115,6 +115,18 @@ argocd-apps:
             name: in-cluster
             namespace: '{{path.basename}}'
           project: default 
+          # Reloader intentionally injects content-hash environment variables
+          # to trigger rolling restarts. They are controller-owned runtime
+          # state, not configuration drift from Git.
+          ignoreDifferences:
+            - group: apps
+              kind: Deployment
+              jqPathExpressions:
+                - '.spec.template.spec.containers[]?.env[]? | select(.name | startswith("STAKATER_"))'
+            - group: apps
+              kind: StatefulSet
+              jqPathExpressions:
+                - '.spec.template.spec.containers[]?.env[]? | select(.name | startswith("STAKATER_"))'
           source:
             repoURL: *repoURL
             path: '{{path}}'
@@ -133,6 +145,7 @@ argocd-apps:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
+              - RespectIgnoreDifferences=true
 argo-workflows:
   server:
     authModes:
