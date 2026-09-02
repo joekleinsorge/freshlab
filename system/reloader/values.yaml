@@ -5,7 +5,10 @@ reloader:
     # Prometheus Operator and Grafana sidecars hot-reload their generated
     # configuration. Restarting them for every Secret update causes needless
     # Prometheus WAL replays and monitoring outages.
-    ignoreNamespaces: kube-prometheus-stack
+    # Seafile's MariaDB is stateful and credential changes require deliberate
+    # maintenance; automatic hash injection causes needless database restarts
+    # and permanent Git drift there as well.
+    ignoreNamespaces: kube-prometheus-stack,seafile
     reloadOnCreate: true
     reloadOnDelete: true
     syncAfterRestart: true
