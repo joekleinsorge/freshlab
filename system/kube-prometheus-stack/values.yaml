@@ -192,6 +192,7 @@ kube-prometheus-stack:
                 - https://home.kleinsorge.dev
                 - https://kindle-weather.kleinsorge.dev
                 - https://kitchenowl.kleinsorge.dev
+                - https://kiali.kleinsorge.dev
                 - https://mealie.kleinsorge.dev
                 - https://photos.kleinsorge.dev
                 - https://plex.kleinsorge.dev/identity

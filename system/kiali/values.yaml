@@ -1,0 +1,42 @@
+kiali-server:
+  auth:
+    # This cluster is reachable only on the trusted LAN. Anonymous plus
+    # view-only access keeps the dashboard convenient without allowing Kiali
+    # users to mutate workloads or mesh configuration.
+    strategy: anonymous
+
+  deployment:
+    view_only_mode: true
+    cluster_wide_access: true
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+  external_services:
+    istio:
+      root_namespace: istio-system
+    prometheus:
+      enabled: true
+      url: http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+    grafana:
+      enabled: true
+      internal_url: http://kube-prometheus-stack-grafana.kube-prometheus-stack:80
+      external_url: https://grafana-monitoring.kleinsorge.dev
+    tracing:
+      enabled: true
+      provider: tempo
+      internal_url: http://tempo.tempo:3200
+      external_url: https://grafana-monitoring.kleinsorge.dev/explore
+      health_check_url: http://tempo.tempo:3200/ready
+      use_grpc: false
+
+  server:
+    web_fqdn: kiali.kleinsorge.dev
+    web_schema: https
+
+  istio_namespace: istio-system
+

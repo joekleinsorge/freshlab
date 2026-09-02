@@ -78,6 +78,7 @@ appRoutes:
   - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
   - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
   - {namespace: kitchenowl, name: kitchenowl, hostname: kitchenowl.kleinsorge.dev, service: kitchenowl, port: 80}
+  - {namespace: kiali, name: kiali, hostname: kiali.kleinsorge.dev, service: kiali, port: 20001}
   - {namespace: kube-ops-view, name: kube-ops-view, hostname: view.kleinsorge.dev, service: kube-ops-view, port: 8080}
   - {namespace: librespeed, name: librespeed, hostname: speed.kleinsorge.dev, service: librespeed, port: 80}
   - {namespace: mealie, name: mealie, hostname: mealie.kleinsorge.dev, service: mealie, port: 9000}

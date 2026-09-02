@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kiali
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: kiali
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kiali
+  endpoints:
+    - port: http-metrics
+      interval: 30s
+      scrapeTimeout: 10s
