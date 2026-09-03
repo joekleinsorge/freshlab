@@ -24,6 +24,8 @@ spec:
           - list: "request.object.spec.initContainers[]"
             pattern:
               image: "*@sha256:*"
+        allowExistingViolations: true
+      skipBackgroundRequests: true
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -53,3 +55,7 @@ spec:
                     rekor:
                       url: https://rekor.sigstore.dev
           mutateDigest: false
+          required: true
+          useCache: true
+          verifyDigest: true
+      skipBackgroundRequests: true

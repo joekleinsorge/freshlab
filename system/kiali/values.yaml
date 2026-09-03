@@ -1,4 +1,9 @@
 kiali-server:
+  login_token:
+    # Keep the generated ConfigMap stable across Argo renders. This is only
+    # used for anonymous-mode login tokens; replace it with a secret-backed
+    # value if authenticated Kiali sessions are enabled.
+    signing_key: freshlab-kiali-login-token-signing-key-v1
   auth:
     # This cluster is reachable only on the trusted LAN. Anonymous plus
     # view-only access keeps the dashboard convenient without allowing Kiali

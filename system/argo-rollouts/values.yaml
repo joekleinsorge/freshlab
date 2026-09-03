@@ -31,7 +31,9 @@ argo-rollouts:
       annotations:
         link.argocd.argoproj.io/external-link: "Open app|https://rollouts.kleinsorge.dev"
       parentRefs:
-        - name: freshlab
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: freshlab
           namespace: istio-system
           sectionName: https
       hostnames:

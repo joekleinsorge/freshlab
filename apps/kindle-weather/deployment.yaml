@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: kindle-weather
-        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather:c06da66
+        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:f8d1c3a9ef8c1b948a7bded321ae507f7d107ae1a780b87dce3f88dd1f100862
         env:
         - name: CACHE_EXPIRATION
           value: "1800"
@@ -55,14 +55,12 @@ spec:
             cpu: 250m
             memory: 256Mi
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 60
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 60
