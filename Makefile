@@ -43,9 +43,11 @@ dex-password-reset:
 	password=$$(openssl rand -hex 24); \
 	hash=$$(htpasswd -bnBC 12 '' "$$password" | cut -d: -f2); \
 	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops --set '["stringData"]["DEX_ADMIN_PASSWORD_HASH"]' "\"$$hash\"" "$(DEX_SECRETS_FILE)" >/dev/null; \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d "$(DEX_SECRETS_FILE)" | KUBECONFIG="$(KUBECONFIG)" kubectl apply -f - >/dev/null; \
+	KUBECONFIG="$(KUBECONFIG)" kubectl -n dex rollout restart deployment/dex >/dev/null; \
 	printf '%s\n' 'Dex password updated. Use this password with admin@kleinsorge.dev:'; \
 	printf '%s\n' "$$password"; \
-	printf '%s\n' 'Redeploy the Dex secret before logging in.'
+	printf '%s\n' 'Dex is restarting; try the Argo CD login again in a few seconds.'
 
 # Print the bootstrap Argo CD local-admin password, if the bootstrap secret
 # still exists. Normal access uses the Dex SSO login instead.
