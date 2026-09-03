@@ -9,13 +9,13 @@ spec:
   groups:
     - name: kindle-weather.availability
       rules:
-        - alert: KindleWeatherDeploymentUnavailable
-          expr: kube_deployment_status_replicas_unavailable{namespace="kindle-weather",deployment="kindle-weather"} > 0
+        - alert: KindleWeatherRolloutUnavailable
+          expr: rollout_info_replicas_unavailable{namespace="kindle-weather",rollout="kindle-weather"} > 0
           for: 10m
           labels:
             severity: warning
           annotations:
-            summary: Kindle Weather deployment has unavailable replicas
+            summary: Kindle Weather rollout has unavailable replicas
             description: kindle-weather has had unavailable replicas for at least 10 minutes.
         - alert: KindleWeatherPodCrashLooping
           expr: increase(kube_pod_container_status_restarts_total{namespace="kindle-weather",pod=~"kindle-weather-.*",container="kindle-weather"}[15m]) > 2
@@ -33,4 +33,3 @@ spec:
           annotations:
             summary: Kindle Weather public endpoint check is failing
             description: Blackbox probe has failed for https://kindle-weather.kleinsorge.dev for at least 10 minutes.
-

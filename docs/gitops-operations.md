@@ -46,3 +46,26 @@ The `argo-workflows-ops` application provides cluster-scoped templates:
 
 Both run with a dedicated read-only ServiceAccount. Workflow creation remains
 limited to the Argo Workflows administrative group.
+
+## Progressive delivery
+
+`kindle-weather` is managed as an Argo Rollout using the blue-green strategy.
+The public `kindle-weather-service` remains on the active revision while the
+next revision is made available through the private
+`kindle-weather-preview` Service. After the preview is healthy, Rollouts waits
+60 seconds and promotes it automatically, then removes the previous revision
+after a 30-second safety delay.
+
+To inspect or control a rollout from a workstation with the Rollouts kubectl
+plugin installed:
+
+```shell
+kubectl -n kindle-weather port-forward service/kindle-weather-preview 8080:80
+kubectl argo rollouts get rollout kindle-weather -n kindle-weather --watch
+kubectl argo rollouts promote kindle-weather -n kindle-weather
+kubectl argo rollouts abort kindle-weather -n kindle-weather
+```
+
+While a new revision is waiting for promotion, the port-forward above serves
+the preview revision at `http://localhost:8080`; the public hostname continues
+to serve the active revision.

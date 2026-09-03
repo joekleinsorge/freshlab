@@ -14,3 +14,21 @@ spec:
       port: 80
       targetPort: 8080
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kindle-weather-preview
+  labels:
+    app: kindle-weather
+spec:
+  # Argo Rollouts adds the pod-template-hash selector to this Service while a
+  # new revision is being validated. It is intentionally not public-facing.
+  selector:
+    app: kindle-weather
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

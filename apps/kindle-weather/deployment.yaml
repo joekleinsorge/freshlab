@@ -1,13 +1,29 @@
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: kindle-weather
+  labels:
+    app: kindle-weather
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 600
   selector:
     matchLabels:
       app: kindle-weather
+  strategy:
+    blueGreen:
+      # Keep the existing public Service as the active endpoint. Rollouts
+      # changes its pod-template-hash selector only after the preview is ready.
+      activeService: kindle-weather-service
+      # This Service is the private validation endpoint for the next version.
+      previewService: kindle-weather-preview
+      previewReplicaCount: 1
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 60
+      scaleDownDelaySeconds: 30
+      scaleDownDelayRevisionLimit: 2
   template:
     metadata:
       labels:
