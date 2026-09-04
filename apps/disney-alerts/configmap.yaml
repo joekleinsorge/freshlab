@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: disney-alerts-config
+data:
+  config.yaml: |
+    defaults:
+      poll_seconds: 60
+      timeout_seconds: 30
+      user_agent: "disney-availability-alerts/0.2 (+freshlab monitor)"
+      max_backoff_seconds: 3600
+      jitter_fraction: 0.1
+      error_alert_after: 3
+      repeat_alert_seconds: 1800
+      browser_concurrency: 1
+      artifact_dir: "/data/artifacts"
+    watches: []

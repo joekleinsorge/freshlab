@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: disney-alerts
+  labels:
+    app: disney-alerts
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: disney-alerts
+  template:
+    metadata:
+      labels:
+        app: disney-alerts
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      securityContext:
+        fsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: seed-config
+          image: busybox:1.36@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+          command:
+            - sh
+            - -c
+            - if [ ! -f /data/config.yaml ]; then cp /seed/config.yaml /data/config.yaml; fi; chmod 664 /data/config.yaml
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: seed-config
+              mountPath: /seed
+              readOnly: true
+      containers:
+        - name: app
+          image: ghcr.io/joekleinsorge/disney-availability-alerts:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DISNEY_ALERTS_CONFIG
+              value: /data/config.yaml
+            - name: STATE_DATABASE
+              value: /data/state.db
+            - name: DISNEY_BROWSER_STATE
+              value: /secrets/disney-storage-state.json
+            - name: AVAILABILITY_DAYS
+              value: "499"
+            - name: AVAILABILITY_REFRESH_SECONDS
+              value: "21600"
+            - name: AVAILABILITY_REQUEST_DELAY_SECONDS
+              value: "0.25"
+            - name: AVAILABILITY_REQUEST_CONCURRENCY
+              value: "2"
+            - name: ALLOWED_WATCH_HOSTS
+              value: disneyworld.disney.go.com
+          envFrom:
+            - secretRef:
+                name: disney-alerts-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: disney-browser-state
+              mountPath: /secrets
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: disney-alerts-data
+        - name: seed-config
+          configMap:
+            name: disney-alerts-config
+        - name: disney-browser-state
+          secret:
+            secretName: disney-browser-state
+            defaultMode: 0440
+        - name: tmp
+          emptyDir: {}

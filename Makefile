@@ -5,7 +5,9 @@
 KUBECONFIG = $(shell pwd)/metal/kubeconfig.yaml
 KUBE_CONFIG_PATH = $(KUBECONFIG)
 SOPS_AGE_KEY_FILE ?= $(CURDIR)/key.txt
-DEX_SECRETS_FILE ?= $(CURDIR)/freshlab-secrets/dex-secrets.sops.yaml
+DEX_SECRETS_FILE ?= freshlab-secrets/dex-secrets.sops.yaml
+ARGOCD_OIDC_FILE ?= freshlab-secrets/argocd-oidc.sops.yaml
+DEX_PASSWORD_FILE ?= /tmp/freshlab-dex-password.txt
 
 default: help
 
@@ -29,6 +31,7 @@ help:
 		'  make system       Deploy the system workloads' \
 		'  make dex-password-hash  Show the configured Dex password hash' \
 		'  make dex-password-reset Generate and save a new Dex password' \
+		'  make argocd-auth-sync Apply Argo/Dex client secrets and restart SSO' \
 		'  make argocd-password    Show the Argo CD local-admin password' \
 		'  make clean        Tear down the metal cluster'
 
@@ -42,12 +45,25 @@ dex-password-reset:
 	@set -eu; \
 	password=$$(openssl rand -hex 24); \
 	hash=$$(htpasswd -bnBC 12 '' "$$password" | cut -d: -f2); \
-	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops --set '["stringData"]["DEX_ADMIN_PASSWORD_HASH"]' "\"$$hash\"" "$(DEX_SECRETS_FILE)" >/dev/null; \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops --set '["stringData"]["DEX_ADMIN_PASSWORD_HASH"] "'"$$hash"'"' "$(DEX_SECRETS_FILE)" >/dev/null; \
+	umask 077; printf '%s\n' "$$password" > "$(DEX_PASSWORD_FILE)"; \
 	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d "$(DEX_SECRETS_FILE)" | KUBECONFIG="$(KUBECONFIG)" kubectl apply -f - >/dev/null; \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d "$(ARGOCD_OIDC_FILE)" | KUBECONFIG="$(KUBECONFIG)" kubectl apply -f - >/dev/null; \
 	KUBECONFIG="$(KUBECONFIG)" kubectl -n dex rollout restart deployment/dex >/dev/null; \
+	KUBECONFIG="$(KUBECONFIG)" kubectl -n argocd rollout restart deployment/argocd-server >/dev/null; \
 	printf '%s\n' 'Dex password updated. Use this password with admin@kleinsorge.dev:'; \
 	printf '%s\n' "$$password"; \
+	printf '%s\n' "Password also saved to $(DEX_PASSWORD_FILE) (mode 600)."; \
 	printf '%s\n' 'Dex is restarting; try the Argo CD login again in a few seconds.'
+
+# Apply both sides of the Argo/Dex OIDC client configuration and restart them.
+argocd-auth-sync:
+	@set -e; \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d "$(DEX_SECRETS_FILE)" | KUBECONFIG="$(KUBECONFIG)" kubectl apply -f - >/dev/null; \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d "$(ARGOCD_OIDC_FILE)" | KUBECONFIG="$(KUBECONFIG)" kubectl apply -f - >/dev/null; \
+	KUBECONFIG="$(KUBECONFIG)" kubectl -n dex rollout restart deployment/dex >/dev/null; \
+	KUBECONFIG="$(KUBECONFIG)" kubectl -n argocd rollout restart deployment/argocd-server >/dev/null; \
+	printf '%s\n' 'Argo/Dex SSO secrets applied; both services are restarting.'
 
 # Print the bootstrap Argo CD local-admin password, if the bootstrap secret
 # still exists. Normal access uses the Dex SSO login instead.

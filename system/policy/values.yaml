@@ -7,6 +7,7 @@ protectedNamespaces:
 
 networkPolicyNamespaces:
   - budget
+  - disney-alerts
   - excalidraw
   - flask
   - freshrss

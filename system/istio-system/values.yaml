@@ -68,13 +68,14 @@ appRoutes:
   - {namespace: authelia, name: authelia, hostname: authelia.kleinsorge.dev, service: authelia, port: 80}
   - {namespace: budget, name: budget, hostname: budget.kleinsorge.dev, service: budget, port: 5006}
   - {namespace: dex, name: dex, hostname: dex.kleinsorge.dev, service: dex, port: 5556}
+  - {namespace: disney-alerts, name: disney-alerts, hostname: disney-alerts.kleinsorge.dev, service: disney-alerts, port: 80}
   - {namespace: excalidraw, name: excalidraw, hostname: draw.kleinsorge.dev, service: excalidraw, port: 80}
   - {namespace: flask, name: flask, hostname: flask.kleinsorge.dev, service: flask-cache, port: 80}
   - {namespace: freshrss, name: freshrss, hostname: rss.kleinsorge.dev, service: freshrss, port: 80}
   - {namespace: frigate, name: frigate, hostname: frigate.kleinsorge.dev, service: frigate, port: 5000}
   - {namespace: grafana, name: grafana, hostname: grafana.kleinsorge.dev, service: grafana, port: 80}
   - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
-  - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000}
+  - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000, dataplaneMode: none}
   - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
   - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
   - {namespace: kitchenowl, name: kitchenowl, hostname: kitchenowl.kleinsorge.dev, service: kitchenowl, port: 80}

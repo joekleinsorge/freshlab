@@ -25,7 +25,7 @@ hajimari:
     title: Home
     lightTheme: chalk
     darkTheme: horizon
-    showAppUrls: false
+    showAppUrls: true
     showAppInfo: true
     showAppStatus: true
     customThemes:
@@ -43,9 +43,51 @@ hajimari:
             url: https://github.com/joekleinsorge/freshlab
           - name: Hardware
             url: https://192.168.1.101:9090
-      # - group: External services
-      #   bookmarks:
-      #     - name: Terraform Cloud
-      #       url: https://app.terraform.io
-      #     - name: Cloudflare
-      #       url: https://dash.cloudflare.com
+      - group: Applications
+        bookmarks:
+          - name: Actual Budget
+            url: https://budget.kleinsorge.dev
+          - name: Argo CD
+            url: https://argocd.kleinsorge.dev
+          - name: Argo Workflows
+            url: https://workflows.kleinsorge.dev
+          - name: Authelia
+            url: https://authelia.kleinsorge.dev
+          - name: Dex
+            url: https://dex.kleinsorge.dev
+          - name: Excalidraw
+            url: https://draw.kleinsorge.dev
+          - name: Flask Cache
+            url: https://flask.kleinsorge.dev
+          - name: FreshRSS
+            url: https://rss.kleinsorge.dev
+          - name: Frigate
+            url: https://frigate.kleinsorge.dev
+          - name: Grafana
+            url: https://grafana.kleinsorge.dev
+          - name: Grocy
+            url: https://grocy.kleinsorge.dev
+          - name: Immich
+            url: https://photos.kleinsorge.dev
+          - name: Kindle Weather
+            url: https://kindle-weather.kleinsorge.dev
+          - name: KitchenOwl
+            url: https://kitchenowl.kleinsorge.dev
+          - name: Kiali
+            url: https://kiali.kleinsorge.dev
+          - name: Kube Ops View
+            url: https://view.kleinsorge.dev
+          - name: LibreSpeed
+            url: https://speed.kleinsorge.dev
+          - name: Mealie
+            url: https://mealie.kleinsorge.dev
+          - name: NGINX Web
+            url: https://web.kleinsorge.dev
+          - name: Plex
+            url: https://plex.kleinsorge.dev
+          - name: Seafile
+            url: https://files.kleinsorge.dev
+          - name: Tools
+            url: https://tools.kleinsorge.dev
+          - name: Uptime Kuma
+            url: https://status.kleinsorge.dev

@@ -28,7 +28,7 @@ kind: Namespace
 metadata:
   name: {{ .namespace }}
   labels:
-    istio.io/dataplane-mode: ambient
+    istio.io/dataplane-mode: {{ .dataplaneMode | default "ambient" | quote }}
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted

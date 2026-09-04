@@ -1,6 +1,10 @@
 argo-cd:
   global:
     domain: argocd.kleinsorge.dev
+  redisSecretInit:
+    # The Redis secret is already managed by the bootstrap and the completed
+    # Helm hook only creates permanent Argo drift after every upgrade.
+    enabled: false
   configs:
     params:
       server.insecure: true
@@ -258,63 +262,34 @@ argocd-apps:
                   values:
                     - apps
               maxUpdate: 100%
+      goTemplate: true
+      goTemplateOptions:
+        - missingkey=error
       generators:
-        - merge:
-            mergeKeys:
-              - path.basename
-            generators:
-              - git:
-                  repoURL: &repoURL https://github.com/joekleinsorge/freshlab
-                  revision: &revision main
-                  directories:
-                    - path: system/*
-                    - path: system/gateway-api-crds
-                      exclude: true
-                    - path: platform/*
-                    - path: global/*
-                    - path: apps/*
-                    - path: freshlab-secrets
-              # Gateway API routes do not produce the Ingress metadata Argo
-              # uses for automatic external links. Add the public URL to the
-              # matching generated Application instead.
-              - list:
-                  elements:
-                    - {path.basename: argocd, appURL: "Open app|https://argocd.kleinsorge.dev"}
-                    - {path.basename: argo-rollouts, appURL: "Open app|https://rollouts.kleinsorge.dev"}
-                    - {path.basename: authelia, appURL: "Open app|https://authelia.kleinsorge.dev"}
-                    - {path.basename: budget, appURL: "Open app|https://budget.kleinsorge.dev"}
-                    - {path.basename: dex, appURL: "Open app|https://dex.kleinsorge.dev"}
-                    - {path.basename: excalidraw, appURL: "Open app|https://draw.kleinsorge.dev"}
-                    - {path.basename: flask, appURL: "Open app|https://flask.kleinsorge.dev"}
-                    - {path.basename: freshrss, appURL: "Open app|https://rss.kleinsorge.dev"}
-                    - {path.basename: frigate, appURL: "Open app|https://frigate.kleinsorge.dev"}
-                    - {path.basename: grafana, appURL: "Open app|https://grafana.kleinsorge.dev"}
-                    - {path.basename: grocy, appURL: "Open app|https://grocy.kleinsorge.dev"}
-                    - {path.basename: hajimari, appURL: "Open app|https://home.kleinsorge.dev"}
-                    - {path.basename: immich, appURL: "Open app|https://photos.kleinsorge.dev"}
-                    - {path.basename: kindle-weather, appURL: "Open app|https://kindle-weather.kleinsorge.dev"}
-                    - {path.basename: kitchenowl, appURL: "Open app|https://kitchenowl.kleinsorge.dev"}
-                    - {path.basename: kube-ops-view, appURL: "Open app|https://view.kleinsorge.dev"}
-                    - {path.basename: librespeed, appURL: "Open app|https://speed.kleinsorge.dev"}
-                    - {path.basename: mealie, appURL: "Open app|https://mealie.kleinsorge.dev"}
-                    - {path.basename: nginx, appURL: "Open app|https://web.kleinsorge.dev"}
-                    - {path.basename: plex, appURL: "Open app|https://plex.kleinsorge.dev"}
-                    - {path.basename: seafile, appURL: "Open app|https://files.kleinsorge.dev"}
-                    - {path.basename: tools, appURL: "Open app|https://tools.kleinsorge.dev"}
-                    - {path.basename: uptime-kuma, appURL: "Open app|https://status.kleinsorge.dev"}
+        - git:
+            repoURL: &repoURL https://github.com/joekleinsorge/freshlab
+            revision: &revision main
+            directories:
+              - path: system/*
+              - path: system/gateway-api-crds
+                exclude: true
+              - path: platform/*
+              - path: global/*
+              - path: apps/*
+              - path: freshlab-secrets
       template:
         metadata:
-          name: '{{path.basename}}'
+          name: '{{.path.basename}}'
           labels:
-            freshlab.kleinsorge.dev/application: '{{path.basename}}'
-            freshlab.kleinsorge.dev/layer: '{{path[0]}}'
+            freshlab.kleinsorge.dev/application: '{{.path.basename}}'
+            freshlab.kleinsorge.dev/layer: '{{index .path.segments 0}}'
           annotations:
-            link.argocd.argoproj.io/external-link: '{{appURL}}'
+            link.argocd.argoproj.io/external-link: '{{- $links := dict "argocd" "Open app|https://argocd.kleinsorge.dev" "argo-rollouts" "Open app|https://rollouts.kleinsorge.dev" "authelia" "Open app|https://authelia.kleinsorge.dev" "budget" "Open app|https://budget.kleinsorge.dev" "dex" "Open app|https://dex.kleinsorge.dev" "disney-alerts" "Open app|https://disney-alerts.kleinsorge.dev" "excalidraw" "Open app|https://draw.kleinsorge.dev" "flask" "Open app|https://flask.kleinsorge.dev" "freshrss" "Open app|https://rss.kleinsorge.dev" "frigate" "Open app|https://frigate.kleinsorge.dev" "grafana" "Open app|https://grafana.kleinsorge.dev" "grocy" "Open app|https://grocy.kleinsorge.dev" "hajimari" "Open app|https://home.kleinsorge.dev" "immich" "Open app|https://photos.kleinsorge.dev" "kindle-weather" "Open app|https://kindle-weather.kleinsorge.dev" "kitchenowl" "Open app|https://kitchenowl.kleinsorge.dev" "kiali" "Open app|https://kiali.kleinsorge.dev" "kube-ops-view" "Open app|https://view.kleinsorge.dev" "librespeed" "Open app|https://speed.kleinsorge.dev" "mealie" "Open app|https://mealie.kleinsorge.dev" "nginx" "Open app|https://web.kleinsorge.dev" "plex" "Open app|https://plex.kleinsorge.dev" "seafile" "Open app|https://files.kleinsorge.dev" "tools" "Open app|https://tools.kleinsorge.dev" "uptime-kuma" "Open app|https://status.kleinsorge.dev" -}}{{get $links .path.basename}}'
         spec:
           destination:
             name: in-cluster
-            namespace: '{{path.basename}}'
-          project: '{{path[0]}}'
+            namespace: '{{.path.basename}}'
+          project: '{{index .path.segments 0}}'
           # Reloader intentionally injects content-hash environment variables
           # to trigger rolling restarts. They are controller-owned runtime
           # state, not configuration drift from Git.
@@ -327,9 +302,41 @@ argocd-apps:
               kind: StatefulSet
               jqPathExpressions:
                 - '.spec.template.spec.containers[]?.env[]? | select(.name | startswith("STAKATER_"))'
+            # These CRD metadata fields are rewritten by the bundled
+            # operators during installation and upgrades; the schemas remain
+            # managed by the chart.
+            - group: apiextensions.k8s.io
+              kind: CustomResourceDefinition
+              jqPathExpressions:
+                - '.metadata.labels'
+                - '.metadata.annotations'
+            # cert-manager rotates this webhook bundle and the generated TLS
+            # Secret independently of Helm.
+            - group: admissionregistration.k8s.io
+              kind: ValidatingWebhookConfiguration
+              name: longhorn-snapshot-validation-webhook
+              jqPathExpressions:
+                - '.webhooks[]?.clientConfig.caBundle'
+            - group: ''
+              kind: Secret
+              name: longhorn-snapshot-validation-webhook-tls
+              jqPathExpressions:
+                - '.data'
+            # Grafana's external secret controller owns the password data;
+            # ignore only its derived checksum and generated Secret payload.
+            - group: ''
+              kind: Secret
+              name: grafana
+              jqPathExpressions:
+                - '.data'
+            - group: apps
+              kind: Deployment
+              name: grafana
+              jqPathExpressions:
+                - '.spec.template.metadata.annotations["checksum/secret"]'
           source:
             repoURL: *repoURL
-            path: '{{path}}'
+            path: '{{.path.path}}'
             targetRevision: *revision
           syncPolicy:
             automated:
