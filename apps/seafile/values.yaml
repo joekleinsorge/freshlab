@@ -30,7 +30,8 @@ seafile:
   persistence:
     data:
       enabled: true
-      type: nfs
+      type: pvc
+      storageClass: longhorn
+      size: 20Gi
+      accessMode: ReadWriteOnce
       mountPath: /shared
-      server: 192.168.1.208
-      path: /volume1/kube/seafile
