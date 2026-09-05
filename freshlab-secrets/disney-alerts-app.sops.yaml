@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+    ADMIN_PASSWORD: ENC[AES256_GCM,data:MOJIdrxf74l3uueT/rMBeBPqkFSD+QIz29pFCsIHSC6efYviViZIeKhktgqlY7B4oPcEDvEV2POHjEkPiMqa+w==,iv:yQ+6jikESz76lYUDNX3V3H69fKBFAjg3zDgbClnx7UM=,tag:bi0KibJqM0jYrg6Kt90w/Q==,type:str]
+    ADMIN_USERNAME: ENC[AES256_GCM,data:KhAxDQ==,iv:rIkyHBsjPgPamL0BM+V+vVF599pxkMJkdfJAqds2WC4=,tag:fj56LckzWDScG8fbQRPvLQ==,type:str]
+    ALERT_PROVIDER: ENC[AES256_GCM,data:1eYcGA==,iv:n8tKHMbKPSkIuunHlmZI59AlJoSSQdt9vu+wBOjcTKc=,tag:nDdgv6fKOqeXSKcuwoWZRQ==,type:str]
+kind: Secret
+metadata:
+    name: disney-alerts-secrets
+    namespace: disney-alerts
+type: Opaque
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByM0JvS2o5YzBUMVo5WW45
+            SlYrR3RBZnFmUUZkcGtpbXNEUlcvUk1kVHhVClA4NG9CVWQxYWtsZnQ4L2wwUm9l
+            ZjNLRWRXcWFid0EvMUdoNTNPWERXRlEKLS0tIHl2Z1N6cXRINys4b3liVWpCL29F
+            ZTI0dUFrRGEzclVvTHRSemxXd1lJaTAK4WlxvtXV+zpurB0PvT67F+Fevv38v0xH
+            AfvWGXVJHl24FgjwJa4+UlkjlTesLpv9mCDa7EGnrIoIg9/KsV1R8w==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-05T00:04:36Z"
+    mac: ENC[AES256_GCM,data:8PSNUHZKW5v7u9YwCdDE1zr9KGkXS93JbJp9qE7kWHhexuLwFHdjWS9Yvfy/4Y3ueDnHATECEj7WlYGS+vbYMr6Xle4pbuY04InZ/aQKKnV4XUF9SMKxUVKtOm1VLPapIPm7hdsq/Hzo4XBRg2YqU5rlxd4b01JD320XUZsI734=,iv:omDpNoCVfeTTQJIYxuNc6FHUWe5pA7rGABDCbEvDc08=,tag:DeuWABUJTAfChQ6dt+LnJg==,type:str]
+    version: 3.13.3
