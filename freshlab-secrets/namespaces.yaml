@@ -15,6 +15,7 @@ kind: Namespace
 metadata:
   name: authelia
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -32,6 +33,7 @@ kind: Namespace
 metadata:
   name: dex
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -44,6 +46,7 @@ kind: Namespace
 metadata:
   name: disney-alerts
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -61,6 +64,7 @@ kind: Namespace
 metadata:
   name: frigate
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -73,6 +77,7 @@ kind: Namespace
 metadata:
   name: grafana
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -85,6 +90,7 @@ kind: Namespace
 metadata:
   name: immich
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -97,6 +103,7 @@ kind: Namespace
 metadata:
   name: kindle-weather
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
@@ -109,6 +116,7 @@ kind: Namespace
 metadata:
   name: kitchenowl
   labels:
+    istio.io/dataplane-mode: ambient
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
