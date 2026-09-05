@@ -373,6 +373,7 @@ argo-workflows:
       rbac:
         enabled: true
         secretWhitelist:
+          - argo-server-sso
           - argo-workflows-sso-admin.service-account-token
           - argo-workflows-sso-readonly.service-account-token
       scopes:
