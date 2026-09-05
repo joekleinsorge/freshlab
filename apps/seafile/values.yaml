@@ -1,4 +1,10 @@
 seafile:
+  env:
+    DB_ROOT_PASSWD:
+      valueFrom:
+        secretKeyRef:
+          name: seafile-mariadb
+          key: mariadb-root-password
   ingress:
     main:
       enabled: false

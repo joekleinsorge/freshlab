@@ -86,17 +86,21 @@ spec:
               cpu: "2"
               memory: 2Gi
           readinessProbe:
-            httpGet:
-              path: /readyz
-              port: http
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget -q -T 3 -O /dev/null http://127.0.0.1:8080/readyz
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 12
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: http
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - wget -q -T 3 -O /dev/null http://127.0.0.1:8080/healthz
             initialDelaySeconds: 120
             periodSeconds: 30
             timeoutSeconds: 10
