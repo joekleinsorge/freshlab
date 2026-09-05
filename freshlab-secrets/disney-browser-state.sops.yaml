@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: disney-browser-state
+    namespace: disney-alerts
+type: Opaque
+stringData:
+    disney-storage-state.json: ENC[AES256_GCM,data:Xms=,iv:9+mZTc6VhoTyKIzbEteOSDOeVgSBbA32nipadNTCKug=,tag:p7Oke2DGcytVkqysrLgKDw==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4Nytna1ZRK1pqQ2czdXY2
+            NmpWcUVjbDZaSGRjZlE5QVJZZ1BjM2JvOUFvCnU5RTcwdzhITTN4K2dBNWt1SXFH
+            M0k5M283ODB4RXpweHRXenI0UDBSdFEKLS0tIDR3RUV1WjJEZ1hWcGJnTi9KV1dB
+            S3lEblEzbkEwVk9wN01ONW0yZjdaYU0KO8Xz8C1uc1nEe9+jIZBff7qOTR5NmPQj
+            1ZOkeGQb8wUYB86qICSC0EBcZY73rTbu6Iu6AIHkpXX//otWYnXvcw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-05T00:20:53Z"
+    mac: ENC[AES256_GCM,data:Vq5jAMnCPwF0XADVN9mpT5MAlb/T13Hz9NBNHNmXGrDdmu5Mdb9FRxLQpRlgSqxJVBQ9zOVNeSPRMwpbNixQlyURe0lOPUGNcZZ99CBuDyL5zEt3Gk/1ZNO5yuBWqh0FEtQCFvADMjHa9DlBxZHKqh/TepgsJQBYb6ktM3hDVRk=,iv:wByjurCwo1jK3D2um3vuSbUMwhEeD5Fef2uNzmRTkdI=,tag:FQd96kDaLfjjxlLuLb8agQ==,type:str]
+    version: 3.13.3
