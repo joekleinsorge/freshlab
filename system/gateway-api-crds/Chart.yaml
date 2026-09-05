@@ -3,7 +3,7 @@ name: gateway-api-crds
 version: 0.0.0
 dependencies:
   - name: gateway-api-crds
-    version: 1.5.1
+    version: 1.6.0
     repository: oci://ghcr.io/wiremind/wiremind-helm-charts
     # The nodes install the standard Gateway API channel during metal setup.
     # This dependency contains the experimental channel, which the upstream
