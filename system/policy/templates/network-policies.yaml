@@ -29,3 +29,22 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: kube-prometheus-stack
 {{- end }}
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-node-probes-memcached
+  namespace: seafile
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: memcached
+  ingress:
+    - fromEntities:
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "11211"
+              protocol: TCP

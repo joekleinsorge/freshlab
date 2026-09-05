@@ -31,5 +31,6 @@ seafile:
     data:
       enabled: true
       type: nfs
+      mountPath: /shared
       server: 192.168.1.208
       path: /volume1/kube/seafile
