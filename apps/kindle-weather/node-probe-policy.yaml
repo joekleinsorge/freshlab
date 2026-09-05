@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-node-health-probes
+  namespace: kindle-weather
+spec:
+  podSelector:
+    matchLabels:
+      app: kindle-weather
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 192.168.1.100/32
+        - ipBlock:
+            cidr: 192.168.1.101/32
+        - ipBlock:
+            cidr: 192.168.1.102/32
+        - ipBlock:
+            cidr: 192.168.1.103/32
+      ports:
+        - protocol: TCP
+          port: 8080
