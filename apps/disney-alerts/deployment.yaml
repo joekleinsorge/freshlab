@@ -19,6 +19,8 @@ spec:
         app: disney-alerts
     spec:
       automountServiceAccountToken: false
+      imagePullSecrets:
+        - name: ghcr-pull
       nodeSelector:
         kubernetes.io/arch: amd64
       securityContext:
@@ -51,7 +53,7 @@ spec:
               readOnly: true
       containers:
         - name: app
-          image: ghcr.io/joekleinsorge/disney-availability-alerts:latest
+          image: ghcr.io/joekleinsorge/disney-availability-alerts@sha256:84b5a6beb2d42f41c1f72dcf6061a75ac9114f617aa850c9669464a7af2c669b
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
