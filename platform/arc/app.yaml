@@ -27,6 +27,7 @@ spec:
     namespace: arc-system2
   syncPolicy:
     automated:
+      enabled: true
       prune: true
       selfHeal: true
     syncOptions:

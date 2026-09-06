@@ -23,6 +23,7 @@ spec:
     namespace: arc-runners
   syncPolicy:
     automated:
+      enabled: true
       prune: true
       selfHeal: true
     syncOptions:
