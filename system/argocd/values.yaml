@@ -355,6 +355,7 @@ argocd-apps:
               - ServerSideApply=true
               - RespectIgnoreDifferences=true
       syncPolicy:
+        applicationsSync: sync
         preserveResourcesOnDeletion: true
 argo-workflows:
   server:
