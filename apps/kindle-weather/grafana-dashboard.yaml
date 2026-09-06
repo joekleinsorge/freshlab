@@ -10,8 +10,8 @@ data:
   kindle-weather.json: |
     {
       "uid": "kindle-weather-otel",
-      "title": "Kindle Weather / OpenTelemetry",
-      "tags": ["kindle-weather", "opentelemetry"],
+      "title": "Kindle Weather / Service Health",
+      "tags": ["kindle-weather", "service-health"],
       "timezone": "browser",
       "schemaVersion": 39,
       "version": 1,
@@ -21,46 +21,86 @@ data:
       "panels": [
         {
           "id": 1,
-          "type": "timeseries",
-          "title": "HTTP request rate",
+          "type": "stat",
+          "title": "Public endpoint",
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
-          "targets": [{"expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"kindle-weather\"}[5m]))", "legendFormat": "requests/s"}],
-          "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
+          "gridPos": {"h": 5, "w": 6, "x": 0, "y": 0},
+          "targets": [{"expr": "probe_success{job=\"blackbox-http\",instance=\"https://kindle-weather.kleinsorge.dev\"}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}]}, "overrides": []}
         },
         {
           "id": 2,
-          "type": "timeseries",
-          "title": "HTTP request latency (p95)",
+          "type": "stat",
+          "title": "HTTP status",
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
-          "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name=\"kindle-weather\"}[5m])))", "legendFormat": "p95"}],
-          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []}
+          "gridPos": {"h": 5, "w": 6, "x": 6, "y": 0},
+          "targets": [{"expr": "probe_http_status_code{job=\"blackbox-http\",instance=\"https://kindle-weather.kleinsorge.dev\"}", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}
         },
         {
           "id": 3,
           "type": "stat",
-          "title": "Public endpoint",
+          "title": "Ready pods",
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "gridPos": {"h": 5, "w": 6, "x": 0, "y": 8},
-          "targets": [{"expr": "probe_success{job=\"blackbox-http\",instance=\"https://kindle-weather.kleinsorge.dev\"}", "legendFormat": "available"}],
-          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}]}, "overrides": []}
+          "gridPos": {"h": 5, "w": 6, "x": 12, "y": 0},
+          "targets": [{"expr": "sum(kube_pod_status_ready{namespace=\"kindle-weather\",condition=\"true\",pod=~\"kindle-weather-.*\"})", "refId": "A"}],
+          "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}
         },
         {
           "id": 4,
           "type": "stat",
-          "title": "Running pods",
+          "title": "Restarts (1h)",
           "datasource": {"type": "prometheus", "uid": "prometheus"},
-          "gridPos": {"h": 5, "w": 6, "x": 6, "y": 8},
-          "targets": [{"expr": "sum(kube_pod_status_ready{namespace=\"kindle-weather\",condition=\"true\"})", "legendFormat": "ready"}],
+          "gridPos": {"h": 5, "w": 6, "x": 18, "y": 0},
+          "targets": [{"expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"kindle-weather\",container=\"kindle-weather\"}[1h]))", "refId": "A"}],
           "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}
         },
         {
           "id": 5,
+          "type": "timeseries",
+          "title": "Public latency",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 5},
+          "targets": [{"expr": "probe_duration_seconds{job=\"blackbox-http\",instance=\"https://kindle-weather.kleinsorge.dev\"}", "legendFormat": "probe latency"}],
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []}
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Rollout replicas",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 5},
+          "targets": [
+            {"expr": "rollout_info_replicas_available{namespace=\"kindle-weather\",rollout=\"kindle-weather\"}", "legendFormat": "available"},
+            {"expr": "rollout_info_replicas_desired{namespace=\"kindle-weather\",rollout=\"kindle-weather\"}", "legendFormat": "desired"},
+            {"expr": "rollout_info_replicas_unavailable{namespace=\"kindle-weather\",rollout=\"kindle-weather\"}", "legendFormat": "unavailable"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}
+        },
+        {
+          "id": 7,
+          "type": "timeseries",
+          "title": "Container CPU",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 13},
+          "targets": [{"expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"kindle-weather\",pod=~\"kindle-weather-.*\",container=\"kindle-weather\"}[5m]))", "legendFormat": "CPU cores"}],
+          "fieldConfig": {"defaults": {"unit": "cores"}, "overrides": []}
+        },
+        {
+          "id": 8,
+          "type": "timeseries",
+          "title": "Container memory",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 13},
+          "targets": [{"expr": "sum(container_memory_working_set_bytes{namespace=\"kindle-weather\",pod=~\"kindle-weather-.*\",container=\"kindle-weather\"})", "legendFormat": "working set"}],
+          "fieldConfig": {"defaults": {"unit": "bytes"}, "overrides": []}
+        },
+        {
+          "id": 9,
           "type": "text",
           "title": "Traces",
-          "gridPos": {"h": 5, "w": 12, "x": 12, "y": 8},
-          "options": {"mode": "markdown", "content": "Open **Explore → Tempo** and filter by `service.name = kindle-weather` to inspect OTLP traces."}
+          "gridPos": {"h": 5, "w": 24, "x": 0, "y": 21},
+          "options": {"mode": "markdown", "content": "Open **Explore → Tempo** and filter by `service.name = kindle-weather`. Use the public endpoint and rollout panels above to correlate traces with availability and deployments."}
         }
       ]
     }
