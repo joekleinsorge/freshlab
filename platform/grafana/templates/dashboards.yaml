@@ -1,0 +1,24 @@
+{{- $files := .Files.Glob "dashboards/*.json" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshlab-grafana-dashboards
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana_dashboard: "1"
+data:
+{{- range $path, $file := $files }}
+  {{ base $path }}: |-
+{{ $file | toString | nindent 4 }}
+{{- end }}
+{{- range $app := .Values.grafana.freshlabAppDashboards }}
+  app-{{ $app }}.json: |-
+{{- $namespace := $app -}}
+{{- $panels := list
+  (dict "type" "stat" "title" "Available Replicas" "gridPos" (dict "h" 4 "w" 8 "x" 0 "y" 0) "targets" (list (dict "expr" (printf "sum(kube_deployment_status_replicas_available{namespace=\\\"%s\\\"})" $namespace) "refId" "A")))
+  (dict "type" "stat" "title" "Pod Restarts" "gridPos" (dict "h" 4 "w" 8 "x" 8 "y" 0) "targets" (list (dict "expr" (printf "sum(increase(kube_pod_container_status_restarts_total{namespace=\\\"%s\\\"}[1h]))" $namespace) "refId" "A")))
+  (dict "type" "timeseries" "title" "CPU Usage" "gridPos" (dict "h" 8 "w" 12 "x" 0 "y" 4) "targets" (list (dict "expr" (printf "sum(rate(container_cpu_usage_seconds_total{namespace=\\\"%s\\\",container!=\\\"\\\",container!=\\\"POD\\\"}[$__rate_interval]))" $namespace) "legendFormat" "CPU cores" "refId" "A")))
+  (dict "type" "timeseries" "title" "Memory Usage" "gridPos" (dict "h" 8 "w" 12 "x" 12 "y" 4) "targets" (list (dict "expr" (printf "sum(container_memory_working_set_bytes{namespace=\\\"%s\\\",container!=\\\"\\\",container!=\\\"POD\\\"})" $namespace) "legendFormat" "Memory" "refId" "A")) "fieldConfig" (dict "defaults" (dict "unit" "bytes")))
+  (dict "type" "timeseries" "title" "HTTP Probe" "gridPos" (dict "h" 8 "w" 24 "x" 0 "y" 12) "targets" (list (dict "expr" (printf "probe_success{job=\\\"blackbox-http\\\",instance=~\\\".*%s.*\\\"}" $app) "legendFormat" "{{instance}}" "refId" "A")))
+}} {{ dict "annotations" (dict "list" (list)) "editable" true "graphTooltip" 1 "panels" $panels "schemaVersion" 39 "tags" (list "freshlab" "app" $app) "templating" (dict "list" (list)) "time" (dict "from" "now-6h" "to" "now") "title" (printf "Freshlab - %s" $app) "uid" (printf "freshlab-app-%s" $app) "version" 1 | toJson | nindent 4 }}
+{{- end }}

@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kindle-weather-grafana-dashboard
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Kindle Weather
+data:
+  kindle-weather.json: |
+    {
+      "uid": "kindle-weather-otel",
+      "title": "Kindle Weather / OpenTelemetry",
+      "tags": ["kindle-weather", "opentelemetry"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "templating": {"list": []},
+      "time": {"from": "now-6h", "to": "now"},
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "HTTP request rate",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "targets": [{"expr": "sum(rate(http_server_request_duration_seconds_count{service_name=\"kindle-weather\"}[5m]))", "legendFormat": "requests/s"}],
+          "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
+        },
+        {
+          "id": 2,
+          "type": "timeseries",
+          "title": "HTTP request latency (p95)",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "targets": [{"expr": "histogram_quantile(0.95, sum by (le) (rate(http_server_request_duration_seconds_bucket{service_name=\"kindle-weather\"}[5m])))", "legendFormat": "p95"}],
+          "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []}
+        },
+        {
+          "id": 3,
+          "type": "stat",
+          "title": "Public endpoint",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 5, "w": 6, "x": 0, "y": 8},
+          "targets": [{"expr": "probe_success{job=\"blackbox-http\",instance=\"https://kindle-weather.kleinsorge.dev\"}", "legendFormat": "available"}],
+          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}]}, "overrides": []}
+        },
+        {
+          "id": 4,
+          "type": "stat",
+          "title": "Running pods",
+          "datasource": {"type": "prometheus", "uid": "prometheus"},
+          "gridPos": {"h": 5, "w": 6, "x": 6, "y": 8},
+          "targets": [{"expr": "sum(kube_pod_status_ready{namespace=\"kindle-weather\",condition=\"true\"})", "legendFormat": "ready"}],
+          "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []}
+        },
+        {
+          "id": 5,
+          "type": "text",
+          "title": "Traces",
+          "gridPos": {"h": 5, "w": 12, "x": 12, "y": 8},
+          "options": {"mode": "markdown", "content": "Open **Explore → Tempo** and filter by `service.name = kindle-weather` to inspect OTLP traces."}
+        }
+      ]
+    }

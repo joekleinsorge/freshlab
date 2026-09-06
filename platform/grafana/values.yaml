@@ -1,4 +1,26 @@
 grafana:
+  freshlabAppDashboards:
+    - budget
+    - disney-alerts
+    - excalidraw
+    - flask
+    - freshrss
+    - frigate
+    - grocy
+    - hajimari
+    - immich
+    - kindle-weather
+    - kitchenowl
+    - kube-ops-view
+    - librespeed
+    - mealie
+    - mqtt
+    - nginx
+    - plex
+    - romm
+    - seafile
+    - tools
+    - uptime-kuma
   ingress:
     enabled: true
     ingressClassName: istio
@@ -13,7 +35,9 @@ grafana:
   sidecar:
     dashboards:
       enabled: true
-      searchNamespace: monitoring-system
+      searchNamespace: ALL
+      label: grafana_dashboard
+      labelValue: "1"
     datasources:
       enabled: true
       searchNamespace: monitoring-system
