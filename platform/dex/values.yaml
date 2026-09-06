@@ -36,6 +36,11 @@ dex:
         redirectURIs:
           - 'https://workflows.kleinsorge.dev/oauth2/callback'
         secretEnv: ARGO_WORKFLOWS_SSO_CLIENT_SECRET
+      - id: disney-alerts-sso
+        name: Disney Alerts
+        redirectURIs:
+          - 'https://disney-alerts.kleinsorge.dev/auth/callback'
+        secretEnv: DISNEY_ALERTS_SSO_CLIENT_SECRET
   envFrom:
     - secretRef:
         name: dex-secrets

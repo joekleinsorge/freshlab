@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: disney-alerts-sso
+    namespace: disney-alerts
+type: Opaque
+stringData:
+    OIDC_CLIENT_SECRET: ENC[AES256_GCM,data:1Eg30zUJKINlIGza/lW/2AfmJ0k73misIVjSrrRdS+uaKSPlDQ2TwrPM29FMZXUQz2mZHyqXGPIeq4qRCEKsgw==,iv:js+Xh4DoIdOr6lP4/kQwzaDvzpjpf43pRtGLr/rg/1U=,tag:cvz38QWXqDy2SqbKfTlceA==,type:str]
+    OIDC_SESSION_SECRET: ENC[AES256_GCM,data:8fKcFUuCHXpDD2Iq6i5f5MgFEPaET+FndZdzKGe/V908t6kpA4wOeUkt99oWouvKzWHoXQGEXKLBzW3Ybg4x,iv:1VbFM3yU2mIE0B043pFfxf4ylTj8qNOZnMAK4hublWA=,tag:/wntSgaMLInnrcSydN0WTg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBEekVmWXVIc1dHUVRJaU1Q
+            ai8wemM0S3VZZUtnVkxDRnBjczN4U3NEWEZVCm1VZis5NkVESlMxclhtY1hNSkxv
+            NE1oVEhYdktQRXM2YzkySEUwL2gwSlUKLS0tIC9JTFFUMEVHZDBtM29YQWFEYUNo
+            S1BrQnBNSlltL1BmMmpWbnYrUlBadVUKtahQvRlalowF0YTbhSWbYImPQZPcuj/s
+            2TeSwBh7XsxKgXEUSEp+sfF3q3b6+HQTako/Yh/vrLREF0PWK1x6FA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-06T02:42:50Z"
+    mac: ENC[AES256_GCM,data:KBh9HRPnAto2cV0+TbqUGUTmKgHwRiFFGG8oqOuOcmwKqBhxvrbqvNBucKg5AF/stASYWW9YeqQ0jFxsx6HwjaukUUrBc9eX0UPYHrZuFxA/0Zl+kDDj+VsXRfo4qCgMJBjZFWM1X93J2+nVpn8mZokAZjli8dhdk1FBsX1hPNI=,iv:aw1dp6FQnPKfo68vUEwYxRHTLnIhWzPz+gn5ag+MECc=,tag:Elv04DJ5bA47eTP8o97ibg==,type:str]
+    version: 3.13.3
