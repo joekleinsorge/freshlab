@@ -97,7 +97,8 @@ frigate:
           height: 720
           fps: 5
     record:
-      enabled: True
+      # Frigate is used for identification and snapshot alerts; do not retain video recordings.
+      enabled: false
       retain:
         days: 2
         mode: motion
