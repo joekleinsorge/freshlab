@@ -40,9 +40,52 @@ grafana:
       labelValue: "1"
     datasources:
       enabled: true
-      searchNamespace: monitoring-system
+      searchNamespace: grafana
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          uid: prometheus
+          type: prometheus
+          access: proxy
+          url: http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+          isDefault: true
+          jsonData:
+            httpMethod: POST
+            timeInterval: 30s
+        - name: node
+          uid: node
+          type: prometheus
+          access: proxy
+          url: http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+        - name: Loki
+          uid: Loki
+          type: loki
+          access: proxy
+          url: http://loki.loki:3100
+        - name: Tempo
+          uid: Tempo
+          type: tempo
+          access: proxy
+          url: http://tempo.tempo:3200
   additionalDataSources:
+    - name: Prometheus
+      uid: prometheus
+      type: prometheus
+      access: proxy
+      url: http://kube-prometheus-stack-prometheus.kube-prometheus-stack:9090
+      isDefault: true
+      jsonData:
+        httpMethod: POST
+        timeInterval: 30s
+    - name: Loki
+      uid: Loki
+      type: loki
+      access: proxy
+      url: http://loki.loki:3100
     - name: Tempo
+      uid: Tempo
       type: tempo
       url: http://tempo.tempo:3200
       access: proxy
