@@ -19,9 +19,7 @@ argo-cd:
         clientSecret: $argocd-oidc:clientSecret
         requestedScopes: ["openid", "profile", "email", "groups"]
       resource.ignoreResourceUpdatesEnabled: true
-      resource.customizations.ignoreResourceUpdates.all: |
-        jsonPointers:
-          - /status
+      resource.customizations.ignoreResourceUpdates.all: ""
       # istiod deliberately fills in CA data and tightens its validators after
       # Helm creates them. Treat those runtime-owned webhook bodies as live
       # controller state instead of permanent Git drift.
