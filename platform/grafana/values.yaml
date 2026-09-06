@@ -41,6 +41,8 @@ grafana:
     datasources:
       enabled: true
       searchNamespace: grafana
+  livenessProbe:
+    initialDelaySeconds: 300
   datasources:
     datasources.yaml:
       apiVersion: 1
