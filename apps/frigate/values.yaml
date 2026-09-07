@@ -113,6 +113,7 @@ frigate:
             bird: 3
     snapshots:
       enabled: True
+      quality: 95
       retain:
         default: 5
         objects:
@@ -120,6 +121,9 @@ frigate:
           cat: 5
           dog: 5
           bird: 3
+    live:
+      height: 1520
+      quality: 10
   probes:
     liveness:
       enabled: true
