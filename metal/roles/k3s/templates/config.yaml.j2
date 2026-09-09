@@ -8,6 +8,10 @@ server: https://{{ k3s_join_endpoint }}:6443
 token-file: {{ k3s_token_file }}
 {% if 'masters' in group_names %}
 {{ k3s_server_config | to_nice_yaml }}
+# Keep etcd peer traffic on each node's fixed address.  The control-plane VIP
+# can move between nodes and must never become an etcd member address.
+node-ip: {{ ansible_host }}
+advertise-address: {{ ansible_host }}
 {% endif %}
 snapshotter: stargz
 kubelet-arg:

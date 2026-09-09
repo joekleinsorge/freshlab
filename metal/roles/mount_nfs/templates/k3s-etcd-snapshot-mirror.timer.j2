@@ -1,0 +1,11 @@
+[Unit]
+Description=Mirror K3s etcd snapshots off-node every six hours
+
+[Timer]
+OnCalendar=*-*-* 00/6:45:00
+RandomizedDelaySec=10m
+Persistent=true
+Unit=k3s-etcd-snapshot-mirror.service
+
+[Install]
+WantedBy=timers.target

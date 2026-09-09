@@ -1,0 +1,9 @@
+[Unit]
+Description=Mirror K3s etcd snapshots to off-node NFS storage
+After=network-online.target k3s.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/install -d -m 0700 /mnt/kube-backups/k3s-etcd/{{ inventory_hostname }}
+ExecStart=/usr/bin/rsync -a --delete-after /var/lib/rancher/k3s/server/db/snapshots/ /mnt/kube-backups/k3s-etcd/{{ inventory_hostname }}/

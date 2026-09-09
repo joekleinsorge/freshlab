@@ -18,13 +18,21 @@ spec:
             summary: "Node {{ `{{ $labels.instance }}` }} has less than 10% memory available"
             description: "Memory pressure is approaching eviction thresholds."
         - alert: FreshlabNodeFilesystemLow
-          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.15
+          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.25
           for: 15m
           labels:
             severity: warning
           annotations:
+            summary: "Filesystem on {{ `{{ $labels.instance }}` }} is below 25% free"
+            description: "Free space on {{ `{{ $labels.mountpoint }}` }} is approaching the Longhorn safety reserve."
+        - alert: FreshlabNodeFilesystemCritical
+          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.15
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
             summary: "Filesystem on {{ `{{ $labels.instance }}` }} is below 15% free"
-            description: "Free space on {{ `{{ $labels.mountpoint }}` }} is approaching the node eviction threshold."
+            description: "Immediate cleanup or expansion is required before kubelet begins evicting workloads."
         - alert: FreshlabNodeFilesystemWillFill
           expr: predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs"}[6h], 24 * 3600) < 0
           for: 30m
@@ -33,6 +41,72 @@ spec:
           annotations:
             summary: "Filesystem on {{ `{{ $labels.instance }}` }} may fill within 24 hours"
             description: "Current growth on {{ `{{ $labels.mountpoint }}` }} will exhaust available space."
+        - alert: FreshlabNodeDiskPressure
+          expr: kube_node_status_condition{condition="DiskPressure",status="true"} == 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Node {{ `{{ $labels.node }}` }} is under disk pressure"
+            description: "Kubelet has entered DiskPressure and may evict application pods."
+        - alert: FreshlabSSDHealthFailure
+          expr: freshlab_smart_device_healthy == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "SSD {{ `{{ $labels.device }}` }} on {{ `{{ $labels.instance }}` }} reports failure"
+            description: "SMART health has failed; replace the disk before Longhorn exhausts replica redundancy."
+        - alert: FreshlabSSDHealthMetricsMissing
+          expr: count(freshlab_smart_device_healthy) < 4
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SMART telemetry is missing from one or more cluster nodes"
+            description: "Fewer than four node disks are currently publishing SMART health."
+        - alert: FreshlabSSDTemperatureHigh
+          expr: freshlab_smart_device_temperature_celsius > 65
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SSD {{ `{{ $labels.device }}` }} on {{ `{{ $labels.instance }}` }} is hot"
+            description: "Drive temperature has remained above 65 degrees Celsius."
+    - name: freshlab.longhorn
+      rules:
+        - alert: FreshlabLonghornVolumeDegraded
+          expr: max by (volume, pvc, pvc_namespace) (longhorn_volume_robustness{state="degraded"}) == 1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn volume {{ `{{ $labels.pvc_namespace }}` }}/{{ `{{ $labels.pvc }}` }} is degraded"
+            description: "At least one replica is unavailable; the volume has reduced node-failure tolerance."
+        - alert: FreshlabLonghornVolumeFaulted
+          expr: max by (volume, pvc, pvc_namespace) (longhorn_volume_robustness{state="faulted"}) == 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Longhorn volume {{ `{{ $labels.pvc_namespace }}` }}/{{ `{{ $labels.pvc }}` }} is faulted"
+            description: "The volume is unavailable or at immediate risk of data loss."
+        - alert: FreshlabLonghornDiskUnschedulable
+          expr: longhorn_disk_status{condition="schedulable"} == 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Longhorn disk on {{ `{{ $labels.node }}` }} cannot schedule replicas"
+            description: "Capacity or disk health prevents Longhorn from maintaining replica redundancy."
+        - alert: FreshlabLonghornDiskCapacityLow
+          expr: (longhorn_disk_capacity_bytes - longhorn_disk_usage_bytes - longhorn_disk_reservation_bytes) / longhorn_disk_capacity_bytes < 0.25
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn disk on {{ `{{ $labels.node }}` }} has less than 25% usable capacity"
+            description: "Replica rebuilds may soon be blocked by the configured storage reserve."
     - name: freshlab.workloads
       rules:
         - alert: FreshlabApplicationEndpointDown

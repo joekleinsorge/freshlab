@@ -15,3 +15,50 @@
     state: present
     fstype: nfs
   notify: Reload systemd
+
+- name: Ensure cluster backup mount point exists
+  when: "'masters' in group_names"
+  ansible.builtin.file:
+    path: /mnt/kube-backups
+    state: directory
+    owner: root
+    group: root
+    mode: '0750'
+
+- name: Configure cluster backup NFS volume as a non-blocking automount
+  when: "'masters' in group_names"
+  ansible.posix.mount:
+    src: 192.168.1.208:/volume1/kube
+    path: /mnt/kube-backups
+    opts: rw,hard,_netdev,nofail,x-systemd.automount,x-systemd.idle-timeout=600,x-systemd.mount-timeout=10s
+    state: present
+    fstype: nfs
+  notify: Reload systemd
+
+- name: Install etcd snapshot mirror service
+  when: "'masters' in group_names"
+  ansible.builtin.template:
+    src: k3s-etcd-snapshot-mirror.service.j2
+    dest: /etc/systemd/system/k3s-etcd-snapshot-mirror.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Install etcd snapshot mirror timer
+  when: "'masters' in group_names"
+  ansible.builtin.template:
+    src: k3s-etcd-snapshot-mirror.timer.j2
+    dest: /etc/systemd/system/k3s-etcd-snapshot-mirror.timer
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd
+
+- name: Enable the etcd snapshot mirror timer
+  when: "'masters' in group_names"
+  ansible.builtin.systemd_service:
+    name: k3s-etcd-snapshot-mirror.timer
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -1,0 +1,11 @@
+[Unit]
+Description=Collect SSD SMART health every fifteen minutes
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=15m
+RandomizedDelaySec=2m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

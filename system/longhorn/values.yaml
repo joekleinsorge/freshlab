@@ -4,8 +4,19 @@ longhorn:
   defaultSettings:
     defaultReplicaCount: 2
     replicaAutoBalance: best-effort
-    storageOverProvisioningPercentage: 200
+    # Replicas must live on different nodes; a node loss must not remove both
+    # copies of a volume.
+    replicaSoftAntiAffinity: false
+    # Do not accept more logical Longhorn capacity than the SSDs can provide.
+    # This keeps a full recording volume from starving kubelet and etcd.
+    storageOverProvisioningPercentage: 100
     storageMinimalAvailablePercentage: 25
+    storageReservedPercentageForDefaultDisk: 30
+    autoSalvage: true
+    autoDeletePodWhenVolumeDetachedUnexpectedly: true
+    disableSchedulingOnCordonedNode: true
+    nodeDrainPolicy: block-if-contains-last-replica
+    detachManuallyAttachedVolumesWhenCordoned: true
   csi:
     attacherReplicaCount: 2
     provisionerReplicaCount: 2

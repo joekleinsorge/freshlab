@@ -21,6 +21,14 @@ frigate:
       client_id: frigate
     auth:
       enabled: false
+    go2rtc:
+      streams:
+        # Match stream names to camera names so Frigate 0.14 uses the native
+        # main streams for MSE/WebRTC instead of the 720p jsmpeg fallback.
+        front:
+          - rtsp://frigated:Frigated@192.168.1.110:554/live
+        back:
+          - rtsp://frigated:Frigated@192.168.1.111:554/live
     # mqtt:
     #   host: mqtt.server.com
     #   port: 1883
@@ -64,6 +72,8 @@ frigate:
       labelmap_path: /openvino-model/coco_91cl_bkgr.txt
     cameras:
       front:
+        live:
+          stream_name: front
         ffmpeg:
           inputs:
             - path: rtsp://frigated:Frigated@192.168.1.110:554/cam/realmonitor?channel=1&subtype=1
@@ -83,6 +93,8 @@ frigate:
           height: 720
           fps: 5
       back:
+        live:
+          stream_name: back
         ffmpeg:
           inputs:
             - path: rtsp://frigated:Frigated@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
@@ -236,7 +248,7 @@ frigate:
       accessMode: ReadWriteOnce
 
       # -- size/capacity of the PVC
-      size: 20Gi
+      size: 100Gi
 
       # -- Do not delete the pvc upon helm uninstall
       skipuninstall: false

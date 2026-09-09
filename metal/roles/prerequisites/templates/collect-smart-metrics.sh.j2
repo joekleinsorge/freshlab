@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -u
+
+device="/dev/{{ disk }}"
+output_dir="/var/lib/node_exporter/textfile_collector"
+output="${output_dir}/smart.prom"
+temporary="${output}.tmp"
+
+/usr/sbin/smartctl -H "${device}" >/dev/null 2>&1
+smart_status=$?
+healthy=1
+readable=1
+if (( smart_status & 8 )); then
+  healthy=0
+fi
+if (( smart_status & 7 )); then
+  readable=0
+fi
+
+temperature=$(/usr/sbin/smartctl -A "${device}" 2>/dev/null | /usr/bin/awk '
+  /^Temperature:/ { print $2; exit }
+  /Temperature_Celsius/ { print $10; exit }
+')
+
+{
+  echo '# HELP freshlab_smart_device_healthy Whether SMART reports the node storage device as healthy.'
+  echo '# TYPE freshlab_smart_device_healthy gauge'
+  echo "freshlab_smart_device_healthy{device=\"${device}\"} ${healthy}"
+  echo '# HELP freshlab_smart_device_readable Whether smartctl could read the node storage device.'
+  echo '# TYPE freshlab_smart_device_readable gauge'
+  echo "freshlab_smart_device_readable{device=\"${device}\"} ${readable}"
+  if [[ "${temperature}" =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+    echo '# HELP freshlab_smart_device_temperature_celsius Node storage device temperature in Celsius.'
+    echo '# TYPE freshlab_smart_device_temperature_celsius gauge'
+    echo "freshlab_smart_device_temperature_celsius{device=\"${device}\"} ${temperature}"
+  fi
+} >"${temporary}"
+
+/usr/bin/chmod 0644 "${temporary}"
+/usr/bin/mv "${temporary}" "${output}"

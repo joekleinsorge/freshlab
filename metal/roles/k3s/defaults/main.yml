@@ -23,6 +23,11 @@ k3s_server_config:
   disable-network-policy: true
   flannel-backend: none
   secrets-encryption: true
+  # Keep a week of compressed local snapshots.  The mount_nfs role mirrors
+  # them to the NAS so losing every control-plane SSD is recoverable.
+  etcd-snapshot-compress: true
+  etcd-snapshot-schedule-cron: "17 */6 * * *"
+  etcd-snapshot-retention: 28
 k3s_kubelet_args:
   # Keep enough memory and local storage available for the operating system and
   # Kubernetes daemons.  Eviction and image garbage collection protect the

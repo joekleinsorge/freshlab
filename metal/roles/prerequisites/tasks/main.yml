@@ -29,6 +29,7 @@
       - nfs-common
       - nvme-cli
       - open-iscsi
+      - rsync
       - smartmontools
       - socat
       - sysstat
@@ -45,6 +46,44 @@
     state: started
     enabled: true
   tags: ['storage']
+
+- name: Ensure node exporter textfile directory exists
+  ansible.builtin.file:
+    path: /var/lib/node_exporter/textfile_collector
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: ['storage', 'monitoring']
+
+- name: Install SSD SMART metrics collector
+  ansible.builtin.template:
+    src: collect-smart-metrics.sh.j2
+    dest: /usr/local/sbin/collect-smart-metrics
+    owner: root
+    group: root
+    mode: '0750'
+  tags: ['storage', 'monitoring']
+
+- name: Install SSD SMART metrics service and timer
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - freshlab-smart-metrics.service
+    - freshlab-smart-metrics.timer
+  tags: ['storage', 'monitoring']
+
+- name: Enable SSD SMART metrics timer
+  ansible.builtin.systemd_service:
+    name: freshlab-smart-metrics.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+  tags: ['storage', 'monitoring']
 
 - name: Check for active multipath devices
   ansible.builtin.command: multipath -ll

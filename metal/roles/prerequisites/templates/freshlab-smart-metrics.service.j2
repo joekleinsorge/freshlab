@@ -1,0 +1,6 @@
+[Unit]
+Description=Export SSD SMART health for Prometheus node exporter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/collect-smart-metrics

@@ -34,11 +34,18 @@ kube-prometheus-stack:
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($|/)
       - --collector.netclass.ignored-devices=^(veth.*|cali.*|tunl.*|dummy.*)$
       - --collector.textfile
+      - --collector.textfile.directory=/var/lib/node-exporter/textfile_collector
       - --collector.cpu.info
       - --collector.meminfo_numa
       - --collector.network_route
       - --collector.schedstat
       - --collector.thermal_zone
+    extraHostVolumeMounts:
+      - name: textfile-collector
+        hostPath: /var/lib/node_exporter/textfile_collector
+        type: DirectoryOrCreate
+        mountPath: /var/lib/node-exporter/textfile_collector
+        readOnly: true
     resources:
       limits:
         cpu: 250m
