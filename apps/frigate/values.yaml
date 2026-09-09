@@ -138,12 +138,12 @@ frigate:
       quality: 10
   probes:
     liveness:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 30
       failureThreshold: 5
       timeoutSeconds: 10
     readiness:
-      enabled: true
+      enabled: false
       initialDelaySeconds: 30
       failureThreshold: 5
       timeoutSeconds: 10
