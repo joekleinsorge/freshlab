@@ -47,7 +47,7 @@ jobs:
         run: ./scripts/check-image-pinning.sh
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: freshlab-sbom
           path: freshlab.spdx.json
@@ -63,7 +63,7 @@ jobs:
       id-token: write
     steps:
       - name: Download SBOM
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: freshlab-sbom
 
@@ -86,7 +86,7 @@ jobs:
             freshlab.spdx.json
 
       - name: Upload signed SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: freshlab-signed-sbom
           path: |
