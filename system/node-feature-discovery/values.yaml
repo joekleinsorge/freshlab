@@ -8,7 +8,7 @@ node-feature-discovery:
         cpu: 200m
         memory: 256Mi
   worker:
-    config: |-
+    config:
       core:
         sleepInterval: 5m
         # Publish useful CPU, kernel, storage, network, and system labels while
