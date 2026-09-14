@@ -2,7 +2,8 @@ apiVersion: v1
 data:
     ADMIN_PASSWORD: ENC[AES256_GCM,data:MOJIdrxf74l3uueT/rMBeBPqkFSD+QIz29pFCsIHSC6efYviViZIeKhktgqlY7B4oPcEDvEV2POHjEkPiMqa+w==,iv:yQ+6jikESz76lYUDNX3V3H69fKBFAjg3zDgbClnx7UM=,tag:bi0KibJqM0jYrg6Kt90w/Q==,type:str]
     ADMIN_USERNAME: ENC[AES256_GCM,data:KhAxDQ==,iv:rIkyHBsjPgPamL0BM+V+vVF599pxkMJkdfJAqds2WC4=,tag:fj56LckzWDScG8fbQRPvLQ==,type:str]
-    ALERT_PROVIDER: ENC[AES256_GCM,data:1eYcGA==,iv:n8tKHMbKPSkIuunHlmZI59AlJoSSQdt9vu+wBOjcTKc=,tag:nDdgv6fKOqeXSKcuwoWZRQ==,type:str]
+    ALERT_PROVIDER: ENC[AES256_GCM,data:M3s1Nw==,iv:ZmKs4sU3f8lVx4nFhZLHgS4o6V2/RpijinGOwEMRmo0=,tag:aN93z/yPRx2gw7dRX4hPfw==,type:str]
+    NTFY_TOPIC: ENC[AES256_GCM,data:qsCD9A9xJwT0dzwrYiYz8R/EBiDQxyA5BeCoSNMLyou4VUKGmJvarhTBBGQ=,iv:vgw7w9ajPI7KqHFUuD2uPBbreLcnH35PlrR700Makx4=,tag:gI/W6LGOAdFmft3O+lCHkA==,type:str]
 kind: Secret
 metadata:
     name: disney-alerts-secrets
@@ -20,6 +21,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-09-05T00:04:36Z"
-    mac: ENC[AES256_GCM,data:8PSNUHZKW5v7u9YwCdDE1zr9KGkXS93JbJp9qE7kWHhexuLwFHdjWS9Yvfy/4Y3ueDnHATECEj7WlYGS+vbYMr6Xle4pbuY04InZ/aQKKnV4XUF9SMKxUVKtOm1VLPapIPm7hdsq/Hzo4XBRg2YqU5rlxd4b01JD320XUZsI734=,iv:omDpNoCVfeTTQJIYxuNc6FHUWe5pA7rGABDCbEvDc08=,tag:DeuWABUJTAfChQ6dt+LnJg==,type:str]
+    lastmodified: "2026-09-14T12:49:05Z"
+    mac: ENC[AES256_GCM,data:H7K9LgnqFbX/i0z/b2hRPsGtdd9XwqvrdMw4uURKVP+4NHIziaV28zX9D6FE/iv8n+z6jqLFAXwUJejsJ/kOQIbL5M0Th+yjfRduNmyKoSfNJTqAse+nW4LK99yPQ4BNxFVyixsD29NuI+mH8aP2ka/VkvKg5rkJIlBU9kRiCCg=,iv:goLQapRrQODRMIbzlgkYYdRZVrk7FH+Kva9u5AIKDcw=,tag:N+SV0zeNqHH/VUk6gXMrxg==,type:str]
     version: 3.13.3
