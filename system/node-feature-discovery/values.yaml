@@ -8,13 +8,9 @@ node-feature-discovery:
         cpu: 200m
         memory: 256Mi
   worker:
-    config: |-
-      {
-        "core": {
-          "sleepInterval": "5m",
-          "labelSources": ["cpu", "kernel", "memory", "network", "pci", "storage", "system"]
-        }
-      }
+    # An empty JSON object preserves the chart's valid default worker config.
+    # The chart serializes this field into the config file consumed by NFD.
+    config: {}
     resources:
       requests:
         cpu: 25m
