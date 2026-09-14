@@ -1,0 +1,6 @@
+dependencies:
+- name: prometheus-smartctl-exporter
+  repository: oci://ghcr.io/prometheus-community/charts
+  version: 0.17.1
+digest: sha256:9786403632d92da8d7d9e6c0d44c8b43fc15e2f7cae71f6241179f07dc28c439
+generated: "2026-09-14T08:26:17.07354-04:00"
