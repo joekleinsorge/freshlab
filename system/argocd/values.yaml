@@ -223,7 +223,9 @@ argocd-apps:
     root:
       namespace: argocd
       strategy:
-        type: RollingSync
+        # Sync all generated applications so app-of-apps health cannot deadlock
+        # the rollout on the argocd application itself.
+        type: AllAtOnce
         rollingSync:
           steps:
             - matchExpressions:
@@ -338,6 +340,7 @@ argocd-apps:
             targetRevision: *revision
           syncPolicy:
             automated:
+              enabled: true
               prune: true
               selfHeal: true
             retry:
