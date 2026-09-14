@@ -5,7 +5,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     hajimari.io/appName: Authelia
-    hajimari.io/icon: shield-account
+    hajimari.io/icon: mdi:shield-account
 spec:
   ingressClassName: istio
   rules:

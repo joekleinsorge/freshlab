@@ -7,7 +7,7 @@ uptime-kuma:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         uptime-kuma.io/enable: 'true'
         hajimari.io/appName: Uptime Kuma
-        hajimari.io/icon: pulse
+        hajimari.io/icon: mdi:heart-pulse
       hosts:
         - host: &host status.kleinsorge.dev
           paths:

@@ -6,7 +6,7 @@ kube-ops-view:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Kube Ops View
-        hajimari.io/icon: kubernetes
+        hajimari.io/icon: simple-icons:kubernetes
       hosts:
         - host: &host view.kleinsorge.dev
           paths:

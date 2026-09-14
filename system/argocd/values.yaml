@@ -45,7 +45,7 @@ argo-cd:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         hajimari.io/appName: Argo CD
-        hajimari.io/icon: kubernetes
+        hajimari.io/icon: simple-icons:kubernetes
       tls: true
     resources:
       requests:
@@ -178,6 +178,8 @@ argocd-apps:
         - namespace: dex
           server: https://kubernetes.default.svc
         - namespace: grafana
+          server: https://kubernetes.default.svc
+        - namespace: monitoring-system
           server: https://kubernetes.default.svc
         - namespace: runners
           server: https://kubernetes.default.svc

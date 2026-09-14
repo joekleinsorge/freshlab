@@ -40,7 +40,7 @@ metadata:
     kubernetes.io/ingress.class: istio
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hajimari.io/appName: Flask Cache
-    hajimari.io/icon: flask
+    hajimari.io/icon: mdi:flask
 spec:
   rules:
     - host: &host flask.kleinsorge.dev

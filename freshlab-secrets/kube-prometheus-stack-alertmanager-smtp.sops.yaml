@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: alertmanager-smtp
+    namespace: kube-prometheus-stack
+type: Opaque
+stringData:
+    smtp-auth-password: ENC[AES256_GCM,data:xyEGbDQaeO7NyaRHjYay0+BScw==,iv:/u6Zp5Mn7jiB8WXFnLgzSKbi0NFl4lKyiRzkDRbVjxw=,tag:rcxXIUPKGeVsVc7+ni4V8A==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSVkNLREZsSFdoaDkxR2Fo
+            dnpPWDJiYlVmaTF6cVFiZy8ySmxQaW5uRVcwCnZSYUNwcUpkQzlVelIwOGw0SlE3
+            eHJ0YjliZU1YcHpNRG5XVVFvQmFCalUKLS0tIDMrN1RkeHZqZlBsWWs4cy81amxQ
+            OE9VbzZVUThpU2REYWljZGVZQStXb1kKtrdWmCsZULRTnpzPb2WMwxrId6Ljr/cj
+            uwji1SgFY6wqFPhnIof/WvAkzSVdqOv9PzQ7kP1BGzTuWGBVhQW5Zw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-14T00:28:05Z"
+    mac: ENC[AES256_GCM,data:h7FVNLuCD3rX1bKhyK3MwN2lR19MRfli0b7D7WHc8499FiQCr4XjF3zIqiK4c8/ZyRauxXzRBUzpjrjjXMsJuigMdHOcghlwugQP8gm4PC/Zh0AMy6J2nHzskKl5lhSDIeb+MrQ20HyeflnfSnuzGGIZWfMsX+lWwZSl2S8rC0w=,iv:9tWv4FrQBbT3Q5gdXe+fuPco9ZVuwl+h/6rjZuwcjuE=,tag:lkwQIQfNNQZ2cACX/XW6SA==,type:str]
+    version: 3.13.3

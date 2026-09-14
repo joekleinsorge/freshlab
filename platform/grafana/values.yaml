@@ -26,6 +26,8 @@ grafana:
     ingressClassName: istio
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      hajimari.io/appName: Grafana
+      hajimari.io/icon: simple-icons:grafana
     hosts:
       - &host grafana.kleinsorge.dev
     tls:

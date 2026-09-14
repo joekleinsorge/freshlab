@@ -23,11 +23,13 @@ spec:
         app.kubernetes.io/name: plex
         app.kubernetes.io/version: 1.16.0
     spec:
+      securityContext:
+        supplementalGroups:
+          - 44
+          - 991
       affinity: {}
       containers:
         - env:
-          - name: PLEX_CLAIM
-            value: claim-xzd3t6GPqzwVgnesddeq
           - name: TZ
             value: America/New_York
           - name: VERSION
@@ -43,6 +45,8 @@ spec:
               name: pms-config
             - mountPath: /transcode
               name: pms-transcode
+            - mountPath: /dev/dri
+              name: pms-dri
             - mountPath: /media
               name: pms-media
       initContainers: []
@@ -53,6 +57,10 @@ spec:
       volumes:
         - name: pms-transcode
           emptyDir: {}
+        - name: pms-dri
+          hostPath:
+            path: /dev/dri
+            type: Directory
         - name: pms-media
           nfs:
             server: 192.168.1.208
@@ -68,6 +76,4 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 2Gi
-
-
+            storage: 10Gi

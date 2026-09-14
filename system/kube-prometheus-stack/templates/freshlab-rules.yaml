@@ -157,3 +157,27 @@ spec:
           annotations:
             summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is not bound"
             description: "Application storage has not been available for ten minutes."
+        - alert: FreshlabPersistentVolumeLowSpace
+          expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.25
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is below 25% free"
+            description: "Expand or clean up this application volume before it can no longer write data."
+        - alert: FreshlabPersistentVolumeCriticalSpace
+          expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.10
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is below 10% free"
+            description: "Immediate cleanup or expansion is required to prevent application write failures."
+        - alert: FreshlabPersistentVolumeWillFill
+          expr: predict_linear(kubelet_volume_stats_available_bytes[6h], 3 * 24 * 3600) < 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} may fill within three days"
+            description: "Current data growth is projected to exhaust this application volume within three days."

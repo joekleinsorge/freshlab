@@ -41,10 +41,97 @@ frigate:
     #   hwaccel_args: preset-vaapi
     objects:
       track:
+        # Police vehicles are classified by the COCO model as car.
+        - bicycle
+        - car
+        - motorcycle
+        - airplane
+        - bus
+        - train
+        - boat
+        - traffic light
+        - fire hydrant
+        - street sign
+        - stop sign
+        - parking meter
+        - bench
         - person
+        - bird
         - cat
         - dog
-        - bird
+        - horse
+        - sheep
+        - cow
+        - elephant
+        - bear
+        - zebra
+        - giraffe
+        - hat
+        - backpack
+        - umbrella
+        - shoe
+        - eye glasses
+        - handbag
+        - tie
+        - suitcase
+        - frisbee
+        - skis
+        - snowboard
+        - sports ball
+        - kite
+        - baseball bat
+        - baseball glove
+        - skateboard
+        - surfboard
+        - tennis racket
+        - bottle
+        - plate
+        - wine glass
+        - cup
+        - fork
+        - knife
+        - spoon
+        - bowl
+        - banana
+        - apple
+        - sandwich
+        - orange
+        - broccoli
+        - carrot
+        - hot dog
+        - pizza
+        - donut
+        - cake
+        - chair
+        - couch
+        - potted plant
+        - bed
+        - mirror
+        - dining table
+        - window
+        - desk
+        - toilet
+        - door
+        - tv
+        - laptop
+        - mouse
+        - remote
+        - keyboard
+        - cell phone
+        - microwave
+        - oven
+        - toaster
+        - sink
+        - refrigerator
+        - blender
+        - book
+        - clock
+        - vase
+        - scissors
+        - teddy bear
+        - hair drier
+        - toothbrush
+        - hair brush
       filters:
         person:
           min_score: 0.6
@@ -95,6 +182,11 @@ frigate:
       back:
         live:
           stream_name: back
+        objects:
+          filters:
+            person:
+              min_score: 0.75
+              threshold: 0.85
         ffmpeg:
           inputs:
             - path: rtsp://frigated:Frigated@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
@@ -109,7 +201,7 @@ frigate:
           height: 720
           fps: 5
     record:
-      # Keep Frigate event and review processing active with one day of video retention.
+      # Keep Frigate's event/review pipeline active, but do not retain recordings.
       enabled: true
       retain:
         days: 1
@@ -120,35 +212,44 @@ frigate:
           mode: motion
           objects:
             person: 7
+            car: 7
+            bus: 7
+            motorcycle: 7
             cat: 5
             dog: 5
             bird: 3
     snapshots:
       enabled: True
+      # Preserve detail for identification in Home Assistant alerts and Frigate review.
       quality: 95
       retain:
         default: 5
         objects:
           person: 7
+          car: 7
+          bus: 7
+          motorcycle: 7
           cat: 5
           dog: 5
           bird: 3
     live:
-      height: 1520
-      quality: 10
+      # This only controls the 720p jsmpeg fallback. go2rtc above supplies the
+      # native 2688x1520 H.264 stream for normal live viewing.
+      height: 720
+      quality: 1
   probes:
     liveness:
-      enabled: false
+      enabled: true
       initialDelaySeconds: 30
       failureThreshold: 5
       timeoutSeconds: 10
     readiness:
-      enabled: false
-      initialDelaySeconds: 30
+      enabled: true
+      initialDelaySeconds: 60
       failureThreshold: 5
       timeoutSeconds: 10
     startup:
-      enabled: false
+      enabled: true
       failureThreshold: 30
       periodSeconds: 10
 
@@ -186,7 +287,7 @@ frigate:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       hajimari.io/appName: Frigate
-      hajimari.io/icon: cctv
+      hajimari.io/icon: mdi:cctv
     hosts:
       - host: &host frigate.kleinsorge.dev
         paths:

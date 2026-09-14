@@ -7,7 +7,7 @@ librespeed:
         cert-manager.io/cluster-issuer: letsencrypt-prod
         librespeed.io/enable: 'true'
         hajimari.io/appName: LibreSpeed
-        hajimari.io/icon: speedometer
+        hajimari.io/icon: mdi:speedometer
       hosts:
         - host: &host speed.kleinsorge.dev
           paths:

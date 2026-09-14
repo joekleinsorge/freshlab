@@ -9,6 +9,12 @@ dex:
         inCluster: true
     oauth2:
       skipApprovalScreen: true
+    # Keep OIDC refresh tokens valid long enough that the configured clients
+    # do not force an interactive login during normal day-to-day use.
+    expiry:
+      refreshTokens:
+        validIfNotUsedFor: 2160h
+        absoluteLifetime: 8760h
     enablePasswordDB: true
     staticPasswords:
       - email: admin@kleinsorge.dev

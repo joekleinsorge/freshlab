@@ -15,7 +15,7 @@ automation:
     condition:
       - condition: template
         value_template: >
-          {{ event_type == 'new' and label in ['person', 'cat', 'dog', 'bird'] }}
+          {{ event_type == 'new' and label not in ['', 'unknown'] }}
     action:
       # Use notify.notify for all registered HA devices.
       # If you want only one phone, replace with notify.mobile_app_<device_name>.

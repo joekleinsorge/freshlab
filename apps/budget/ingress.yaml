@@ -6,7 +6,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/ingress.class: istio
     hajimari.io/appName: Actual Budget
-    hajimari.io/icon: wallet
+    hajimari.io/icon: mdi:wallet
 spec:
   tls:
     - hosts:

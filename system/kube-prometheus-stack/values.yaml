@@ -9,7 +9,78 @@ kube-prometheus-stack:
   kubeScheduler:
     enabled: false
   alertmanager:
+    config:
+      global:
+        resolve_timeout: 5m
+        smtp_smarthost: smtp.gmail.com:587
+        smtp_from: josephkleinsorge@gmail.com
+        smtp_auth_username: josephkleinsorge@gmail.com
+        smtp_auth_password_file: /etc/alertmanager/secrets/alertmanager-smtp/smtp-auth-password
+        smtp_require_tls: true
+      route:
+        receiver: email
+        group_by:
+          - alertname
+          - namespace
+          - persistentvolumeclaim
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 4h
+      receivers:
+        - name: "null"
+        - name: email
+          email_configs:
+            - to: josephkleinsorge@gmail.com
+              headers:
+                subject: '{{ template "freshlab.email.subject" . }}'
+              html: '{{ template "freshlab.email.html" . }}'
+              send_resolved: true
+          webhook_configs:
+            - url: http://freshlab-alertmanager-eventsource-svc.argocd.svc.cluster.local:12000/alerts
+              send_resolved: false
+      templates:
+        - /etc/alertmanager/config/*.tmpl
+    templateFiles:
+      freshlab-email.tmpl: |-
+        {{ define "freshlab.email.subject" }}[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}{{ with .CommonLabels.namespace }} — {{ . }}{{ end }}{{ end }}
+
+        {{ define "freshlab.email.html" }}
+        <!doctype html>
+        <html>
+        <body style="margin:0;background:#f4f6f8;color:#17202a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;line-height:1.45">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:28px 12px">
+            <tr><td align="center">
+              <table role="presentation" width="620" cellpadding="0" cellspacing="0" style="max-width:620px;background:#ffffff;border:1px solid #dfe3e8;border-radius:10px;overflow:hidden">
+                <tr>
+                  <td style="padding:18px 22px;background:#17202a;color:#ffffff;font-size:18px;font-weight:700">Freshlab alert</td>
+                  <td align="right" style="padding:18px 22px;background:#17202a;color:{{ if eq .Status "firing" }}#ffb4b4{{ else }}#a7f3d0{{ end }};font-size:13px;font-weight:700;letter-spacing:.06em">{{ .Status | toUpper }}</td>
+                </tr>
+                <tr><td colspan="2" style="padding:22px">
+                  <div style="font-size:20px;font-weight:700;margin-bottom:6px">{{ .CommonLabels.alertname }}</div>
+                  <div style="color:#64748b;font-size:13px;margin-bottom:18px">{{ len .Alerts.Firing }} firing · {{ len .Alerts.Resolved }} resolved</div>
+                  {{ range .Alerts.Firing }}
+                  <div style="border-left:4px solid #dc2626;padding:10px 14px;margin:0 0 12px;background:#fff7f7">
+                    <div style="font-weight:650">{{ .Annotations.summary }}</div>
+                    {{ with .Annotations.description }}<div style="margin-top:4px;color:#475569;font-size:14px">{{ . }}</div>{{ end }}
+                    {{ with .GeneratorURL }}<div style="margin-top:8px;font-size:13px"><a href="{{ . }}" style="color:#2563eb">View alert details</a></div>{{ end }}
+                  </div>
+                  {{ end }}
+                  {{ range .Alerts.Resolved }}
+                  <div style="border-left:4px solid #16a34a;padding:10px 14px;margin:0 0 12px;background:#f0fdf4">
+                    <div style="font-weight:650">Resolved: {{ .Annotations.summary }}</div>
+                  </div>
+                  {{ end }}
+                  <div style="margin-top:20px;padding-top:14px;border-top:1px solid #e2e8f0;color:#64748b;font-size:12px">Sent by Freshlab Alertmanager</div>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </body>
+        </html>
+        {{ end }}
     alertmanagerSpec:
+      secrets:
+        - alertmanager-smtp
       retention: 120h
       resources:
         requests:
@@ -69,6 +140,15 @@ kube-prometheus-stack:
   grafana:
     admin:
       existingSecret: grafana-admin-credentials
+    sidecar:
+      dashboards:
+        enabled: true
+        searchNamespace: ALL
+        label: grafana_dashboard
+        labelValue: "1"
+        folderAnnotation: grafana_folder
+        provider:
+          foldersFromFilesStructure: true
     deploymentStrategy:
       type: RollingUpdate
       rollingUpdate:

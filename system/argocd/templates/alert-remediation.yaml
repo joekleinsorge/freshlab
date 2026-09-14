@@ -1,0 +1,244 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: freshlab-alert-remediation
+  namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: freshlab-alert-remediation
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "patch"]
+  - apiGroups: ["argoproj.io"]
+    resources: ["applications"]
+    verbs: ["get", "patch"]
+  - apiGroups: ["argoproj.io"]
+    resources: ["workflows"]
+    verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: freshlab-alert-remediation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: freshlab-alert-remediation
+subjects:
+  - kind: ServiceAccount
+    name: freshlab-alert-remediation
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+spec:
+  nats:
+    native:
+      replicas: 1
+      auth: none
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: freshlab-alertmanager
+  namespace: {{ .Release.Namespace }}
+spec:
+  eventBusName: default
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
+  webhook:
+    alertmanager:
+      port: "12000"
+      endpoint: /alerts
+      method: POST
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: freshlab-alert-remediation
+  namespace: {{ .Release.Namespace }}
+spec:
+  eventBusName: default
+  template:
+    serviceAccountName: freshlab-alert-remediation
+  dependencies:
+    - name: alert
+      eventSourceName: freshlab-alertmanager
+      eventName: alertmanager
+  triggers:
+    - template:
+        name: restart-crashlooping-pod
+        conditions: alert
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: freshlab-alert-restart-
+                namespace: {{ .Release.Namespace }}
+              spec:
+                serviceAccountName: freshlab-alert-remediation
+                workflowTemplateRef:
+                  name: freshlab-alert-remediation
+                  clusterScope: true
+                arguments:
+                  parameters:
+                    - name: action
+                      value: restart-pod
+                    - name: namespace
+                    - name: pod
+                    - name: pvc
+          parameters:
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.namespace
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.pod
+              dest: spec.arguments.parameters.2.value
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.persistentvolumeclaim
+              dest: spec.arguments.parameters.3.value
+      conditions: alert
+      retryStrategy:
+        steps: 2
+        duration: 1m
+      filters:
+        data:
+          - path: body.alerts.0.labels.alertname
+            type: string
+            value:
+              - FreshlabPodCrashLooping
+    - template:
+        name: expand-known-pvc
+        conditions: alert
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: freshlab-alert-expand-
+                namespace: {{ .Release.Namespace }}
+              spec:
+                serviceAccountName: freshlab-alert-remediation
+                workflowTemplateRef:
+                  name: freshlab-alert-remediation
+                  clusterScope: true
+                arguments:
+                  parameters:
+                    - name: action
+                      value: expand-known-pvc
+                    - name: namespace
+                    - name: pod
+                    - name: pvc
+          parameters:
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.namespace
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.persistentvolumeclaim
+              dest: spec.arguments.parameters.3.value
+            - src:
+                dependencyName: alert
+                dataKey: body.alerts.0.labels.pod
+              dest: spec.arguments.parameters.2.value
+      conditions: alert
+      retryStrategy:
+        steps: 2
+        duration: 1m
+      filters:
+        data:
+          - path: body.alerts.0.labels.alertname
+            type: string
+            value:
+              - FreshlabPersistentVolumeCriticalSpace
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: freshlab-alert-remediation
+spec:
+  entrypoint: remediate
+  ttlStrategy:
+    secondsAfterCompletion: 86400
+  arguments:
+    parameters:
+      - name: action
+      - name: namespace
+      - name: pod
+      - name: pvc
+  templates:
+    - name: remediate
+      inputs:
+        parameters:
+          - name: action
+          - name: namespace
+          - name: pod
+          - name: pvc
+      container:
+        image: registry.k8s.io/kubectl:v1.36.4@sha256:b8d523e7b8cdc5e3caa0f8891ee9f504abf137dec786e6e0ddd33e4f272c2f13
+        command: [/bin/sh, -ec]
+        args:
+          - |
+            case "$ACTION" in
+              restart-pod)
+                case "$NAMESPACE" in
+                  plex|freshrss|frigate|grocy|immich|kitchenowl|mealie|romm|seafile|uptime-kuma) ;;
+                  *) echo "refusing pod restart in unapproved namespace: $NAMESPACE"; exit 1 ;;
+                esac
+                case "$POD" in
+                  [a-z0-9-]* ) kubectl -n "$NAMESPACE" delete pod "$POD" --wait=false ;;
+                  *) echo "refusing invalid pod name"; exit 1 ;;
+                esac
+                ;;
+              expand-known-pvc)
+                if [ "$NAMESPACE" = plex ] && [ "$PVC" = pms-config-plex-0 ]; then
+                  kubectl -n plex patch pvc pms-config-plex-0 --type=merge -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
+                else
+                  echo "no automatic expansion policy for $NAMESPACE/$PVC"
+                fi
+                ;;
+              *) echo "unknown remediation action: $ACTION"; exit 1 ;;
+            esac
+        env:
+          - name: ACTION
+            value: '{{ "{{inputs.parameters.action}}" }}'
+          - name: NAMESPACE
+            value: '{{ "{{inputs.parameters.namespace}}" }}'
+          - name: POD
+            value: '{{ "{{inputs.parameters.pod}}" }}'
+          - name: PVC
+            value: '{{ "{{inputs.parameters.pvc}}" }}'
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: [ALL]
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault

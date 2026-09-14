@@ -5,7 +5,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     hajimari.io/appName: Mealie
-    hajimari.io/icon: silverware-fork-knife
+    hajimari.io/icon: mdi:silverware-fork-knife
 spec:
   ingressClassName: istio
   tls:

@@ -5,7 +5,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     hajimari.io/appName: Grocy
-    hajimari.io/icon: cart
+    hajimari.io/icon: mdi:cart
 spec:
   ingressClassName: istio
   tls:

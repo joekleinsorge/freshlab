@@ -33,84 +33,32 @@ hajimari:
         backgroundColor: '#0c0e0c'
         primaryColor: '#eaebea'
         accentColor: '#d8323c'
-    defaultEnable: true
+    # Discover explicitly annotated Ingresses; customApps below covers the
+    # public HTTPRoutes that Hajimari cannot discover.
+    defaultEnable: false
     namespaceSelector:
       any: true
     customApps:
       - group: Applications
         apps:
-          - name: Actual Budget
-            url: https://budget.kleinsorge.dev
-            icon: wallet
-          - name: Argo CD
-            url: https://argocd.kleinsorge.dev
-            icon: kubernetes
-          - name: Argo Workflows
-            url: https://workflows.kleinsorge.dev
-            icon: source-branch
-          - name: Authelia
-            url: https://authelia.kleinsorge.dev
-            icon: shield-account
-          - name: Dex
-            url: https://dex.kleinsorge.dev
-            icon: key-chain
           - name: Disney Alerts
             url: https://disney-alerts.kleinsorge.dev
-            icon: ticket
-          - name: Excalidraw
-            url: https://draw.kleinsorge.dev
-            icon: pencil
-          - name: Flask Cache
-            url: https://flask.kleinsorge.dev
-            icon: flask
+            icon: mdi:ticket
           - name: FreshRSS
             url: https://rss.kleinsorge.dev
-            icon: rss
-          - name: Frigate
-            url: https://frigate.kleinsorge.dev
-            icon: cctv
-          - name: Grafana
-            url: https://grafana.kleinsorge.dev
-            icon: simple-icons:grafana
-          - name: Grocy
-            url: https://grocy.kleinsorge.dev
-            icon: cart
-          - name: Immich
-            url: https://photos.kleinsorge.dev
-            icon: simple-icons:immich
+            icon: mdi:rss
           - name: Kindle Weather
             url: https://kindle-weather.kleinsorge.dev
-            icon: weather-partly-cloudy
-          - name: KitchenOwl
-            url: https://kitchenowl.kleinsorge.dev
-            icon: food-apple
+            icon: mdi:weather-partly-cloudy
           - name: Kiali
             url: https://kiali.kleinsorge.dev
-            icon: topology
-          - name: Kube Ops View
-            url: https://view.kleinsorge.dev
-            icon: kubernetes
-          - name: LibreSpeed
-            url: https://speed.kleinsorge.dev
-            icon: speedometer
-          - name: Mealie
-            url: https://mealie.kleinsorge.dev
-            icon: silverware-fork-knife
+            icon: mdi:topology
           - name: NGINX Web
             url: https://web.kleinsorge.dev
-            icon: nginx
+            icon: simple-icons:nginx
           - name: Plex
             url: https://plex.kleinsorge.dev
-            icon: plex
-          - name: Seafile
-            url: https://files.kleinsorge.dev
-            icon: simple-icons:seafile
-          - name: Tools
-            url: https://tools.kleinsorge.dev
-            icon: tools
-          - name: Uptime Kuma
-            url: https://status.kleinsorge.dev
-            icon: pulse
+            icon: simple-icons:plex
     globalBookmarks:
       - group: Homelab
         bookmarks:

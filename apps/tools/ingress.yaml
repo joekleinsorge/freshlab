@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: istio
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     hajimari.io/appName: Tools
-    hajimari.io/icon: tools
+    hajimari.io/icon: mdi:tools
 spec:
   rules:
     - host: &host tools.kleinsorge.dev
