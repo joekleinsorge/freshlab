@@ -2,16 +2,24 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/lipgloss"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/textinput"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"golang.org/x/crypto/ssh"
 )
 
 var hosts = []string{"metal1", "metal2", "metal3"}
+
+var enterKey = key.NewBinding(key.WithKeys("enter"))
+
+type hostItem string
+
+func (item hostItem) FilterValue() string {
+	return string(item)
+}
 
 type model struct {
 	spinner       spinner.Model
@@ -26,7 +34,7 @@ type model struct {
 func initialModel() model {
 	items := make([]list.Item, len(hosts))
 	for i := range hosts {
-		items[i] = list.Item{Text: hosts[i]} // Use Text instead of Value
+		items[i] = hostItem(hosts[i])
 	}
 
 	s := spinner.NewModel()
@@ -40,7 +48,8 @@ func initialModel() model {
 
 	passwordInput := textinput.NewModel()
 	passwordInput.Placeholder = "Password"
-	passwordInput.MaskCharacter = '*'
+	passwordInput.EchoMode = textinput.EchoPassword
+	passwordInput.EchoCharacter = '*'
 
 	return model{
 		spinner:       s,
@@ -69,7 +78,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, key.Enter):
+		case key.Matches(msg, enterKey):
 			if m.usernameInput.Focused() {
 				m.sshConfig.User = m.usernameInput.Value()
 				return m, textinput.Blink
@@ -92,4 +101,3 @@ func main() {
 		fmt.Println("Error running program:", err)
 	}
 }
-

@@ -1,4 +1,7 @@
 githubConfigUrl: "https://github.com/JoeKleinsorge/freshlab"
 githubConfigSecret: gh-arc-app 
+controllerServiceAccount:
+  namespace: arc-system2
+  name: arc-system2-gha-rs-controller
 maxRunners: 5
 minRunners: 1

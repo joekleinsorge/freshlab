@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: kindle-weather
-        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:f8d1c3a9ef8c1b948a7bded321ae507f7d107ae1a780b87dce3f88dd1f100862
+        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:643a4da0e618420f43d0887d6e07303dc8d609ae8d57e801c1eb8a93390d2f46
         env:
         - name: CACHE_EXPIRATION
           value: "1800"

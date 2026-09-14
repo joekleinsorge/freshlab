@@ -6,7 +6,7 @@ cilium_helm_timeout: 15m
 cilium_helm_retries: 2
 cilium_helm_retry_delay: 15
 gateway_api_install_crds: true
-gateway_api_crd_version: v1.6.1
+gateway_api_crd_version: v1.6.2
 gateway_api_required_crds:
   - gatewayclasses
   - gateways

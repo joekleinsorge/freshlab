@@ -1,5 +1,7 @@
 external-dns:
   provider: cloudflare
+  # Preserve the pre-1.22 default now that the chart requires an explicit policy.
+  policy: upsert-only
   txtOwnerId: freshlab
   sources:
     - service

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: memcached
-          image: memcached:1.6.39-alpine
+          image: memcached:1.6.45-alpine
           args:
             - --memory-limit=128
             - --conn-limit=1024
