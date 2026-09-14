@@ -304,6 +304,13 @@ argocd-apps:
               kind: StatefulSet
               jqPathExpressions:
                 - '.spec.template.spec.containers[]?.env[]? | select(.name | startswith("STAKATER_"))'
+            # StatefulSet claim templates are immutable after creation. The
+            # bound Plex PVC is expanded independently without recreating it.
+            - group: apps
+              kind: StatefulSet
+              name: plex
+              jsonPointers:
+                - /spec/volumeClaimTemplates
             # These CRD metadata fields are rewritten by the bundled
             # operators during installation and upgrades; the schemas remain
             # managed by the chart.
