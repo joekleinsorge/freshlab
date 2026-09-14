@@ -213,6 +213,7 @@ spec:
               expand-known-pvc)
                 if [ "$NAMESPACE" = plex ] && [ "$PVC" = pms-config-plex-0 ]; then
                   kubectl -n plex patch pvc pms-config-plex-0 --type=merge -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
+                  kubectl -n plex delete pod plex-0 --wait=false
                 else
                   echo "no automatic expansion policy for $NAMESPACE/$PVC"
                 fi
