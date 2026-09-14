@@ -36,6 +36,7 @@ kube-prometheus-stack:
       - --collector.textfile
       - --collector.textfile.directory=/var/lib/node-exporter/textfile_collector
       - --collector.cpu.info
+      - --collector.ethtool
       - --collector.meminfo_numa
       - --collector.network_route
       - --collector.schedstat

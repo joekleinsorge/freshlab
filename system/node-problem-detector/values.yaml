@@ -1,0 +1,21 @@
+node-problem-detector:
+  # Kernel, read-only-filesystem, and container-runtime monitors publish Node
+  # Conditions and events before Kubernetes loses the node entirely.
+  settings:
+    prometheus_address: 0.0.0.0
+    prometheus_port: 20257
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      attachMetadata:
+        node: true
+      additionalLabels:
+        release: kube-prometheus-stack
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

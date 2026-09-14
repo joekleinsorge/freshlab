@@ -1,0 +1,23 @@
+node-feature-discovery:
+  master:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  worker:
+    config: |-
+      core:
+        sleepInterval: 5m
+        # Publish useful CPU, kernel, storage, network, and system labels while
+        # avoiding noisy feature sources that are irrelevant to this cluster.
+        labelSources: [cpu, kernel, memory, network, pci, storage, system]
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
