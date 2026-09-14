@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshlab-node-hardware-dashboard
+  namespace: {{ .Release.Namespace }}
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Infrastructure
+data:
+  node-hardware.json: |-
+    {
+      "uid": "freshlab-node-hardware",
+      "title": "Freshlab Node Hardware Health",
+      "tags": ["freshlab", "hardware", "nodes"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "1m",
+      "templating": {"list": [{"name":"node","type":"query","datasource":{"type":"prometheus","uid":"prometheus"},"query":"label_values(smartctl_device_smart_status, instance)","includeAll":true,"multi":true,"allValue":".*","current":{"text":"All","value":"$__all"}}]},
+      "panels": [
+        {"id":1,"type":"stat","title":"SMART failures","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"count(smartctl_device_smart_status{instance=~\"$node\"} != 1)","refId":"A"}],"options":{"reduceOptions":{"calcs":["lastNotNull"]},"orientation":"auto","textMode":"auto","colorMode":"value","graphMode":"none"}},
+        {"id":2,"type":"timeseries","title":"Drive temperature","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"smartctl_device_temperature{instance=~\"$node\",temperature_type=\"current\"}","legendFormat":"{{ `{{instance}}` }} {{ `{{device}}` }}","refId":"A"}],"fieldConfig":{"defaults":{"unit":"celsius","thresholds":{"mode":"absolute","steps":[{"color":"green","value":null},{"color":"orange","value":60},{"color":"red","value":70}]}},"overrides":[]}},
+        {"id":3,"type":"timeseries","title":"Disk media errors","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"smartctl_device_media_errors{instance=~\"$node\"}","legendFormat":"{{ `{{instance}}` }} {{ `{{device}}` }}","refId":"A"}],"fieldConfig":{"defaults":{"min":0},"overrides":[]}},
+        {"id":4,"type":"timeseries","title":"NVMe endurance used","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"smartctl_device_percentage_used{instance=~\"$node\"}","legendFormat":"{{ `{{instance}}` }} {{ `{{device}}` }}","refId":"A"}],"fieldConfig":{"defaults":{"unit":"percent","min":0,"max":100},"overrides":[]}},
+        {"id":5,"type":"timeseries","title":"NIC negotiated speed","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"node_ethtool_speed{instance=~\"$node\",device!~\"lo|veth.*|cali.*|cilium.*|lxc.*\"}","legendFormat":"{{ `{{instance}}` }} {{ `{{device}}` }}","refId":"A"}],"fieldConfig":{"defaults":{"unit":"bps","min":0},"overrides":[]}},
+        {"id":6,"type":"timeseries","title":"NIC error rate","datasource":{"type":"prometheus","uid":"prometheus"},"targets":[{"expr":"rate(node_network_receive_errs_total{instance=~\"$node\",device!~\"lo|veth.*|cali.*|cilium.*|lxc.*\"}[5m])","legendFormat":"RX {{ `{{instance}}` }} {{ `{{device}}` }}","refId":"A"},{"expr":"rate(node_network_transmit_errs_total{instance=~\"$node\",device!~\"lo|veth.*|cali.*|cilium.*|lxc.*\"}[5m])","legendFormat":"TX {{ `{{instance}}` }} {{ `{{device}}` }}","refId":"B"}],"fieldConfig":{"defaults":{"unit":"ops","min":0},"overrides":[]}}
+      ]
+    }

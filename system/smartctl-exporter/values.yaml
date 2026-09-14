@@ -1,0 +1,27 @@
+prometheus-smartctl-exporter:
+  # Automatically discovers SATA and NVMe disks on every Kubernetes node.
+  common:
+    config:
+      collect_not_more_than_period: 120s
+  extraArgs:
+    # Never wake a sleeping disk just to collect telemetry.
+    smartctl.powermode-check: standby
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  serviceMonitor:
+    enabled: true
+    extraLabels:
+      release: kube-prometheus-stack
+    interval: 60s
+    scrapeTimeout: 30s
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_node_name]
+        targetLabel: instance
+  prometheusRules:
+    # Alerts live with the rest of the cluster's tailored hardware rules.
+    enabled: false
