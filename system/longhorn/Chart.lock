@@ -1,0 +1,9 @@
+dependencies:
+- name: longhorn
+  repository: https://charts.longhorn.io
+  version: 1.12.1
+- name: snapshot-controller
+  repository: https://piraeus.io/helm-charts
+  version: 5.2.0
+digest: sha256:2c58f564631d0e4c5016c770022cceb21854c8e9dc45af369e8e18b7dbef427d
+generated: "2026-09-13T20:20:40.389822-04:00"

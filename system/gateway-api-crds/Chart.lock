@@ -1,0 +1,6 @@
+dependencies:
+- name: gateway-api-crds
+  repository: oci://ghcr.io/wiremind/wiremind-helm-charts
+  version: 1.6.2
+digest: sha256:f0534596163064416d279daf6643c3ec61dc218537ec2cb4b1db56febe93f86b
+generated: "2026-09-13T20:20:02.452594-04:00"

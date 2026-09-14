@@ -1,0 +1,6 @@
+dependencies:
+- name: seafile
+  repository: https://k8s-at-home.com/charts
+  version: 3.1.2
+digest: sha256:bec60310be6d922937e3d2f43b86b4184dcdb0b837d9158a76d2f3ed786c827a
+generated: "2026-09-13T20:28:24.534416-04:00"
