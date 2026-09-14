@@ -20,7 +20,8 @@ prometheus-smartctl-exporter:
     interval: 60s
     scrapeTimeout: 30s
     relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_node_name]
+      - action: replace
+        sourceLabels: [__meta_kubernetes_pod_node_name]
         targetLabel: instance
   prometheusRules:
     # Alerts live with the rest of the cluster's tailored hardware rules.
