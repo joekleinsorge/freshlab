@@ -37,12 +37,6 @@ spec:
           resources:
             requests: {cpu: 25m, memory: 64Mi}
             limits: {cpu: 500m, memory: 512Mi}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: [ALL]
-            seccompProfile:
-              type: RuntimeDefault
 ---
 apiVersion: v1
 kind: Service
