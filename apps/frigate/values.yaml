@@ -5,7 +5,7 @@ frigate:
     pullPolicy: IfNotPresent
   env:
     TZ: UTC
-  envFromSecrets: 
+  envFromSecrets:
     - frigate-rstp-credentials
   extraVolumes: []
   extraVolumeMounts: []
@@ -187,6 +187,9 @@ frigate:
             person:
               min_score: 0.75
               threshold: 0.85
+          # Persist the exclusion mask in the declarative config so Helm
+          # restarts do not overwrite the mask saved by the Frigate UI.
+          mask: 0.726,0.703,0.652,0.874,0.749,0.977,0.801,0.828
         ffmpeg:
           inputs:
             - path: rtsp://frigated:Frigated@192.168.1.111:554/cam/realmonitor?channel=1&subtype=1
