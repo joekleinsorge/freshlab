@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: freshlab-grafana-dashboards
   namespace: {{ .Release.Namespace }}
+  annotations:
+    grafana_folder: Freshlab / Core
   labels:
     grafana_dashboard: "1"
 data:
