@@ -85,7 +85,9 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
-            runAsNonRoot: true
+            # The upstream rest-server image runs as root; enforcing
+            # non-root prevents the container from being created.
+            runAsNonRoot: false
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:

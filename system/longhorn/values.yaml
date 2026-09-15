@@ -38,3 +38,9 @@ longhorn:
   persistence:
     defaultClass: true
     defaultClassReplicaCount: 2
+
+snapshot-controller:
+  controller:
+    # VolumeGroupSnapshot CRDs are not installed in this cluster.
+    args:
+      featureGates: ""

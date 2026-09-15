@@ -49,7 +49,8 @@ spec:
           image: ghcr.io/tensorchord/cloudnative-vectorchord:16.15-1.1.1
           imagePullPolicy: IfNotPresent
           securityContext:
-            runAsUser: 0
+            runAsUser: 26
+          command: [postgres]
           args:
             - -c
             - shared_preload_libraries=vchord.so
