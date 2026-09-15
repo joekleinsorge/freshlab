@@ -112,6 +112,9 @@ spec:
             httpGet:
               path: /
               port: upstream
+              httpHeaders:
+                - name: Host
+                  value: auth.kleinsorge.dev
           resources:
             requests: {cpu: 10m, memory: 16Mi}
             limits: {cpu: 100m, memory: 128Mi}
