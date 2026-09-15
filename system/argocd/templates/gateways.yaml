@@ -48,6 +48,21 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same
+    {{- if and (eq $gateway.serviceName "argocd-server") $.Values.argocdMcp.enabled }}
+    - name: mcp-https
+      protocol: HTTPS
+      port: 443
+      hostname: {{ $.Values.argocdMcp.host | quote }}
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: argocd-mcp-tls
+      allowedRoutes:
+        namespaces:
+          from: Same
+    {{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

@@ -1,0 +1,156 @@
+{{- if .Values.argocdMcp.enabled }}
+{{- $image := printf "%s:%s" .Values.argocdMcp.image.repository .Values.argocdMcp.image.tag }}
+{{- if .Values.argocdMcp.image.digest }}
+{{- $image = printf "%s@%s" $image .Values.argocdMcp.image.digest }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-mcp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: argocd-mcp
+    app.kubernetes.io/part-of: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-mcp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: argocd-mcp
+        app.kubernetes.io/part-of: argocd
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: install-mcp
+          image: {{ $image | quote }}
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - npm install --prefix /mcp --omit=dev {{ .Values.argocdMcp.package | quote }}
+          volumeMounts:
+            - name: mcp-package
+              mountPath: /mcp
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsNonRoot: true
+            runAsUser: 1000
+      containers:
+        - name: mcp
+          image: {{ $image | quote }}
+          imagePullPolicy: IfNotPresent
+          command: ["node"]
+          args:
+            - /mcp/node_modules/argocd-mcp/dist/index.js
+            - http
+            - --allowed-host-header
+            - {{ .Values.argocdMcp.host | quote }}
+          env:
+            - name: ARGOCD_BASE_URL
+              value: {{ .Values.argocdMcp.argocdBaseUrl | quote }}
+            - name: ARGOCD_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.argocdMcp.credentialsSecretName }}
+                  key: argocd-api-token
+            - name: MCP_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.argocdMcp.credentialsSecretName }}
+                  key: mcp-auth-token
+            - name: MCP_BIND_ADDRESS
+              value: 0.0.0.0
+            - name: MCP_READ_ONLY
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - name: mcp-package
+              mountPath: /mcp
+      volumes:
+        - name: mcp-package
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-mcp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: argocd-mcp
+    app.kubernetes.io/part-of: argocd
+spec:
+  selector:
+    app.kubernetes.io/name: argocd-mcp
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+      protocol: TCP
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-mcp-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: argocd-mcp-tls
+  dnsNames:
+    - {{ .Values.argocdMcp.host | quote }}
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: argocd-mcp
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: argocd-server-gateway
+      sectionName: mcp-https
+  hostnames:
+    - {{ .Values.argocdMcp.host | quote }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /mcp
+      backendRefs:
+        - name: argocd-mcp
+          port: 3000
+{{- end }}

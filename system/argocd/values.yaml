@@ -11,12 +11,17 @@ argo-cd:
       controller.diff.server.side: false
       applicationsetcontroller.enable.progressive.syncs: true
     cm:
+      # The MCP server uses a dedicated API-only account. Create its token
+      # with `argocd account generate-token --account mcp` and store it in the
+      # Secret referenced by argocdMcp.credentialsSecretName.
+      accounts.mcp: apiKey
       kustomize.buildOptions: --enable-alpha-plugins --enable-exec
       oidc.config: |
         name: Dex
         issuer: https://dex.kleinsorge.dev
         clientID: argocd-sso
         clientSecret: $argocd-oidc:clientSecret
+        cliClientID: argocd-cli
         requestedScopes: ["openid", "profile", "email", "groups"]
       resource.ignoreResourceUpdatesEnabled: true
       resource.customizations.ignoreResourceUpdates.all: ""
@@ -31,7 +36,8 @@ argo-cd:
       policy.default: role:readonly
       policy.csv: |
         g, freshlab-admins, role:admin
-      scopes: '[groups, email]'
+        g, mcp, role:readonly
+    scopes: '[groups, email]'
   server:
     replicas: 2
     autoscaling:
@@ -152,6 +158,21 @@ argo-cd:
         cpu: 500m
         memory: 512Mi
     metrics: *metrics
+
+# Optional self-hosted MCP endpoint for AI assistants. The Argo CD API token
+# and inbound MCP token are deliberately supplied by a separately managed
+# Secret; neither credential belongs in this repository.
+argocdMcp:
+  enabled: true
+  image:
+    repository: node
+    tag: 20-slim
+    digest: ""
+  package: argocd-mcp@0.9.0
+  credentialsSecretName: argocd-mcp-credentials
+  argocdBaseUrl: http://argocd-server.argocd.svc.cluster.local
+  host: argocd-mcp.kleinsorge.dev
+  gatewayAddress: 192.168.1.230
 argocd-apps:
   projects:
     system:
@@ -286,7 +307,7 @@ argocd-apps:
             freshlab.kleinsorge.dev/application: '{{.path.basename}}'
             freshlab.kleinsorge.dev/layer: '{{index .path.segments 0}}'
           annotations:
-            link.argocd.argoproj.io/external-link: '{{- $links := dict "argocd" "Open app|https://argocd.kleinsorge.dev" "argo-rollouts" "Open app|https://rollouts.kleinsorge.dev" "authelia" "Open app|https://authelia.kleinsorge.dev" "budget" "Open app|https://budget.kleinsorge.dev" "dex" "Open app|https://dex.kleinsorge.dev" "disney-alerts" "Open app|https://disney-alerts.kleinsorge.dev" "excalidraw" "Open app|https://draw.kleinsorge.dev" "flask" "Open app|https://flask.kleinsorge.dev" "freshrss" "Open app|https://rss.kleinsorge.dev" "frigate" "Open app|https://frigate.kleinsorge.dev" "grafana" "Open app|https://grafana.kleinsorge.dev" "grocy" "Open app|https://grocy.kleinsorge.dev" "hajimari" "Open app|https://home.kleinsorge.dev" "immich" "Open app|https://photos.kleinsorge.dev" "kindle-weather" "Open app|https://kindle-weather.kleinsorge.dev" "kitchenowl" "Open app|https://kitchenowl.kleinsorge.dev" "kiali" "Open app|https://kiali.kleinsorge.dev" "kube-ops-view" "Open app|https://view.kleinsorge.dev" "librespeed" "Open app|https://speed.kleinsorge.dev" "mealie" "Open app|https://mealie.kleinsorge.dev" "nginx" "Open app|https://web.kleinsorge.dev" "plex" "Open app|https://plex.kleinsorge.dev" "seafile" "Open app|https://files.kleinsorge.dev" "tools" "Open app|https://tools.kleinsorge.dev" "uptime-kuma" "Open app|https://status.kleinsorge.dev" -}}{{get $links .path.basename}}'
+            link.argocd.argoproj.io/external-link: '{{- $links := dict "argocd" "Open app|https://argocd.kleinsorge.dev" "argo-rollouts" "Open app|https://rollouts.kleinsorge.dev" "autobrr" "Open app|https://autobrr.kleinsorge.dev" "authelia" "Open app|https://authelia.kleinsorge.dev" "bazarr" "Open app|https://bazarr.kleinsorge.dev" "budget" "Open app|https://budget.kleinsorge.dev" "dex" "Open app|https://dex.kleinsorge.dev" "disney-alerts" "Open app|https://disney-alerts.kleinsorge.dev" "excalidraw" "Open app|https://draw.kleinsorge.dev" "flask" "Open app|https://flask.kleinsorge.dev" "freshrss" "Open app|https://rss.kleinsorge.dev" "frigate" "Open app|https://frigate.kleinsorge.dev" "grafana" "Open app|https://grafana.kleinsorge.dev" "grocy" "Open app|https://grocy.kleinsorge.dev" "hajimari" "Open app|https://home.kleinsorge.dev" "hermes" "Open app|https://hermes.kleinsorge.dev" "homepage" "Open app|https://home.kleinsorge.dev" "immich" "Open app|https://photos.kleinsorge.dev" "kindle-weather" "Open app|https://kindle-weather.kleinsorge.dev" "kitchenowl" "Open app|https://kitchenowl.kleinsorge.dev" "kiali" "Open app|https://kiali.kleinsorge.dev" "kube-ops-view" "Open app|https://view.kleinsorge.dev" "librespeed" "Open app|https://speed.kleinsorge.dev" "mealie" "Open app|https://mealie.kleinsorge.dev" "nginx" "Open app|https://web.kleinsorge.dev" "pairdrop" "Open app|https://drop.kleinsorge.dev" "paperless" "Open app|https://paperless.kleinsorge.dev" "plex" "Open app|https://plex.kleinsorge.dev" "prowlarr" "Open app|https://prowlarr.kleinsorge.dev" "qbittorrent" "Open app|https://qbittorrent.kleinsorge.dev" "radarr" "Open app|https://radarr.kleinsorge.dev" "seafile" "Open app|https://files.kleinsorge.dev" "seerr" "Open app|https://seerr.kleinsorge.dev" "sonarr" "Open app|https://sonarr.kleinsorge.dev" "tautulli" "Open app|https://tautulli.kleinsorge.dev" "tools" "Open app|https://tools.kleinsorge.dev" "uptime-kuma" "Open app|https://status.kleinsorge.dev" -}}{{get $links .path.basename}}'
         spec:
           destination:
             name: in-cluster
