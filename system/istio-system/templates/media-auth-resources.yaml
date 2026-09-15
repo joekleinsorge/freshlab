@@ -51,6 +51,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: media-auth
+      annotations:
+        media-auth/config-revision: "2"
     spec:
       automountServiceAccountToken: false
       containers:
