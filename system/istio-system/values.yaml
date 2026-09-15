@@ -96,15 +96,15 @@ appRoutes:
   - {namespace: nginx, name: nginx, hostname: web.kleinsorge.dev, service: nginx-service, port: 80}
   - {namespace: pairdrop, name: pairdrop, hostname: drop.kleinsorge.dev, service: pairdrop, port: 3000}
   - {namespace: paperless, name: paperless, hostname: paperless.kleinsorge.dev, service: paperless, port: 8000}
-  - {namespace: autobrr, name: autobrr, hostname: autobrr.kleinsorge.dev, service: autobrr, port: 7474, dataplaneMode: none}
-  - {namespace: bazarr, name: bazarr, hostname: bazarr.kleinsorge.dev, service: bazarr, port: 6767, dataplaneMode: none}
+  - {namespace: autobrr, name: autobrr, hostname: autobrr.kleinsorge.dev, service: autobrr, port: 7474, dataplaneMode: none, protected: true}
+  - {namespace: bazarr, name: bazarr, hostname: bazarr.kleinsorge.dev, service: bazarr, port: 6767, dataplaneMode: none, protected: true}
   - {namespace: plex, name: plex, hostname: plex.kleinsorge.dev, service: plex, port: 32400}
-  - {namespace: prowlarr, name: prowlarr, hostname: prowlarr.kleinsorge.dev, service: prowlarr, port: 9696, dataplaneMode: none}
-  - {namespace: qbittorrent, name: qbittorrent, hostname: qbittorrent.kleinsorge.dev, service: qbittorrent, port: 8080, dataplaneMode: none}
-  - {namespace: radarr, name: radarr, hostname: radarr.kleinsorge.dev, service: radarr, port: 7878, dataplaneMode: none}
+  - {namespace: prowlarr, name: prowlarr, hostname: prowlarr.kleinsorge.dev, service: prowlarr, port: 9696, dataplaneMode: none, protected: true}
+  - {namespace: qbittorrent, name: qbittorrent, hostname: qbittorrent.kleinsorge.dev, service: qbittorrent, port: 8080, dataplaneMode: none, protected: true}
+  - {namespace: radarr, name: radarr, hostname: radarr.kleinsorge.dev, service: radarr, port: 7878, dataplaneMode: none, protected: true}
   - {namespace: seerr, name: seerr, hostname: seerr.kleinsorge.dev, service: seerr, port: 5055, dataplaneMode: none}
   - {namespace: seafile, name: seafile, hostname: files.kleinsorge.dev, service: seafile, port: 80}
-  - {namespace: sonarr, name: sonarr, hostname: sonarr.kleinsorge.dev, service: sonarr, port: 8989, dataplaneMode: none}
-  - {namespace: tautulli, name: tautulli, hostname: tautulli.kleinsorge.dev, service: tautulli, port: 8181, dataplaneMode: none}
+  - {namespace: sonarr, name: sonarr, hostname: sonarr.kleinsorge.dev, service: sonarr, port: 8989, dataplaneMode: none, protected: true}
+  - {namespace: tautulli, name: tautulli, hostname: tautulli.kleinsorge.dev, service: tautulli, port: 8181, dataplaneMode: none, protected: true}
   - {namespace: tools, name: tools, hostname: tools.kleinsorge.dev, service: tools-service, port: 80}
   - {namespace: uptime-kuma, name: uptime-kuma, hostname: status.kleinsorge.dev, service: uptime-kuma, port: 3001}

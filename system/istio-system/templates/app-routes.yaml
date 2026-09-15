@@ -23,6 +23,7 @@ spec:
             statusCode: 301
 ---
 {{- range .Values.appRoutes }}
+{{- if not .protected }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -62,4 +63,5 @@ spec:
           port: {{ .port }}
           weight: 1
 ---
+{{- end }}
 {{- end }}

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: media-stack-oidc
+    namespace: media-auth
+type: Opaque
+stringData:
+    client-secret: ENC[AES256_GCM,data:xA8VRJAGP6OiFvP3v/itCBvPU3D5PBHZ5540z8nEekUSoVP8tZUzM1Q4TinvlTZZ//WFi59GNkWtorg9EfjrMA==,iv:J3y1yqDSaOY83rFhSYZBFgE3ORDYjUh6uzuslf5CgwU=,tag:VL+3mcmo3TEB7loy0HOALQ==,type:str]
+    cookie-secret: ENC[AES256_GCM,data:+qBLqxfdXJdYTI2i+DofKeE+n00b0jy3oUF2EThe1nE=,iv:QJu0kWr851TolDzbctgQtutP7SzNIASyX1RJQER9rx8=,tag:4qlO0UuQfNKplZhHiObYDA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBLZG9GMTIrd0JWODREbG5D
+            Zm1FMWJZR29YTmtYUWRZdFhoYmhCbjhkR0Y4CitWK2psTDJ3KzVCamhhLzE4dVFz
+            Q3g0cVJ3TWFsTVFsTERZTk10M0ROY1UKLS0tIG4zRzJTU0pSaXBHSnVwM1RHT1Z6
+            UnRPQnA5ZUFJdDF3NmxPcWQ1YjlTTkkKWykluKyu6+W0xFrgV/tBFxjzi8EatjBL
+            HiHBjM4c0SuocylXR16dxq2OfunSw3uk4Eqxum/g2WpgQS/OqBNBWQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-15T16:34:42Z"
+    mac: ENC[AES256_GCM,data:iHct6hKPx+0OjSGwmgGPl01cpsoOgggIoTWbM4yeO/FzagciKWbArdl/VnjsWE//BAsuvgChBUXb0AWTS2om8CtJvOS7MjBphDyBiMQqbLtcOcS2zA1RTwJv5o8fwsa9+qyCzozxkJg2cAwoWdd8/Zy2+yw+gucE1ICqdspVJQA=,iv:Z3FM39Q/mIzbgdWNGHsKbtQJUd91pQ+bSJRMC7asBts=,tag:rq+WKbIpN+Y9uaI04isdqg==,type:str]
+    version: 3.13.3

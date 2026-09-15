@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: mealie-oidc
+    namespace: mealie
+type: Opaque
+stringData:
+    OIDC_CLIENT_SECRET: ENC[AES256_GCM,data:tfX2PMNJW9yf6lMpIOCMhXtosrG56Vshi2SeDHJvZIE0A1yUMhcfCFdsA4RaYTp57k4HsEzULCSjSLWQvRsomw==,iv:HR0qfu+Sh40XY4bxkU176XBGJFS4uAQCQNiLttWEvu4=,tag:8vXgqy++SsFAPZHIacHMUg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBrRWZxOHZZeFU3b05PTHJM
+            L2k2QzFhMHIwUUhXYXpWVXBwOWw4ZndjSmk0CjIvODdERW9rODZHRE1zM0V6Z2p5
+            SStBY1dWSUFRK1BJWnAzWG8xa01sNkkKLS0tIGxNdTVrUytRaVlLQzhsR2VmTUJC
+            YmUzWDRzMG1DUHdlWVE3MVcxRG1IQU0KS8RzB395ZZhUzz38y9vEVaftWc+xcyuS
+            QrGQuTU27rHRaMf4o0fzOYT3tgLdAk3FEhgEh5zT5wNYbqOrAPs/9Q==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-15T15:01:52Z"
+    mac: ENC[AES256_GCM,data:le0jS1kcGBjUx07HauKorBFWZZWUCqZNZMuvV+VQ4kJY3h6IOOKodnRrcVWItJZDw6gRw+KaXYPvYjqXp8iIUno1gwf41HFqXJu1dy6HkTyYzcE1stal0taHZawJ/8ioBuup5pCebL0uLDIpyZu6QdKVPxT5BiMui8tZAgqw49s=,iv:Ga98UxeoTlUKxLiJeM67tmLOQ4S57vBiD7K0/l5wUWc=,tag:Jv8Ejk3K+GWDtJf2jjJJfQ==,type:str]
+    version: 3.13.3

@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: media-auth-nginx
+  namespace: media-auth
+data:
+  nginx.conf: |
+    events {}
+    http {
+      resolver kube-dns.kube-system.svc.cluster.local valid=30s;
+      map $host $media_upstream {
+        default http://127.0.0.1:8099;
+        autobrr.kleinsorge.dev http://autobrr.autobrr.svc.cluster.local:7474;
+        bazarr.kleinsorge.dev http://bazarr.bazarr.svc.cluster.local:6767;
+        prowlarr.kleinsorge.dev http://prowlarr.prowlarr.svc.cluster.local:9696;
+        qbittorrent.kleinsorge.dev http://qbittorrent.qbittorrent.svc.cluster.local:8080;
+        radarr.kleinsorge.dev http://radarr.radarr.svc.cluster.local:7878;
+        sonarr.kleinsorge.dev http://sonarr.sonarr.svc.cluster.local:8989;
+        tautulli.kleinsorge.dev http://tautulli.tautulli.svc.cluster.local:8181;
+      }
+      server {
+        listen 8080;
+        location / {
+          proxy_pass $media_upstream;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto https;
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-auth
+  namespace: media-auth
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: media-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: media-auth
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://dex.kleinsorge.dev
+            - --http-address=0.0.0.0:4180
+            - --upstream=http://127.0.0.1:8080
+            - --redirect-url=https://auth.kleinsorge.dev/oauth2/callback
+            - --email-domain=*
+            - --scope=openid profile email groups
+            - --cookie-domain=.kleinsorge.dev
+            - --whitelist-domain=.kleinsorge.dev
+            - --reverse-proxy=true
+            - --pass-user-headers=true
+            - --skip-provider-button=true
+          env:
+            - name: OAUTH2_PROXY_CLIENT_ID
+              value: media-stack-sso
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: media-stack-oidc
+                  key: client-secret
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: media-stack-oidc
+                  key: cookie-secret
+          ports:
+            - name: http
+              containerPort: 4180
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {cpu: 250m, memory: 256Mi}
+        - name: nginx
+          image: nginx:1.29.1-alpine
+          ports:
+            - name: upstream
+              containerPort: 8080
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: upstream
+          resources:
+            requests: {cpu: 10m, memory: 16Mi}
+            limits: {cpu: 100m, memory: 128Mi}
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: media-auth-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-auth
+  namespace: media-auth
+spec:
+  selector:
+    app.kubernetes.io/name: media-auth
+  ports:
+    - name: http
+      port: 4180
+      targetPort: http

@@ -53,6 +53,22 @@ dex:
         redirectURIs:
           - 'https://disney-alerts.kleinsorge.dev/auth/callback'
         secretEnv: DISNEY_ALERTS_SSO_CLIENT_SECRET
+      - id: mealie-sso
+        name: Mealie
+        redirectURIs:
+          - 'https://mealie.kleinsorge.dev/login'
+          - 'https://mealie.kleinsorge.dev/login?direct=1'
+        secretEnv: MEALIE_SSO_CLIENT_SECRET
+      - id: paperless-sso
+        name: Paperless-ngx
+        redirectURIs:
+          - 'https://paperless.kleinsorge.dev/accounts/oidc/dex/login/callback/'
+        secretEnv: PAPERLESS_SSO_CLIENT_SECRET
+      - id: media-stack-sso
+        name: Media Stack Gateway
+        redirectURIs:
+          - 'https://auth.kleinsorge.dev/oauth2/callback'
+        secretEnv: MEDIA_STACK_SSO_CLIENT_SECRET
   envFrom:
     - secretRef:
         name: dex-secrets

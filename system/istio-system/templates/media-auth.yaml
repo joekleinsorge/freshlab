@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: media-auth
+  labels:
+    istio.io/dataplane-mode: none
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: latest
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: latest
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: media-auth
+  namespace: media-auth
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: freshlab
+      namespace: istio-system
+      sectionName: https
+  hostnames:
+    - auth.kleinsorge.dev
+    - autobrr.kleinsorge.dev
+    - bazarr.kleinsorge.dev
+    - prowlarr.kleinsorge.dev
+    - qbittorrent.kleinsorge.dev
+    - radarr.kleinsorge.dev
+    - sonarr.kleinsorge.dev
+    - tautulli.kleinsorge.dev
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: media-auth
+          port: 4180
