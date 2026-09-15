@@ -317,6 +317,14 @@ argocd-apps:
           # to trigger rolling restarts. They are controller-owned runtime
           # state, not configuration drift from Git.
           ignoreDifferences:
+            # Namespace labels and annotations are shared with Istio and
+            # cluster policy controllers. Those controllers add dataplane
+            # and security metadata after the namespace is created.
+            - group: ''
+              kind: Namespace
+              jqPathExpressions:
+                - '.metadata.labels'
+                - '.metadata.annotations'
             - group: apps
               kind: Deployment
               jqPathExpressions:
