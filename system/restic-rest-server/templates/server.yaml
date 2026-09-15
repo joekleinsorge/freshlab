@@ -9,9 +9,6 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
-  mountOptions:
-    - hard
-    - nfsvers=4.1
   nfs:
     server: {{ .Values.nfs.server }}
     path: {{ .Values.nfs.path }}

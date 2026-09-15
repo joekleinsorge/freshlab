@@ -55,13 +55,6 @@ spec:
             limits:
               cpu: "2"
               memory: 2Gi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            seccompProfile:
-              type: RuntimeDefault
           volumeMounts:
             - {name: data, mountPath: /usr/src/paperless/data, subPath: data}
             - {name: data, mountPath: /usr/src/paperless/media, subPath: media}
@@ -80,8 +73,6 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop: [ALL]
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
