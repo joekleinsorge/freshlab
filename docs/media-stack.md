@@ -9,17 +9,20 @@ The *arr workloads and qBittorrent share `192.168.1.208:/volume1/Media` (as
 before syncing if the media layout differs, and configure the *arr
 download/import paths accordingly.
 
-Before enabling qBittorrent, create its WireGuard secret in the `qbittorrent`
-namespace. The namespace is intentionally marked privileged because Gluetun
-needs `NET_ADMIN` and `/dev/net/tun`:
+Before enabling qBittorrent, create its PIA OpenVPN credentials in the
+`qbittorrent` namespace. The namespace is intentionally marked privileged
+because Gluetun needs `NET_ADMIN` and `/dev/net/tun`:
 
 ```sh
 kubectl -n qbittorrent create secret generic qbittorrent-secrets \
-  --from-literal=WIREGUARD_PRIVATE_KEY='replace-me'
+  --from-literal=PIA_OPENVPN_USERNAME='replace-me' \
+  --from-literal=PIA_OPENVPN_PASSWORD='replace-me'
 ```
 
-Replace the placeholder with a SOPS-managed Secret before committing a
-production configuration. Configure the *arr API keys in a Secret named
+Gluetun uses PIA's native OpenVPN integration here; PIA WireGuard requires a
+custom generated configuration and is not used by this manifest. Replace the
+placeholders with a SOPS-managed Secret before committing a production
+configuration. Configure the *arr API keys in a Secret named
 `recyclarr-secrets` with `SONARR_API_KEY` and `RADARR_API_KEY`.
 
 After the pods are healthy, configure the applications using these internal

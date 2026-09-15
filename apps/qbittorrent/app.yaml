@@ -38,16 +38,22 @@ spec:
               add: [NET_ADMIN]
           env:
             - name: VPN_SERVICE_PROVIDER
-              value: nordvpn
+              value: private internet access
             - name: VPN_TYPE
-              value: wireguard
-            - name: WIREGUARD_PRIVATE_KEY
+              value: openvpn
+            - name: OPENVPN_USER
               valueFrom:
                 secretKeyRef:
                   name: qbittorrent-secrets
-                  key: WIREGUARD_PRIVATE_KEY
+                  key: PIA_OPENVPN_USERNAME
                   optional: true
-            - name: SERVER_COUNTRIES
+            - name: OPENVPN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: qbittorrent-secrets
+                  key: PIA_OPENVPN_PASSWORD
+                  optional: true
+            - name: SERVER_REGIONS
               value: Netherlands
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.244.0.0/16,10.96.0.0/12,192.168.1.0/24"
