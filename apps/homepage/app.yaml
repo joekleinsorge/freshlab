@@ -1,0 +1,215 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: homepage
+  namespace: homepage
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: homepage
+rules:
+  - apiGroups: [""]
+    resources: [namespaces, pods, nodes]
+    verbs: [get, list]
+  - apiGroups: [metrics.k8s.io]
+    resources: [nodes, pods]
+    verbs: [get, list]
+  - apiGroups: [gateway.networking.k8s.io]
+    resources: [gateways, httproutes]
+    verbs: [get, list]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: homepage
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: homepage
+subjects:
+  - kind: ServiceAccount
+    name: homepage
+    namespace: homepage
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: homepage
+data:
+  kubernetes.yaml: |
+    mode: cluster
+  settings.yaml: |
+    title: Freshlab
+    theme: dark
+    color: slate
+    layout:
+      Media:
+        style: row
+        columns: 4
+      Infrastructure:
+        style: row
+        columns: 4
+      Utilities:
+        style: row
+        columns: 4
+  services.yaml: |
+    - Media:
+        - Plex:
+            icon: plex.svg
+            href: https://plex.kleinsorge.dev
+        - Seerr:
+            icon: jellyseerr.svg
+            href: https://seerr.kleinsorge.dev
+        - Tautulli:
+            icon: tautulli.svg
+            href: https://tautulli.kleinsorge.dev
+        - Sonarr:
+            icon: sonarr.svg
+            href: https://sonarr.kleinsorge.dev
+        - Radarr:
+            icon: radarr.svg
+            href: https://radarr.kleinsorge.dev
+        - Bazarr:
+            icon: bazarr.svg
+            href: https://bazarr.kleinsorge.dev
+        - Prowlarr:
+            icon: prowlarr.svg
+            href: https://prowlarr.kleinsorge.dev
+        - qBittorrent:
+            icon: qbittorrent.svg
+            href: https://qbittorrent.kleinsorge.dev
+    - Infrastructure:
+        - Argo CD:
+            icon: argo-cd.svg
+            href: https://argocd.kleinsorge.dev
+        - Grafana:
+            icon: grafana.svg
+            href: https://grafana.kleinsorge.dev
+        - Kiali:
+            icon: kiali.svg
+            href: https://kiali.kleinsorge.dev
+        - Uptime Kuma:
+            icon: uptime-kuma.svg
+            href: https://status.kleinsorge.dev
+    - Utilities:
+        - FreshRSS:
+            icon: freshrss.svg
+            href: https://rss.kleinsorge.dev
+        - Mealie:
+            icon: mealie.svg
+            href: https://mealie.kleinsorge.dev
+        - Immich:
+            icon: immich.svg
+            href: https://photos.kleinsorge.dev
+        - Hermes:
+            icon: mdi-robot
+            href: https://hermes.kleinsorge.dev
+  widgets.yaml: |
+    - greeting:
+        text: Welcome to Freshlab
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+    - longhorn:
+        expanded: true
+        total: true
+        labels: true
+        nodes: true
+  bookmarks.yaml: |
+    - Developer:
+        - Freshlab:
+            - abbr: FL
+              href: https://github.com/joekleinsorge/freshlab
+  docker.yaml: "{}"
+  custom.css: ""
+  custom.js: ""
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homepage
+  namespace: homepage
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homepage
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: homepage
+    spec:
+      serviceAccountName: homepage
+      automountServiceAccountToken: true
+      containers:
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:v2.2.0
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: home.kleinsorge.dev
+          ports:
+            - name: http
+              containerPort: 3000
+          readinessProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /app/config
+            - name: logs
+              mountPath: /app/config/logs
+      volumes:
+        - name: config
+          configMap:
+            name: homepage
+        - name: logs
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homepage
+  namespace: homepage
+spec:
+  selector:
+    app.kubernetes.io/name: homepage
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-node-health-probes
+  namespace: homepage
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - ipBlock: {cidr: 192.168.1.100/32}
+        - ipBlock: {cidr: 192.168.1.101/32}
+        - ipBlock: {cidr: 192.168.1.102/32}
+        - ipBlock: {cidr: 192.168.1.103/32}
+      ports: [{protocol: TCP, port: 3000}]

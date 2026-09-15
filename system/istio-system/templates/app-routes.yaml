@@ -29,7 +29,7 @@ metadata:
   name: {{ .namespace }}
   labels:
     istio.io/dataplane-mode: {{ .dataplaneMode | default "none" | quote }}
-    pod-security.kubernetes.io/enforce: {{ if eq .namespace "plex" }}privileged{{ else }}baseline{{ end }}
+    pod-security.kubernetes.io/enforce: {{ if has .namespace $.Values.privilegedNamespaces }}privileged{{ else }}baseline{{ end }}
     pod-security.kubernetes.io/enforce-version: latest
     pod-security.kubernetes.io/audit: restricted
     pod-security.kubernetes.io/audit-version: latest

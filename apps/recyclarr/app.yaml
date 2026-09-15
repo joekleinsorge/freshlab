@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: recyclarr
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recyclarr-config
+  namespace: recyclarr
+data:
+  recyclarr.yml: |
+    sonarr:
+      sonarr:
+        base_url: http://sonarr.sonarr.svc.cluster.local:8989
+        api_key: !env_var SONARR_API_KEY
+        quality_profiles:
+          - trash_id: 72dae194fc92bf828f32cde7744e51a1
+            reset_unmatched_scores:
+              enabled: true
+    radarr:
+      radarr:
+        base_url: http://radarr.radarr.svc.cluster.local:7878
+        api_key: !env_var RADARR_API_KEY
+        quality_profiles:
+          - trash_id: 64fb5f9858489bdac2af690e27c8f42f
+            reset_unmatched_scores:
+              enabled: true
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: recyclarr
+  namespace: recyclarr
+spec:
+  schedule: "0 4 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 3000
+            runAsGroup: 3000
+            fsGroup: 3000
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+            - name: copy-config
+              image: busybox:1.38
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: [ALL]
+              command: [cp, /config-input/recyclarr.yml, /config/recyclarr.yml]
+              volumeMounts:
+                - name: config-input
+                  mountPath: /config-input
+                - name: config
+                  mountPath: /config
+          containers:
+            - name: recyclarr
+              image: ghcr.io/recyclarr/recyclarr:8
+              command: [recyclarr, sync]
+              env:
+                - name: TZ
+                  value: America/New_York
+                - name: SONARR_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: recyclarr-secrets
+                      key: SONARR_API_KEY
+                      optional: true
+                - name: RADARR_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: recyclarr-secrets
+                      key: RADARR_API_KEY
+                      optional: true
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: [ALL]
+              volumeMounts:
+                - name: config
+                  mountPath: /config
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  memory: 256Mi
+          volumes:
+            - name: config-input
+              configMap:
+                name: recyclarr-config
+            - name: config
+              emptyDir: {}

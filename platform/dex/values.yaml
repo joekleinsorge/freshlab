@@ -36,6 +36,8 @@ dex:
         name: Argo CD
         redirectURIs:
           - 'https://argocd.kleinsorge.dev/auth/callback'
+          # Argo CD CLI SSO callback.
+          - 'http://localhost:8085/auth/callback'
         secretEnv: ARGOCD_SSO_CLIENT_SECRET
       - id: argo-workflows-sso
         name: Argo Workflows

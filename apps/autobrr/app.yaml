@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autobrr
+  namespace: autobrr
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: autobrr
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: autobrr
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: autobrr
+          image: ghcr.io/autobrr/autobrr:v1.85.0
+          env:
+            - name: TZ
+              value: America/New_York
+          ports:
+            - name: http
+              containerPort: 7474
+          readinessProbe:
+            tcpSocket:
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 30
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: autobrr-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: autobrr-config
+  namespace: autobrr
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autobrr
+  namespace: autobrr
+spec:
+  selector:
+    app.kubernetes.io/name: autobrr
+  ports:
+    - name: http
+      port: 7474
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-node-health-probes
+  namespace: autobrr
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - ipBlock: {cidr: 192.168.1.100/32}
+        - ipBlock: {cidr: 192.168.1.101/32}
+        - ipBlock: {cidr: 192.168.1.102/32}
+        - ipBlock: {cidr: 192.168.1.103/32}
+      ports: [{protocol: TCP, port: 7474}]
