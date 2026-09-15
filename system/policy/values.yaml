@@ -25,12 +25,16 @@ networkPolicyNamespaces:
   - librespeed
   - mealie
   - nginx
+  - ollama
+  - pairdrop
+  - paperless
+  - plex
   - prowlarr
   - qbittorrent
   - radarr
   - recyclarr
-  - plex
   - romm
+  - restic-rest-server
   - seerr
   - seafile
   - sonarr
