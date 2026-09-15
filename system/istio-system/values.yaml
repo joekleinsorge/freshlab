@@ -64,6 +64,12 @@ ztunnel:
 
 # Public applications attached to the shared ambient-mode Gateway. Keeping
 # this inventory here gives every app the same routing and mesh policy.
+privilegedNamespaces:
+  # Plex already needs direct access to /dev/dri. qBittorrent Gluetun
+  # sidecar additionally needs NET_ADMIN and /dev/net/tun for WireGuard.
+  - plex
+  - qbittorrent
+
 appRoutes:
   - {namespace: authelia, name: authelia, hostname: authelia.kleinsorge.dev, service: authelia, port: 80}
   - {namespace: budget, name: budget, hostname: budget.kleinsorge.dev, service: budget, port: 5006}
@@ -78,7 +84,8 @@ appRoutes:
   - {namespace: frigate, name: frigate, hostname: frigate.kleinsorge.dev, service: frigate, port: 5000}
   - {namespace: grafana, name: grafana, hostname: grafana.kleinsorge.dev, service: grafana, port: 80}
   - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
-  - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000, dataplaneMode: none}
+  - {namespace: homepage, name: homepage, hostname: home.kleinsorge.dev, service: homepage, port: 3000, dataplaneMode: none}
+  - {namespace: hermes, name: hermes, hostname: hermes.kleinsorge.dev, service: hermes, port: 9119, dataplaneMode: none}
   - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
   - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
   - {namespace: kitchenowl, name: kitchenowl, hostname: kitchenowl.kleinsorge.dev, service: kitchenowl, port: 80}
@@ -87,7 +94,15 @@ appRoutes:
   - {namespace: librespeed, name: librespeed, hostname: speed.kleinsorge.dev, service: librespeed, port: 80}
   - {namespace: mealie, name: mealie, hostname: mealie.kleinsorge.dev, service: mealie, port: 9000}
   - {namespace: nginx, name: nginx, hostname: web.kleinsorge.dev, service: nginx-service, port: 80}
+  - {namespace: autobrr, name: autobrr, hostname: autobrr.kleinsorge.dev, service: autobrr, port: 7474, dataplaneMode: none}
+  - {namespace: bazarr, name: bazarr, hostname: bazarr.kleinsorge.dev, service: bazarr, port: 6767, dataplaneMode: none}
   - {namespace: plex, name: plex, hostname: plex.kleinsorge.dev, service: plex, port: 32400}
+  - {namespace: prowlarr, name: prowlarr, hostname: prowlarr.kleinsorge.dev, service: prowlarr, port: 9696, dataplaneMode: none}
+  - {namespace: qbittorrent, name: qbittorrent, hostname: qbittorrent.kleinsorge.dev, service: qbittorrent, port: 8080, dataplaneMode: none}
+  - {namespace: radarr, name: radarr, hostname: radarr.kleinsorge.dev, service: radarr, port: 7878, dataplaneMode: none}
+  - {namespace: seerr, name: seerr, hostname: seerr.kleinsorge.dev, service: seerr, port: 5055, dataplaneMode: none}
   - {namespace: seafile, name: seafile, hostname: files.kleinsorge.dev, service: seafile, port: 80}
+  - {namespace: sonarr, name: sonarr, hostname: sonarr.kleinsorge.dev, service: sonarr, port: 8989, dataplaneMode: none}
+  - {namespace: tautulli, name: tautulli, hostname: tautulli.kleinsorge.dev, service: tautulli, port: 8181, dataplaneMode: none}
   - {namespace: tools, name: tools, hostname: tools.kleinsorge.dev, service: tools-service, port: 80}
   - {namespace: uptime-kuma, name: uptime-kuma, hostname: status.kleinsorge.dev, service: uptime-kuma, port: 3001}

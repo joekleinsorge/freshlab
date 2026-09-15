@@ -6,6 +6,8 @@ protectedNamespaces:
   - arc-runners
 
 networkPolicyNamespaces:
+  - autobrr
+  - bazarr
   - budget
   - disney-alerts
   - excalidraw
@@ -14,6 +16,8 @@ networkPolicyNamespaces:
   - frigate
   - grocy
   - hajimari
+  - hermes
+  - homepage
   - immich
   - kindle-weather
   - kitchenowl
@@ -21,8 +25,15 @@ networkPolicyNamespaces:
   - librespeed
   - mealie
   - nginx
+  - prowlarr
+  - qbittorrent
+  - radarr
+  - recyclarr
   - plex
   - romm
+  - seerr
   - seafile
+  - sonarr
+  - tautulli
   - tools
   - uptime-kuma
