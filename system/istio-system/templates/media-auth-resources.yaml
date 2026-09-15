@@ -20,6 +20,13 @@ data:
       }
       server {
         listen 8080;
+        server_name auth.kleinsorge.dev;
+        location / {
+          return 200 "media auth gateway";
+        }
+      }
+      server {
+        listen 8080 default_server;
         location / {
           proxy_pass $media_upstream;
           proxy_set_header Host $host;
@@ -48,7 +55,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: oauth2-proxy
-          image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0@sha256:786bed0f000c0f8a7b31619244ebab02406a8856a4faf3f5fb1df61fbd6c30ed
           args:
             - --provider=oidc
             - --oidc-issuer-url=https://dex.kleinsorge.dev
@@ -90,7 +97,7 @@ spec:
             requests: {cpu: 20m, memory: 64Mi}
             limits: {cpu: 250m, memory: 256Mi}
         - name: nginx
-          image: nginx:1.29.1-alpine
+          image: nginx:1.29.1-alpine@sha256:42a516af16b852e33b7682d5ef8acbd5d13fe08fecadc7ed98605ba5e3b26ab8
           ports:
             - name: upstream
               containerPort: 8080
