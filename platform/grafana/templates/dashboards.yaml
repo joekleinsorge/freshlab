@@ -13,6 +13,17 @@ data:
   {{ base $path }}: |-
 {{ $file | toString | nindent 4 }}
 {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshlab-grafana-application-dashboards
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    grafana_folder: Freshlab / Applications
+  labels:
+    grafana_dashboard: "1"
+data:
 {{- range $app := .Values.grafana.freshlabAppDashboards }}
   app-{{ $app }}.json: |-
 {{- $namespace := $app -}}
