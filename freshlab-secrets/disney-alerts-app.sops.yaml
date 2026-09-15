@@ -1,5 +1,5 @@
 apiVersion: v1
-data:
+stringData:
     ADMIN_PASSWORD: ENC[AES256_GCM,data:MOJIdrxf74l3uueT/rMBeBPqkFSD+QIz29pFCsIHSC6efYviViZIeKhktgqlY7B4oPcEDvEV2POHjEkPiMqa+w==,iv:yQ+6jikESz76lYUDNX3V3H69fKBFAjg3zDgbClnx7UM=,tag:bi0KibJqM0jYrg6Kt90w/Q==,type:str]
     ADMIN_USERNAME: ENC[AES256_GCM,data:KhAxDQ==,iv:rIkyHBsjPgPamL0BM+V+vVF599pxkMJkdfJAqds2WC4=,tag:fj56LckzWDScG8fbQRPvLQ==,type:str]
     ALERT_PROVIDER: ENC[AES256_GCM,data:M3s1Nw==,iv:ZmKs4sU3f8lVx4nFhZLHgS4o6V2/RpijinGOwEMRmo0=,tag:aN93z/yPRx2gw7dRX4hPfw==,type:str]

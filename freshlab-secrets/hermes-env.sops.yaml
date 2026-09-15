@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: hermes-env
+    namespace: hermes
+type: Opaque
+stringData:
+    HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ENC[AES256_GCM,data:EGqqSJE=,iv:ALAB/+k/2Bj12IUDc2N8XlFgUPPOU43E90K6PWXiTE8=,tag:g1dIfmWLrFOU0Whu2dLn8w==,type:str]
+    HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ENC[AES256_GCM,data:6YTUEofjztdGqEuWKs8RPzy++0P5YLW0P8T88gOrGqs=,iv:/7MgQjwZu2RkWh6QApiHGf9T5HupKPkFaUaSqh+QVsU=,tag:24T8vNIvtKDFWkqzK7iW8A==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0eXgvSWZxUlBaeVloa240
+            TTFLL3Y5UGdTTjFCMWlCa0psaHhPS05DUmt3CmhpSVRUMllLSVp1alJhK2Z3eWcx
+            THMvYU9rNHp6K25xakVoZkFadjd3aGMKLS0tIFcwMm5mM1EvSWZNZlFPME1XMkp5
+            N05pZTB5VWlBYnJpbzRmYkZkTUt6MDAKslQ5aFUCNUnsfqTyrqgmEWJSS+nuGDPs
+            4sRb5DqD4hyqP4AuJIH5eybU440Ot8A8N1pCJNycNXb60tQEriu24A==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-15T12:14:54Z"
+    mac: ENC[AES256_GCM,data:80web72Q7mneuwOqDeibEVkVktY/N2t48f4ZuJiXrnSxnuUjNgVZsRptTh6JdtQNNPOjKnCBneSp7WZCp/vvlogeq5R1PXl2zZpkQzmuseimRWMkpfZP5pyy1vWZlPIA84fabLfKlvN9xNv4aQ81YXG6ePzxKm4T59LNaKDCCDg=,iv:ZX46dCLzPKzR3DjpB9XKvBrjtFlvjUfY8BA3SR/bMk0=,tag:2HFxUYMIFU1PhMuSCSJrHQ==,type:str]
+    version: 3.13.3
