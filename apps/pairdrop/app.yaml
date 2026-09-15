@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pairdrop
+  labels:
+    app.kubernetes.io/name: pairdrop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pairdrop
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pairdrop
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: pairdrop
+          image: lscr.io/linuxserver/pairdrop:1.11.2@sha256:15b6792fcd486d8ebd1853dbfb0419188ca92035da2f29f75eb18b5390fa25d1
+          imagePullPolicy: IfNotPresent
+          env:
+            - {name: PUID, value: "1000"}
+            - {name: PGID, value: "1000"}
+            - {name: TZ, value: America/New_York}
+            - {name: WS_FALLBACK, value: "false"}
+          ports:
+            - {name: http, containerPort: 3000}
+          readinessProbe:
+            httpGet: {path: /, port: http}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /, port: http}
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 25m, memory: 64Mi}
+            limits: {cpu: 500m, memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            seccompProfile:
+              type: RuntimeDefault
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pairdrop
+  labels:
+    app.kubernetes.io/name: pairdrop
+spec:
+  selector:
+    app.kubernetes.io/name: pairdrop
+  ports:
+    - {name: http, port: 3000, targetPort: http}

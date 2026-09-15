@@ -3,3 +3,42 @@ volsync:
     # The chart's ServiceMonitor does not attach a bearer token, so its
     # kube-rbac-proxy endpoint otherwise returns 401 to Prometheus.
     disableAuth: true
+
+backups:
+  enabled: true
+  schedule: "17 */6 * * *"
+  copyMethod: Snapshot
+  pruneIntervalDays: 14
+  retain:
+    hourly: 4
+    daily: 7
+    weekly: 4
+    monthly: 6
+    yearly: 2
+  volumes:
+    - {namespace: authelia, pvc: authelia-data}
+    - {namespace: autobrr, pvc: autobrr-config}
+    - {namespace: bazarr, pvc: bazarr-config}
+    - {namespace: disney-alerts, pvc: disney-alerts-data}
+    - {namespace: freshrss, pvc: freshrss-pvc}
+    - {namespace: frigate, pvc: frigate-config}
+    - {namespace: frigate, pvc: frigate-media}
+    - {namespace: grocy, pvc: grocy-data}
+    - {namespace: hermes, pvc: hermes-data}
+    - {namespace: immich, pvc: immich-postgres-data}
+    - {namespace: kitchenowl, pvc: kitchenowl-data}
+    - {namespace: mealie, pvc: mealie-data}
+    - {namespace: ollama, pvc: ollama-models}
+    - {namespace: paperless, pvc: paperless-data}
+    - {namespace: plex, pvc: pms-config-plex-0}
+    - {namespace: prowlarr, pvc: prowlarr-config}
+    - {namespace: qbittorrent, pvc: qbittorrent-config}
+    - {namespace: radarr, pvc: radarr-config}
+    - {namespace: romm, pvc: mysql-data-pvc}
+    - {namespace: romm, pvc: romm-redis-data-pvc}
+    - {namespace: romm, pvc: romm-resources-pvc}
+    - {namespace: seafile, pvc: data-seafile-mariadb-0}
+    - {namespace: seafile, pvc: seafile-data}
+    - {namespace: seerr, pvc: seerr-config}
+    - {namespace: sonarr, pvc: sonarr-config}
+    - {namespace: tautulli, pvc: tautulli-config}

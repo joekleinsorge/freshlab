@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: freshlab-volsync-restore
+spec:
+  entrypoint: restore
+  serviceAccountName: freshlab-ops-restore
+  podGC:
+    strategy: OnWorkflowCompletion
+  ttlStrategy:
+    secondsAfterCompletion: 86400
+  arguments:
+    parameters:
+      - name: namespace
+      - name: source-pvc
+      - name: restore-pvc
+      - name: capacity
+      - name: storage-class
+        value: longhorn
+  templates:
+    - name: restore
+      steps:
+        - - name: create-empty-pvc
+            template: create-empty-pvc
+        - - name: restore-backup
+            template: restore-backup
+
+    - name: create-empty-pvc
+      resource:
+        action: create
+        setOwnerReference: false
+        manifest: |
+          apiVersion: v1
+          kind: PersistentVolumeClaim
+          metadata:
+            name: {{ "{{workflow.parameters.restore-pvc}}" }}
+            namespace: {{ "{{workflow.parameters.namespace}}" }}
+            labels:
+              freshlab.kleinsorge.dev/restore: {{ "{{workflow.name}}" }}
+          spec:
+            storageClassName: {{ "{{workflow.parameters.storage-class}}" }}
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: {{ "{{workflow.parameters.capacity}}" }}
+
+    - name: restore-backup
+      resource:
+        action: create
+        setOwnerReference: false
+        successCondition: status.lastManualSync == {{ "{{workflow.name}}" }}
+        failureCondition: status.latestMoverStatus.result == Failed
+        manifest: |
+          apiVersion: volsync.backube/v1alpha1
+          kind: ReplicationDestination
+          metadata:
+            name: {{ "{{workflow.name}}" }}
+            namespace: {{ "{{workflow.parameters.namespace}}" }}
+            labels:
+              freshlab.kleinsorge.dev/restore: {{ "{{workflow.name}}" }}
+          spec:
+            trigger:
+              manual: {{ "{{workflow.name}}" }}
+            restic:
+              repository: {{ "{{workflow.parameters.source-pvc}}" }}-volsync-restic
+              destinationPVC: {{ "{{workflow.parameters.restore-pvc}}" }}
+              copyMethod: Direct

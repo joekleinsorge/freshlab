@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: freshlab-benchmarks
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-rwo
+  namespace: freshlab-benchmarks
+spec:
+  storageClassName: longhorn
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: storage-rwo
+  namespace: freshlab-benchmarks
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+        - name: benchmark
+          image: docker.io/library/busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0
+          command: [/bin/sh, -ec]
+          args:
+            - |
+              echo "Sequential write (1 GiB, fsync):"
+              time dd if=/dev/zero of=/data/test.bin bs=1M count=1024 conv=fsync
+              echo "Sequential read (1 GiB):"
+              time dd if=/data/test.bin of=/dev/null bs=1M
+              rm -f /data/test.bin
+          resources:
+            requests: {cpu: 100m, memory: 32Mi}
+            limits: {cpu: "2", memory: 256Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            runAsNonRoot: true
+            runAsUser: 1000
+            seccompProfile: {type: RuntimeDefault}
+          volumeMounts:
+            - {name: data, mountPath: /data}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: storage-rwo}

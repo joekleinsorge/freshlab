@@ -14,6 +14,28 @@ default: help
 git-hooks:
 	pre-commit install
 
+smoke-test:
+	./scripts/cluster-smoke-test
+
+backup-status:
+	kubectl get replicationsources.volsync.backube -A \
+		-o custom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,LAST:.status.lastSyncTime,NEXT:.status.nextSyncTime,RESULT:.status.latestMoverStatus.result'
+
+restore:
+	@test -n "$(NAMESPACE)" -a -n "$(SOURCE_PVC)" -a -n "$(RESTORE_PVC)" -a -n "$(CAPACITY)" || \
+		{ echo 'Usage: make restore NAMESPACE=... SOURCE_PVC=... RESTORE_PVC=... CAPACITY=...'; exit 2; }
+	argo submit --namespace argocd --from clusterworkflowtemplate/freshlab-volsync-restore \
+		-p namespace="$(NAMESPACE)" -p source-pvc="$(SOURCE_PVC)" \
+		-p restore-pvc="$(RESTORE_PVC)" -p capacity="$(CAPACITY)" --watch
+
+paperless-password:
+	@SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d --extract '["stringData"]["PAPERLESS_ADMIN_PASSWORD"]' freshlab-secrets/paperless.sops.yaml
+
+new-app:
+	@test -n "$(NAME)" -a -n "$(IMAGE)" -a -n "$(PORT)" -a -n "$(HOSTNAME)" || \
+		{ echo 'Usage: make new-app NAME=... IMAGE=... PORT=... HOSTNAME=... [CONTAINER_PORT=...]'; exit 2; }
+	./scripts/new-app "$(NAME)" "$(IMAGE)" "$(PORT)" "$(HOSTNAME)" $(if $(CONTAINER_PORT),"$(CONTAINER_PORT)")
+
 metal:
 	make -C metal $(if $(ANSIBLE_LIMIT),ANSIBLE_LIMIT='$(ANSIBLE_LIMIT)')
 
@@ -29,6 +51,11 @@ help:
 		'  make              Show this help' \
 		'  make metal        Provision or manage the metal cluster' \
 		'  make system       Deploy the system workloads' \
+		'  make smoke-test   Verify live nodes, Argo applications, and HTTPS routes' \
+		'  make backup-status Show the latest and next VolSync backup runs' \
+		'  make restore ...   Restore a backup into a new PVC' \
+		'  make paperless-password Show the generated Paperless admin password' \
+		'  make new-app ...   Scaffold a policy-aware Gateway API application' \
 		'  make dex-password-hash  Show the configured Dex password hash' \
 		'  make dex-password-reset Generate and save a new Dex password' \
 		'  make argocd-auth-sync Apply Argo/Dex client secrets and restart SSO' \

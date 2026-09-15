@@ -1,0 +1,19 @@
+name: Cluster smoke test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 10 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Verify the live cluster and every published route
+        run: ./scripts/cluster-smoke-test

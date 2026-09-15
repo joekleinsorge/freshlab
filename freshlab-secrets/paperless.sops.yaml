@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: paperless-secrets
+    namespace: paperless
+type: Opaque
+stringData:
+    PAPERLESS_SECRET_KEY: ENC[AES256_GCM,data:szqiQa+imJR7KnBrtHsRIFBmFAM8QERYlSUslXMThB+1Q3oKsMTrWBEe8gNoJKdPSwdLEiB0MD54tv4/FQVsmQ==,iv:m25+8V+NhKnDyz2IQZoapdo2ltCdrdKr4rNMvbdwPlM=,tag:0H8IwyZrpGGoN0y6mnnDeA==,type:str]
+    PAPERLESS_ADMIN_USER: ENC[AES256_GCM,data:ypJEef4=,iv:X0pD3VLJn/1Cl0cAj4G2Dj6YdiKr0FTtAN9tCU8BIHY=,tag:2E8x4ufC4c6zj2vgH8TS8w==,type:str]
+    PAPERLESS_ADMIN_PASSWORD: ENC[AES256_GCM,data:HtXBxi8ZKeYCPcB5th1/ZGCUTGX/ZzSHSK6Qpdx1w0PuOCykRU1y7iU/Sjr2Rp2Z,iv:8zE6fRLg/FQ5DI3w51kdJMvEMEVvH1P/xyQPIHhVQQo=,tag:s/x6qKf1zy+cBFX+tFnZdQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBBSnVrYnQ1SFhZS1liaXJv
+            NytkRDBidFhKcUkxSzN0aWh6a05FT05mN1VRCmpwcjIwZHlBemlsdlRxeUcrVmxL
+            cVFJVll3NU9pUUVCSTJ1RXUyVjBRMnMKLS0tIGlKTGFrZVZOZkNKcjh1NllscEw2
+            NVpBL2xyc0JwdmhMOXU1OXNyZGVFNHcKa8b0by0o1yQZR5g0V0/iVkzxIKd9XhBf
+            +j5X/yhSArJkH1n4mx7/6AR3f6nGC/0tLEAxTXuT3+621lkSjdXWdg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-15T01:23:11Z"
+    mac: ENC[AES256_GCM,data:kCuykw5/u2uExuwxGUkMmsX8eJ72+83u59IEo+9zcWW27n7qp1H+RVIadpPSaWlTJ5RyKRBPddeZSPEP9yXlzRXwhLKO8ZxVOKvylAs2RTjwSTSqIIFAU/8aMFzHlI4YVseU3tPHMEhP9Ozp9cYGuGoH3JeoSYblejkV/7qE1Jg=,iv:6iHqKBdN+t19ypHKqfFnAjlnH7yCb3a/6hQst4MbgaY=,tag:6OIOVBcJRJZOwtv2OS4XNg==,type:str]
+    version: 3.13.3

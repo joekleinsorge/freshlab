@@ -1,0 +1,33 @@
+image:
+  repository: restic/rest-server
+  tag: 0.14.0
+  digest: sha256:d2aff06f47eb38637dff580c3e6bce4af98f386c396a25d32eb6727ec96214a5
+
+nfs:
+  server: 192.168.1.208
+  path: /volume1/kube
+  capacity: 2Ti
+
+backupNamespaces:
+  - authelia
+  - autobrr
+  - bazarr
+  - disney-alerts
+  - freshrss
+  - frigate
+  - grocy
+  - hermes
+  - immich
+  - kitchenowl
+  - mealie
+  - ollama
+  - paperless
+  - plex
+  - prowlarr
+  - qbittorrent
+  - radarr
+  - romm
+  - seafile
+  - seerr
+  - sonarr
+  - tautulli

@@ -18,6 +18,8 @@ Please note that Freshlab is a personal project and not intended for production 
 - Automatic TLS certificate provisioning and renewal for secure communication over HTTPS
 - Automatic DNS provisioning and management for easy domain configuration
 - Automated monitoring configuration for enhanced observability and insights into the environment
+- Encrypted scheduled PVC backups to off-node NFS storage with guided restores
+- Live cluster, HTTPS endpoint, storage, and security verification tooling
 
 ## Core Components
 

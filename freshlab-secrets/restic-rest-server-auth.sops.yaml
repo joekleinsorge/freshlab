@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: restic-rest-server-auth
+    namespace: restic-rest-server
+type: Opaque
+stringData:
+    .htpasswd: ENC[AES256_GCM,data:OjA20dYrLxQhjhtUKUhuL7oo/ru5rjlDw1plF+TbstvlE094CeyLJO7PiOl0zUoGBTSIz36M5gJcuy9caf8D3aJ7xNf1,iv:VfANPp2SsYNVOJtplEv6SQljp5CYKyf0IyF2res0Yfc=,tag:j2UT1rTbIHeseVity8H8uQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBIYXhaUEJLbzZ4MnhkQlVE
+            Q1BnWWJFcEFUb3ppdWVWTjRidy8weS82Y0NVCkgvUjU5ME5tU01BNVQyNTVoQ0ha
+            a3pFSDdDSHdibWYyTDBxU1NPQmswWEUKLS0tIGhqckdCWTJKdTdJa29sU1VVbFVh
+            VUtWbkJzWXNJMmJJWEtMSkM4Z0Q0U1EKSglPNdaz27er6kFD3GeOmj2q2LRlmCPs
+            ZP6UojjEqiRA30Cgrb+ggx9/JUsDU+FuK26pAnkBXnwbCkB6Yx6+NQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-15T01:23:11Z"
+    mac: ENC[AES256_GCM,data:KQZ4Dwy+VW9cMKYnGHNr+zZcyqrM9WsFyrYcSHqTtZpwi8OeMiiX1H8LVnqSEdQDXCMdcYW2zl3g/e/XePI1nraytmctpddotJKrFgdxSSyxNIEvwuwujqOOhmNpiV/FnuPpDclVLT8gP1zRQpqZ410GxMLRJrhOwr4pSfXrvZ0=,iv:Q8Hota8IFcreUjCOfkwT37aVMWtSh4SMF7KmhqE8qJo=,tag:Kwz+FshKOSqmSg1z8JNi0A==,type:str]
+    version: 3.13.3

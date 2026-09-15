@@ -1,0 +1,5 @@
+apiVersion: v2
+name: restic-rest-server
+description: Cluster-internal Restic REST endpoint backed by the Freshlab NAS
+type: application
+version: 0.1.0

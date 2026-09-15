@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export KUBECONFIG="${KUBECONFIG:-${repo_root}/metal/kubeconfig.yaml}"
+
+required_tools=(curl jq kubectl)
+for tool in "${required_tools[@]}"; do
+  command -v "${tool}" >/dev/null || {
+    echo "Missing required tool: ${tool}" >&2
+    exit 1
+  }
+done
+
+echo "Waiting for every node to report Ready..."
+kubectl wait --for=condition=Ready nodes --all --timeout=5m
+
+echo "Checking Argo CD application state..."
+unhealthy_apps="$(kubectl -n argocd get applications.argoproj.io -o json | jq -r '
+  .items[]
+  | select(.status.sync.status != "Synced" or .status.health.status != "Healthy")
+  | [.metadata.name, .status.sync.status, .status.health.status]
+  | @tsv
+')"
+if [[ -n "${unhealthy_apps}" ]]; then
+  echo "Applications that are not Synced and Healthy:" >&2
+  printf '%s\n' "${unhealthy_apps}" >&2
+  exit 1
+fi
+
+hosts=()
+while IFS= read -r host; do
+  hosts+=("${host}")
+done < <(
+  kubectl get httproutes.gateway.networking.k8s.io -A -o json \
+    | jq -r '.items[].spec.hostnames[]?' \
+    | sort -u
+)
+
+if ((${#hosts[@]} == 0)); then
+  echo "No HTTPRoute hostnames were discovered." >&2
+  exit 1
+fi
+
+failures=0
+for host in "${hosts[@]}"; do
+  printf 'Checking https://%s ... ' "${host}"
+  if status="$(curl --location --silent --show-error --output /dev/null \
+    --connect-timeout 10 --max-time 45 --retry 2 \
+    --write-out '%{http_code}' "https://${host}")" \
+    && [[ "${status}" =~ ^[23][0-9][0-9]$ ]]; then
+    echo "${status}"
+  else
+    echo "failed (${status:-no response})"
+    failures=$((failures + 1))
+  fi
+done
+
+if ((failures > 0)); then
+  echo "${failures} endpoint check(s) failed." >&2
+  exit 1
+fi
+
+echo "Cluster and endpoint smoke checks passed."
