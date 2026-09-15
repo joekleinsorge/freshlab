@@ -4,10 +4,10 @@ Freshlab now includes the optional Plex automation services under `apps/`:
 Prowlarr, FlareSolverr, Sonarr, Radarr, Bazarr, qBittorrent, Seerr,
 Tautulli, Autobrr, and Recyclarr.
 
-The *arr workloads share `192.168.1.208:/volume1/Media` as `/data`; qBittorrent
-uses the `192.168.1.208:/volume1/Media/torrent` subdirectory as `/downloads`.
-Adjust those exports or the mount paths before syncing if the media layout
-differs, and configure the *arr download/import paths accordingly.
+The *arr workloads and qBittorrent share `192.168.1.208:/volume1/Media` (as
+`/data` and `/downloads`, respectively). Adjust that export or the mount paths
+before syncing if the media layout differs, and configure the *arr
+download/import paths accordingly.
 
 Before enabling qBittorrent, create its WireGuard secret in the `qbittorrent`
 namespace. The namespace is intentionally marked privileged because Gluetun
