@@ -18,20 +18,22 @@ spec:
             summary: "Node {{ `{{ $labels.instance }}` }} has less than 10% memory available"
             description: "Memory pressure is approaching eviction thresholds."
         - alert: FreshlabNodeFilesystemLow
-          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.25
+          # NFS shares are mounted on every node. Aggregate those mounts so a
+          # single full share produces one alert rather than one per node.
+          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.25) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.25)
           for: 15m
           labels:
             severity: warning
           annotations:
-            summary: "Filesystem on {{ `{{ $labels.instance }}` }} is below 25% free"
+            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 25% free"
             description: "Free space on {{ `{{ $labels.mountpoint }}` }} is approaching the Longhorn safety reserve."
         - alert: FreshlabNodeFilesystemCritical
-          expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes < 0.15
+          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.15) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.15)
           for: 5m
           labels:
             severity: critical
           annotations:
-            summary: "Filesystem on {{ `{{ $labels.instance }}` }} is below 15% free"
+            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 15% free"
             description: "Immediate cleanup or expansion is required before kubelet begins evicting workloads."
         - alert: FreshlabNodeFilesystemWillFill
           expr: predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs"}[6h], 24 * 3600) < 0
@@ -158,7 +160,9 @@ spec:
             summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is not bound"
             description: "Application storage has not been available for ten minutes."
         - alert: FreshlabPersistentVolumeLowSpace
-          expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.25
+          # kubelet is authoritative for PVC capacity. Filtering avoids a
+          # duplicate copy of each alert from API-server exported metrics.
+          expr: kubelet_volume_stats_available_bytes{job="kubelet"} / kubelet_volume_stats_capacity_bytes{job="kubelet"} < 0.25
           for: 15m
           labels:
             severity: warning
@@ -166,7 +170,7 @@ spec:
             summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} is below 25% free"
             description: "Expand or clean up this application volume before it can no longer write data."
         - alert: FreshlabPersistentVolumeCriticalSpace
-          expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.10
+          expr: kubelet_volume_stats_available_bytes{job="kubelet"} / kubelet_volume_stats_capacity_bytes{job="kubelet"} < 0.10
           for: 5m
           labels:
             severity: critical

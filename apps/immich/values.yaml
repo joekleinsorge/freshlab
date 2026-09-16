@@ -3,6 +3,20 @@ immich:
     main:
       containers:
         main:
+          probes:
+            startup:
+              enabled: true
+              spec:
+                timeoutSeconds: 10
+                failureThreshold: 60
+            liveness:
+              enabled: true
+              spec:
+                timeoutSeconds: 10
+            readiness:
+              enabled: true
+              spec:
+                timeoutSeconds: 10
           env:
             TZ: America/New_York
             IMMICH_HOST: 0.0.0.0
