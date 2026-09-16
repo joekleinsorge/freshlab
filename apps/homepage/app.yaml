@@ -48,10 +48,16 @@ data:
       Media:
         style: row
         columns: 4
+      Downloads:
+        style: row
+        columns: 4
       Infrastructure:
         style: row
         columns: 4
       Utilities:
+        style: row
+        columns: 4
+      Tools:
         style: row
         columns: 4
   services.yaml: |
@@ -65,25 +71,32 @@ data:
         - Tautulli:
             icon: tautulli.svg
             href: https://tautulli.kleinsorge.dev
-        - Sonarr:
-            icon: sonarr.svg
-            href: https://sonarr.kleinsorge.dev
-        - Radarr:
-            icon: radarr.svg
-            href: https://radarr.kleinsorge.dev
+        - qBittorrent:
+            icon: qbittorrent.svg
+            href: https://qbittorrent.kleinsorge.dev
+        - Frigate:
+            icon: frigate.svg
+            href: https://frigate.kleinsorge.dev
+        - Immich:
+            icon: immich.svg
+            href: https://photos.kleinsorge.dev
+    - Downloads:
+        - Autobrr:
+            icon: mdi-download-network
+            href: https://autobrr.kleinsorge.dev
         - Bazarr:
             icon: bazarr.svg
             href: https://bazarr.kleinsorge.dev
         - Prowlarr:
             icon: prowlarr.svg
             href: https://prowlarr.kleinsorge.dev
-        - qBittorrent:
-            icon: qbittorrent.svg
-            href: https://qbittorrent.kleinsorge.dev
+        - Radarr:
+            icon: radarr.svg
+            href: https://radarr.kleinsorge.dev
+        - Sonarr:
+            icon: sonarr.svg
+            href: https://sonarr.kleinsorge.dev
     - Infrastructure:
-        - Argo CD:
-            icon: argo-cd.svg
-            href: https://argocd.kleinsorge.dev
         - Grafana:
             icon: grafana.svg
             href: https://grafana.kleinsorge.dev
@@ -93,41 +106,64 @@ data:
         - Uptime Kuma:
             icon: uptime-kuma.svg
             href: https://status.kleinsorge.dev
+        - Kube Ops View:
+            icon: mdi-kubernetes
+            href: https://view.kleinsorge.dev
+        - Argo CD:
+            icon: argo-cd.svg
+            href: https://argocd.kleinsorge.dev
     - Utilities:
         - FreshRSS:
             icon: freshrss.svg
             href: https://rss.kleinsorge.dev
-        - Mealie:
-            icon: mealie.svg
-            href: https://mealie.kleinsorge.dev
-        - Immich:
-            icon: immich.svg
-            href: https://photos.kleinsorge.dev
         - Hermes:
             icon: mdi-robot
             href: https://hermes.kleinsorge.dev
-  widgets.yaml: |
-    - greeting:
-        text: Welcome to Freshlab
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-    - longhorn:
-        expanded: true
-        total: true
-        labels: true
-        nodes: true
-  bookmarks.yaml: |
-    - Developer:
-        - Freshlab:
-            - abbr: FL
-              href: https://github.com/joekleinsorge/freshlab
+        - Mealie:
+            icon: mealie.svg
+            href: https://mealie.kleinsorge.dev
+        - Grocy:
+            icon: mdi-fridge-outline
+            href: https://grocy.kleinsorge.dev
+        - Paperless:
+            icon: mdi-file-document-outline
+            href: https://paperless.kleinsorge.dev
+        - Seafile:
+            icon: mdi-cloud-outline
+            href: https://files.kleinsorge.dev
+    - Tools:
+        - Excalidraw:
+            icon: mdi-drawing
+            href: https://draw.kleinsorge.dev
+        - PairDrop:
+            icon: mdi-share-variant
+            href: https://drop.kleinsorge.dev
+        - LibreSpeed:
+            icon: mdi-speedometer
+            href: https://speed.kleinsorge.dev
+        - KitchenOwl:
+            icon: mdi-silverware-fork-knife
+            href: https://kitchenowl.kleinsorge.dev
+        - Budget:
+            icon: mdi-cash-multiple
+            href: https://budget.kleinsorge.dev
+        - Disney Alerts:
+            icon: mdi-bell-outline
+            href: https://disney-alerts.kleinsorge.dev
+        - Kindle Weather:
+            icon: mdi-weather-partly-cloudy
+            href: https://kindle-weather.kleinsorge.dev
+        - Tools:
+            icon: mdi-tools
+            href: https://tools.kleinsorge.dev
+        - Web:
+            icon: mdi-web
+            href: https://web.kleinsorge.dev
+        - Flask:
+            icon: mdi-flask-outline
+            href: https://flask.kleinsorge.dev
+  widgets.yaml: "[]"
+  bookmarks.yaml: "[]"
   docker.yaml: "{}"
   custom.css: ""
   custom.js: ""
