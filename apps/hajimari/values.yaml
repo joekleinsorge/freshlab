@@ -25,38 +25,136 @@ hajimari:
     title: Home
     lightTheme: chalk
     darkTheme: horizon
-    showAppUrls: true
+    showGreeting: false
+    showAppGroups: true
+    showAppUrls: false
     showAppInfo: false
     showAppStatus: false
+    showGlobalBookmarks: false
+    defaultSearchProvider: ''
+    searchProviders: []
     customThemes:
       - name: danger
         backgroundColor: '#0c0e0c'
         primaryColor: '#eaebea'
         accentColor: '#d8323c'
-    # Discover explicitly annotated Ingresses; customApps below covers the
-    # public HTTPRoutes that Hajimari cannot discover.
     defaultEnable: false
     namespaceSelector:
-      any: true
+      matchNames:
+        - hajimari
     customApps:
-      - group: Applications
+      - group: Media
         apps:
-          - name: Disney Alerts
-            url: https://disney-alerts.kleinsorge.dev
-            icon: mdi:ticket
-          - name: FreshRSS
-            url: https://rss.kleinsorge.dev
-            icon: mdi:rss
-          - name: Kindle Weather
-            url: https://kindle-weather.kleinsorge.dev
-            icon: mdi:weather-partly-cloudy
-          - name: Kiali
-            url: https://kiali.kleinsorge.dev
-            icon: mdi:topology
-          - name: NGINX Web
-            url: https://web.kleinsorge.dev
-            icon: simple-icons:nginx
           - name: Plex
             url: https://plex.kleinsorge.dev
             icon: simple-icons:plex
+          - name: Seerr
+            url: https://seerr.kleinsorge.dev
+            icon: simple-icons:jellyseerr
+          - name: Tautulli
+            url: https://tautulli.kleinsorge.dev
+            icon: simple-icons:tautulli
+          - name: Frigate
+            url: https://frigate.kleinsorge.dev
+            icon: simple-icons:frigate
+          - name: Immich
+            url: https://photos.kleinsorge.dev
+            icon: simple-icons:immich
+      - group: Downloads
+        apps:
+          - name: Autobrr
+            url: https://autobrr.kleinsorge.dev
+            icon: simple-icons:autobrr
+          - name: Bazarr
+            url: https://bazarr.kleinsorge.dev
+            icon: simple-icons:bazarr
+          - name: Prowlarr
+            url: https://prowlarr.kleinsorge.dev
+            icon: simple-icons:prowlarr
+          - name: Radarr
+            url: https://radarr.kleinsorge.dev
+            icon: simple-icons:radarr
+          - name: Sonarr
+            url: https://sonarr.kleinsorge.dev
+            icon: simple-icons:sonarr
+          - name: qBittorrent
+            url: https://qbittorrent.kleinsorge.dev
+            icon: simple-icons:qbittorrent
+      - group: Infrastructure
+        apps:
+          - name: Argo CD
+            url: https://argocd.kleinsorge.dev
+            icon: simple-icons:argo
+          - name: Grafana
+            url: https://grafana.kleinsorge.dev
+            icon: simple-icons:grafana
+          - name: Kiali
+            url: https://kiali.kleinsorge.dev
+            icon: mdi:topology
+          - name: Uptime Kuma
+            url: https://status.kleinsorge.dev
+            icon: mdi:heart-pulse
+          - name: Kube Ops View
+            url: https://view.kleinsorge.dev
+            icon: simple-icons:kubernetes
+      - group: Utilities
+        apps:
+          - name: FreshRSS
+            url: https://rss.kleinsorge.dev
+            icon: simple-icons:freshrss
+          - name: Mealie
+            url: https://mealie.kleinsorge.dev
+            icon: simple-icons:mealie
+          - name: Grocy
+            url: https://grocy.kleinsorge.dev
+            icon: mdi:cart
+          - name: Paperless
+            url: https://paperless.kleinsorge.dev
+            icon: simple-icons:paperlessngx
+          - name: Seafile
+            url: https://files.kleinsorge.dev
+            icon: simple-icons:seafile
+          - name: Hermes
+            url: https://hermes.kleinsorge.dev
+            icon: mdi:robot
+      - group: Tools
+        apps:
+          - name: Excalidraw
+            url: https://draw.kleinsorge.dev
+            icon: mdi:pencil
+          - name: PairDrop
+            url: https://drop.kleinsorge.dev
+            icon: mdi:share-variant
+          - name: LibreSpeed
+            url: https://speed.kleinsorge.dev
+            icon: mdi:speedometer
+          - name: KitchenOwl
+            url: https://kitchenowl.kleinsorge.dev
+            icon: mdi:food-apple
+          - name: Actual Budget
+            url: https://budget.kleinsorge.dev
+            icon: mdi:wallet
+          - name: Disney Alerts
+            url: https://disney-alerts.kleinsorge.dev
+            icon: mdi:ticket
+          - name: Kindle Weather
+            url: https://kindle-weather.kleinsorge.dev
+            icon: mdi:weather-partly-cloudy
+          - name: Tools
+            url: https://tools.kleinsorge.dev
+            icon: mdi:tools
+          - name: NGINX Web
+            url: https://web.kleinsorge.dev
+            icon: simple-icons:nginx
+          - name: Flask Cache
+            url: https://flask.kleinsorge.dev
+            icon: mdi:flask
+      - group: System
+        apps:
+          - name: Authelia
+            url: https://authelia.kleinsorge.dev
+            icon: mdi:shield-account
+          - name: Dex
+            url: https://dex.kleinsorge.dev
+            icon: mdi:key-chain
     globalBookmarks: []
