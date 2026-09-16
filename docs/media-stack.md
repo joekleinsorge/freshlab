@@ -1,7 +1,7 @@
 # Media automation stack
 
 Freshlab now includes the optional Plex automation services under `apps/`:
-Prowlarr, FlareSolverr, Sonarr, Radarr, Bazarr, qBittorrent, Seerr,
+Prowlarr, FlareSolverr, Sonarr, Radarr, qBittorrent, Seerr,
 Tautulli, Autobrr, and Recyclarr.
 
 The *arr workloads and qBittorrent share `192.168.1.208:/volume1/Media` (as

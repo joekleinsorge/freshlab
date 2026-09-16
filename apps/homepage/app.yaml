@@ -84,9 +84,6 @@ data:
         - Autobrr:
             icon: mdi-download-network
             href: https://autobrr.kleinsorge.dev
-        - Bazarr:
-            icon: bazarr.svg
-            href: https://bazarr.kleinsorge.dev
         - Prowlarr:
             icon: prowlarr.svg
             href: https://prowlarr.kleinsorge.dev

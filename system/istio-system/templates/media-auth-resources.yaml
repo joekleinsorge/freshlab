@@ -11,7 +11,6 @@ data:
       map $host $media_upstream {
         default http://127.0.0.1:8099;
         autobrr.kleinsorge.dev http://autobrr.autobrr.svc.cluster.local:7474;
-        bazarr.kleinsorge.dev http://bazarr.bazarr.svc.cluster.local:6767;
         prowlarr.kleinsorge.dev http://prowlarr.prowlarr.svc.cluster.local:9696;
         qbittorrent.kleinsorge.dev http://qbittorrent.qbittorrent.svc.cluster.local:8080;
         radarr.kleinsorge.dev http://radarr.radarr.svc.cluster.local:7878;
@@ -52,7 +51,7 @@ spec:
       labels:
         app.kubernetes.io/name: media-auth
       annotations:
-        media-auth/config-revision: "2"
+        media-auth/config-revision: "3"
     spec:
       automountServiceAccountToken: false
       containers:

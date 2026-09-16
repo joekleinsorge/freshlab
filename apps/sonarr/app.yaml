@@ -118,7 +118,4 @@ spec:
               kubernetes.io/metadata.name: seerr
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: bazarr
-        - namespaceSelector:
-            matchLabels:
               kubernetes.io/metadata.name: recyclarr

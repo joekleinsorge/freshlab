@@ -66,9 +66,6 @@ hajimari:
           - name: Autobrr
             url: https://autobrr.kleinsorge.dev
             icon: mdi:alarm
-          - name: Bazarr
-            url: https://bazarr.kleinsorge.dev
-            icon: mdi:subtitles
           - name: Prowlarr
             url: https://prowlarr.kleinsorge.dev
             icon: mdi:compass-outline

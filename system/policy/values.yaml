@@ -7,7 +7,6 @@ protectedNamespaces:
 
 networkPolicyNamespaces:
   - autobrr
-  - bazarr
   - budget
   - disney-alerts
   - excalidraw

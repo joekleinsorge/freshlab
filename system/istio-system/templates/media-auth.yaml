@@ -26,7 +26,6 @@ spec:
   hostnames:
     - auth.kleinsorge.dev
     - autobrr.kleinsorge.dev
-    - bazarr.kleinsorge.dev
     - prowlarr.kleinsorge.dev
     - qbittorrent.kleinsorge.dev
     - radarr.kleinsorge.dev

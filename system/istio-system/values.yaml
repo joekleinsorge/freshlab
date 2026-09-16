@@ -97,7 +97,6 @@ appRoutes:
   - {namespace: pairdrop, name: pairdrop, hostname: drop.kleinsorge.dev, service: pairdrop, port: 3000}
   - {namespace: paperless, name: paperless, hostname: paperless.kleinsorge.dev, service: paperless, port: 8000}
   - {namespace: autobrr, name: autobrr, hostname: autobrr.kleinsorge.dev, service: autobrr, port: 7474, dataplaneMode: none, protected: true}
-  - {namespace: bazarr, name: bazarr, hostname: bazarr.kleinsorge.dev, service: bazarr, port: 6767, dataplaneMode: none, protected: true}
   - {namespace: plex, name: plex, hostname: plex.kleinsorge.dev, service: plex, port: 32400}
   - {namespace: prowlarr, name: prowlarr, hostname: prowlarr.kleinsorge.dev, service: prowlarr, port: 9696, dataplaneMode: none, protected: true}
   - {namespace: qbittorrent, name: qbittorrent, hostname: qbittorrent.kleinsorge.dev, service: qbittorrent, port: 8080, dataplaneMode: none, protected: true}
