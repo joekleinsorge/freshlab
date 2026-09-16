@@ -26,8 +26,8 @@ hajimari:
     lightTheme: chalk
     darkTheme: horizon
     showAppUrls: true
-    showAppInfo: true
-    showAppStatus: true
+    showAppInfo: false
+    showAppStatus: false
     customThemes:
       - name: danger
         backgroundColor: '#0c0e0c'
@@ -59,10 +59,4 @@ hajimari:
           - name: Plex
             url: https://plex.kleinsorge.dev
             icon: simple-icons:plex
-    globalBookmarks:
-      - group: Homelab
-        bookmarks:
-          - name: Public GitHub repository
-            url: https://github.com/joekleinsorge/freshlab
-          - name: Hardware
-            url: https://192.168.1.101:9090
+    globalBookmarks: []

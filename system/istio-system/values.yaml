@@ -84,7 +84,7 @@ appRoutes:
   - {namespace: frigate, name: frigate, hostname: frigate.kleinsorge.dev, service: frigate, port: 5000}
   - {namespace: grafana, name: grafana, hostname: grafana.kleinsorge.dev, service: grafana, port: 80}
   - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
-  - {namespace: homepage, name: homepage, hostname: home.kleinsorge.dev, service: homepage, port: 3000, dataplaneMode: none}
+  - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000, dataplaneMode: none}
   - {namespace: hermes, name: hermes, hostname: hermes.kleinsorge.dev, service: hermes, port: 9119, dataplaneMode: none}
   - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
   - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
