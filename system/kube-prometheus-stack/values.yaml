@@ -154,7 +154,10 @@ kube-prometheus-stack:
         maxSurge: 0
         maxUnavailable: 1
     ingress:
-      enabled: true
+      # Grafana is exposed by templates/grafana-gateway.yaml. The redundant
+      # chart Ingress never receives load-balancer status from Istio and can
+      # leave Argo CD sync operations waiting indefinitely.
+      enabled: false
       ingressClassName: istio
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-prod
