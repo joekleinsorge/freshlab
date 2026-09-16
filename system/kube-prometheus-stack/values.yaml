@@ -303,7 +303,7 @@ kube-prometheus-stack:
               replacement: kube-prometheus-stack-prometheus-blackbox-exporter.kube-prometheus-stack.svc.cluster.local:9115
 
 grafanaGateway:
-  enabled: true
+  enabled: false
   host: grafana-monitoring.kleinsorge.dev
   serviceName: kube-prometheus-stack-grafana
   servicePort: 80
