@@ -158,6 +158,9 @@ hajimari:
             icon: mdi:flask
       - group: System
         apps:
+          - name: Media Auth
+            url: https://auth.kleinsorge.dev
+            icon: mdi:shield-lock
           - name: Authelia
             url: https://authelia.kleinsorge.dev
             icon: mdi:shield-account
