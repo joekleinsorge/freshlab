@@ -67,6 +67,8 @@ spec:
             - --email-domain=*
             - --scope=openid profile email groups
             - --cookie-domain=.kleinsorge.dev
+            - --cookie-samesite=none
+            - --cookie-csrf-samesite=none
             - --whitelist-domain=.kleinsorge.dev
             - --reverse-proxy=true
             - --pass-user-headers=true
