@@ -1,26 +1,4 @@
 grafana:
-  freshlabAppDashboards:
-    - budget
-    - disney-alerts
-    - excalidraw
-    - flask
-    - freshrss
-    - frigate
-    - grocy
-    - hajimari
-    - immich
-    - kindle-weather
-    - kitchenowl
-    - kube-ops-view
-    - librespeed
-    - mealie
-    - mqtt
-    - nginx
-    - plex
-    - romm
-    - seafile
-    - tools
-    - uptime-kuma
   ingress:
     enabled: true
     ingressClassName: istio
