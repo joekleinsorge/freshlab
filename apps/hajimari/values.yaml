@@ -33,6 +33,7 @@ hajimari:
     showGlobalBookmarks: false
     defaultSearchProvider: ''
     searchProviders: []
+    groups: []
     customThemes:
       - name: danger
         backgroundColor: '#0c0e0c'
