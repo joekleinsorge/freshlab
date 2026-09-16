@@ -83,9 +83,18 @@ hajimari:
           - name: Argo CD
             url: https://argocd.kleinsorge.dev
             icon: mdi:ship-wheel
+          - name: Argo Rollouts
+            url: https://rollouts.kleinsorge.dev
+            icon: mdi:chart-timeline-variant
+          - name: Argo Workflows
+            url: https://workflows.kleinsorge.dev
+            icon: mdi:source-branch
           - name: Grafana
             url: https://grafana.kleinsorge.dev
             icon: mdi:chart-areaspline
+          - name: Grafana Monitoring
+            url: https://grafana-monitoring.kleinsorge.dev
+            icon: mdi:monitor-dashboard
           - name: Kiali
             url: https://kiali.kleinsorge.dev
             icon: mdi:topology
