@@ -48,47 +48,47 @@ hajimari:
         apps:
           - name: Plex
             url: https://plex.kleinsorge.dev
-            icon: simple-icons:plex
+            icon: mdi:play-box-multiple
           - name: Seerr
             url: https://seerr.kleinsorge.dev
-            icon: simple-icons:jellyseerr
+            icon: mdi:movie-search
           - name: Tautulli
             url: https://tautulli.kleinsorge.dev
-            icon: simple-icons:tautulli
+            icon: mdi:chart-line
           - name: Frigate
             url: https://frigate.kleinsorge.dev
-            icon: simple-icons:frigate
+            icon: mdi:cctv
           - name: Immich
             url: https://photos.kleinsorge.dev
-            icon: simple-icons:immich
+            icon: mdi:image-multiple
       - group: Downloads
         apps:
           - name: Autobrr
             url: https://autobrr.kleinsorge.dev
-            icon: simple-icons:autobrr
+            icon: mdi:alarm
           - name: Bazarr
             url: https://bazarr.kleinsorge.dev
-            icon: simple-icons:bazarr
+            icon: mdi:subtitles
           - name: Prowlarr
             url: https://prowlarr.kleinsorge.dev
-            icon: simple-icons:prowlarr
+            icon: mdi:compass-outline
           - name: Radarr
             url: https://radarr.kleinsorge.dev
-            icon: simple-icons:radarr
+            icon: mdi:radar
           - name: Sonarr
             url: https://sonarr.kleinsorge.dev
-            icon: simple-icons:sonarr
+            icon: mdi:television-play
           - name: qBittorrent
             url: https://qbittorrent.kleinsorge.dev
-            icon: simple-icons:qbittorrent
+            icon: mdi:download-network
       - group: Infrastructure
         apps:
           - name: Argo CD
             url: https://argocd.kleinsorge.dev
-            icon: simple-icons:argo
+            icon: mdi:ship-wheel
           - name: Grafana
             url: https://grafana.kleinsorge.dev
-            icon: simple-icons:grafana
+            icon: mdi:chart-areaspline
           - name: Kiali
             url: https://kiali.kleinsorge.dev
             icon: mdi:topology
@@ -97,24 +97,24 @@ hajimari:
             icon: mdi:heart-pulse
           - name: Kube Ops View
             url: https://view.kleinsorge.dev
-            icon: simple-icons:kubernetes
+            icon: mdi:server
       - group: Utilities
         apps:
           - name: FreshRSS
             url: https://rss.kleinsorge.dev
-            icon: simple-icons:freshrss
+            icon: mdi:rss
           - name: Mealie
             url: https://mealie.kleinsorge.dev
-            icon: simple-icons:mealie
+            icon: mdi:chef-hat
           - name: Grocy
             url: https://grocy.kleinsorge.dev
             icon: mdi:cart
           - name: Paperless
             url: https://paperless.kleinsorge.dev
-            icon: simple-icons:paperlessngx
+            icon: mdi:file-document
           - name: Seafile
             url: https://files.kleinsorge.dev
-            icon: simple-icons:seafile
+            icon: mdi:cloud
           - name: Hermes
             url: https://hermes.kleinsorge.dev
             icon: mdi:robot
@@ -146,7 +146,7 @@ hajimari:
             icon: mdi:tools
           - name: NGINX Web
             url: https://web.kleinsorge.dev
-            icon: simple-icons:nginx
+            icon: mdi:web
           - name: Flask Cache
             url: https://flask.kleinsorge.dev
             icon: mdi:flask
