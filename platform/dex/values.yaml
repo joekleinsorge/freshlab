@@ -69,6 +69,11 @@ dex:
         redirectURIs:
           - 'https://auth.kleinsorge.dev/oauth2/callback'
         secretEnv: MEDIA_STACK_SSO_CLIENT_SECRET
+      - id: hermes-dashboard
+        name: Hermes Dashboard
+        public: true
+        redirectURIs:
+          - 'https://hermes.kleinsorge.dev/auth/callback'
   envFrom:
     - secretRef:
         name: dex-secrets

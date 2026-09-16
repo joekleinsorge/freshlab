@@ -7,6 +7,8 @@ type: Opaque
 stringData:
     HERMES_DASHBOARD_BASIC_AUTH_USERNAME: ENC[AES256_GCM,data:EGqqSJE=,iv:ALAB/+k/2Bj12IUDc2N8XlFgUPPOU43E90K6PWXiTE8=,tag:g1dIfmWLrFOU0Whu2dLn8w==,type:str]
     HERMES_DASHBOARD_BASIC_AUTH_PASSWORD: ENC[AES256_GCM,data:6YTUEofjztdGqEuWKs8RPzy++0P5YLW0P8T88gOrGqs=,iv:/7MgQjwZu2RkWh6QApiHGf9T5HupKPkFaUaSqh+QVsU=,tag:24T8vNIvtKDFWkqzK7iW8A==,type:str]
+    HERMES_DASHBOARD_OIDC_ISSUER: ENC[AES256_GCM,data:gp/zst5skM7gSd9Y5KcHAa0AtBgI0yu+OD0=,iv:ygMfCBk0x1McrtefOt9k1HmTwcsthx+xoozaMfNAc5s=,tag:14MO63ZnR9x2l/cwkuIYIQ==,type:str]
+    HERMES_DASHBOARD_OIDC_CLIENT_ID: ENC[AES256_GCM,data:j35OeUfc35SKkb4McAV5qA==,iv:7/Yv3leFuJgp7LghWxsuHwDmiQrgBjONAa/3TQE3YGk=,tag:Y1Qu9lz/djH2Pvo2um8BWA==,type:str]
 sops:
     age:
         - enc: |
@@ -19,6 +21,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-09-15T12:14:54Z"
-    mac: ENC[AES256_GCM,data:80web72Q7mneuwOqDeibEVkVktY/N2t48f4ZuJiXrnSxnuUjNgVZsRptTh6JdtQNNPOjKnCBneSp7WZCp/vvlogeq5R1PXl2zZpkQzmuseimRWMkpfZP5pyy1vWZlPIA84fabLfKlvN9xNv4aQ81YXG6ePzxKm4T59LNaKDCCDg=,iv:ZX46dCLzPKzR3DjpB9XKvBrjtFlvjUfY8BA3SR/bMk0=,tag:2HFxUYMIFU1PhMuSCSJrHQ==,type:str]
+    lastmodified: "2026-09-16T01:33:39Z"
+    mac: ENC[AES256_GCM,data:O8BX/u8lz4QYT84G9vbX59Pmt2CuC3YSsZMLz7rx6p6S7rT1Am7p+Fo719N9vvrXzsU7UWQxV10oHa7lf+gOlYtX0vNUdQZnYBJ9R+uiJxVABtAVy86N9PvNPot5xs0Wj7b8WgVKVm6DfZvP8okqc2jiFHRnbX6iGk2cZapE/J8=,iv:lX8idNqRgFtb0Uf6OM4kTKov4UNFvo/KEWHXy36FTWQ=,tag:YqoKMZTqsLbqAyBp7w1ixw==,type:str]
     version: 3.13.3
