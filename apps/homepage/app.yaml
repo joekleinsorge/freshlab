@@ -165,6 +165,7 @@ data:
   widgets.yaml: "[]"
   bookmarks.yaml: "[]"
   docker.yaml: "{}"
+  proxmox.yaml: "{}"
   custom.css: ""
   custom.js: ""
 ---
