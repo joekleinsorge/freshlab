@@ -257,8 +257,9 @@ kube-prometheus-stack:
               requests:
                 storage: 50Gi
       walCompression: true
-      enableFeatures:
-        - remote-write-receiver
+      # Prometheus 3 no longer accepts remote-write-receiver as a feature
+      # flag. Use the dedicated web flag exposed by Prometheus Operator.
+      enableRemoteWriteReceiver: true
       additionalScrapeConfigs:
         - job_name: blackbox-http
           metrics_path: /probe
