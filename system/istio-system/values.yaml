@@ -83,7 +83,7 @@ appRoutes:
   - {namespace: freshrss, name: freshrss, hostname: rss.kleinsorge.dev, service: freshrss, port: 80, dataplaneMode: none}
   - {namespace: frigate, name: frigate, hostname: frigate.kleinsorge.dev, service: frigate, port: 5000}
   - {namespace: grafana, name: grafana, hostname: grafana.kleinsorge.dev, service: grafana, port: 80}
-  - {namespace: kube-prometheus-stack, name: grafana-monitoring, hostname: grafana-monitoring.kleinsorge.dev, service: kube-prometheus-stack-grafana, port: 80}
+  - {namespace: kube-prometheus-stack, name: grafana-monitoring, hostname: monitoring.kleinsorge.dev, service: kube-prometheus-stack-grafana, port: 80}
   - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
   - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000, dataplaneMode: none}
   - {namespace: hermes, name: hermes, hostname: hermes.kleinsorge.dev, service: hermes, port: 9119, dataplaneMode: none}

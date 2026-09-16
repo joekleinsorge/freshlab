@@ -93,7 +93,7 @@ hajimari:
             url: https://grafana.kleinsorge.dev
             icon: mdi:chart-areaspline
           - name: Grafana Monitoring
-            url: https://grafana-monitoring.kleinsorge.dev
+            url: https://monitoring.kleinsorge.dev
             icon: mdi:monitor-dashboard
           - name: Kiali
             url: https://kiali.kleinsorge.dev

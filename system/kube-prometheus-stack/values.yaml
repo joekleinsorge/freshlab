@@ -164,7 +164,7 @@ kube-prometheus-stack:
         hajimari.io/appName: Grafana
         hajimari.io/icon: simple-icons:grafana
       hosts:
-        - &host grafana-monitoring.kleinsorge.dev
+        - &host monitoring.kleinsorge.dev
       tls:
         - secretName: grafana-general-tls
           hosts:
@@ -190,7 +190,7 @@ kube-prometheus-stack:
             datasourceUid: prometheus
     grafana.ini:
       server:
-        root_url: https://grafana-monitoring.kleinsorge.dev
+        root_url: https://monitoring.kleinsorge.dev
       auth:
         disable_login_form: false
         oauth_auto_login: false
@@ -278,7 +278,7 @@ kube-prometheus-stack:
                 - https://files.kleinsorge.dev
                 - https://flask.kleinsorge.dev
                 - https://frigate.kleinsorge.dev
-                - https://grafana-monitoring.kleinsorge.dev
+                - https://monitoring.kleinsorge.dev
                 - https://grocy.kleinsorge.dev
                 - https://home.kleinsorge.dev
                 - https://kindle-weather.kleinsorge.dev
@@ -304,7 +304,7 @@ kube-prometheus-stack:
 
 grafanaGateway:
   enabled: false
-  host: grafana-monitoring.kleinsorge.dev
+  host: monitoring.kleinsorge.dev
   serviceName: kube-prometheus-stack-grafana
   servicePort: 80
   tlsSecretName: grafana-monitoring-gateway-tls
