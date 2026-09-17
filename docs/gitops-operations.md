@@ -49,7 +49,19 @@ limited to the Argo Workflows administrative group.
 
 ## Progressive delivery
 
-`kindle-weather` is managed as an Argo Rollout using the blue-green strategy.
+`kindle-weather` and `flask-cache` (in namespace `flask`) are managed as Argo
+Rollouts using the blue-green strategy. The dashboard at
+https://rollouts.kleinsorge.dev defaults to `kindle-weather`; use its namespace
+selector to switch to `flask`. An explicit default avoids the v1.10 UI loading
+indefinitely in the empty `argo-rollouts` namespace.
+
+Flask uses `flask-cache` as its active Service and the private
+`flask-cache-preview` Service for validation. Its image is pinned to a digest,
+and readiness/startup probes prevent promotion before the app is listening.
+Both applications promote healthy previews automatically after 60 seconds and
+retain the previous revision for another 30 seconds.
+
+Weather follows the same process:
 The public `kindle-weather-service` remains on the active revision while the
 next revision is made available through the private
 `kindle-weather-preview` Service. After the preview is healthy, Rollouts waits
@@ -69,3 +81,9 @@ kubectl argo rollouts abort kindle-weather -n kindle-weather
 While a new revision is waiting for promotion, the port-forward above serves
 the preview revision at `http://localhost:8080`; the public hostname continues
 to serve the active revision.
+
+For Flask, use `kubectl argo rollouts get rollout flask-cache -n flask --watch`
+and `kubectl -n flask port-forward service/flask-cache-preview 8081:80`.
+The same `promote` and `abort` commands above apply with name `flask-cache` and
+namespace `flask`. For migration, create and verify the Rollout alongside the
+existing Deployment before allowing GitOps to prune the Deployment.

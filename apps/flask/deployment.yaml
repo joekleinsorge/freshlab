@@ -1,9 +1,19 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: flask-cache
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
+  progressDeadlineSeconds: 600
+  strategy:
+    blueGreen:
+      activeService: flask-cache
+      previewService: flask-cache-preview
+      previewReplicaCount: 1
+      autoPromotionEnabled: true
+      autoPromotionSeconds: 60
+      scaleDownDelaySeconds: 30
   selector:
     matchLabels:
       name: flask-cache
@@ -14,10 +24,20 @@ spec:
     spec:
       containers:
         - name: cache-service
-          image: xasag94215/flask-cache
+          image: xasag94215/flask-cache@sha256:0fc07109c1a771cfc148694b54477f7649031b0b18bac33d06932eefa1634d2e
           ports:
             - containerPort: 5000
               name: rest
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: rest
+            periodSeconds: 5
+          startupProbe:
+            tcpSocket:
+              port: rest
+            periodSeconds: 5
+            failureThreshold: 30
 ---
 apiVersion: v1
 kind: Service
@@ -30,6 +50,18 @@ spec:
     - port: 80
       targetPort: 5000
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-cache-preview
+spec:
+  selector:
+    name: flask-cache
+  ports:
+    - port: 80
+      targetPort: 5000
+  type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -46,7 +78,7 @@ spec:
     - host: &host flask.kleinsorge.dev
       http:
         paths:
-          - path: / 
+          - path: /
             pathType: Prefix
             backend:
               service:

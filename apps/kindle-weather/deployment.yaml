@@ -47,6 +47,7 @@ spec:
           value: service.namespace=apps,deployment.environment=homelab
         ports:
         - containerPort: 8080
+          protocol: TCP
         resources:
           limits:
             cpu: 500m

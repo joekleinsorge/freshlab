@@ -26,6 +26,11 @@ argo-rollouts:
         - ALL
   dashboard:
     enabled: true
+    # The v1.10 dashboard spins indefinitely when its default namespace has
+    # no Rollouts. Start on weather; Flask remains available in the selector.
+    extraArgs:
+      - --namespace
+      - kindle-weather
     httproute:
       enabled: true
       annotations:
