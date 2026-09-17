@@ -352,7 +352,7 @@ frigate:
       accessMode: ReadWriteOnce
 
       # -- size/capacity of the PVC
-      size: 100Gi
+      size: 150Gi
 
       # -- Do not delete the pvc upon helm uninstall
       skipuninstall: false
@@ -367,7 +367,10 @@ frigate:
       ephemeral-storage: 20Gi
 
    # -- Node Selector configuration
-  nodeSelector: {}
+  # Keep the recording workload off metal0's 100 Mb/s storage path.
+  # metal1 has a healthy NVMe and a verified gigabit Ethernet link.
+  nodeSelector:
+    kubernetes.io/hostname: metal1
 
   # -- Node toleration configuration
   tolerations: []
