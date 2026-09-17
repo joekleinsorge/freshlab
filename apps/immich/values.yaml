@@ -8,7 +8,7 @@ immich:
               enabled: true
               spec:
                 timeoutSeconds: 10
-                failureThreshold: 60
+                failureThreshold: 180
             liveness:
               enabled: true
               spec:
@@ -38,6 +38,22 @@ immich:
         existingClaim: immich-library
 
   server:
+    controllers:
+      main:
+        pod:
+          labels:
+            istio.io/dataplane-mode: none
+        containers:
+          main:
+    persistence:
+      media:
+        enabled: true
+        type: nfs
+        server: 192.168.1.208
+        path: /volume1/Media
+        globalMounts:
+          - path: /media
+            readOnly: true
     ingress:
       main:
         enabled: false
@@ -55,6 +71,15 @@ immich:
           - secretName: immich-tls-certificate
             hosts:
               - *host
+
+  machine-learning:
+    controllers:
+      main:
+        pod:
+          labels:
+            istio.io/dataplane-mode: none
+        containers:
+          main:
 
   valkey:
     enabled: true
