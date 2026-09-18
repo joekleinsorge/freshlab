@@ -166,7 +166,7 @@ argocdMcp:
   enabled: true
   image:
     repository: node
-    tag: 20-slim
+    tag: 24-slim
     digest: ""
   package: argocd-mcp@0.9.0
   credentialsSecretName: argocd-mcp-credentials
