@@ -27,7 +27,14 @@ spec:
         supplementalGroups:
           - 44
           - 991
-      affinity: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values: [metal0]
       containers:
         - env:
           - name: TZ

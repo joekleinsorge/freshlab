@@ -251,10 +251,10 @@ frigate:
       initialDelaySeconds: 60
       failureThreshold: 5
       timeoutSeconds: 10
+    # The chart's HTTP startup probe conflicts with the historical server-side
+    # probe field. Liveness and readiness already cover startup protection.
     startup:
-      enabled: true
-      failureThreshold: 30
-      periodSeconds: 10
+      enabled: false
 
   service:
     # -- Type of Service to use
@@ -367,10 +367,15 @@ frigate:
       ephemeral-storage: 20Gi
 
    # -- Node Selector configuration
-  # Keep the recording workload off metal0's 100 Mb/s storage path.
-  # metal1 has a healthy NVMe and a verified gigabit Ethernet link.
-  nodeSelector:
-    kubernetes.io/hostname: metal1
+  nodeSelector: {}
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values: [metal0]
 
   # -- Node toleration configuration
   tolerations: []
