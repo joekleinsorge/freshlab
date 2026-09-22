@@ -17,6 +17,11 @@ spec:
         - name: intel-gpu-plugin
           image: intel/intel-gpu-plugin:0.36.0
           imagePullPolicy: IfNotPresent
+          args:
+            # Plex receives its DRM devices through the Kubernetes device-plugin
+            # allocation.  Do not inject individual /dev/dri/by-path symlinks:
+            # kubelet cannot create them when the target is already a symlink.
+            - -bypath=none
           securityContext:
             privileged: true
             readOnlyRootFilesystem: true

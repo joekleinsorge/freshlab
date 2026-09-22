@@ -44,6 +44,11 @@ spec:
           image: lscr.io/linuxserver/plex:latest
           imagePullPolicy: IfNotPresent
           name: plex-pms
+          resources:
+            limits:
+              # Device-plugin allocation grants access to just the assigned DRM
+              # devices.  This avoids a privileged container and a broad hostPath.
+              gpu.intel.com/i915: 1
           ports:
             - containerPort: 32400
               name: pms
@@ -52,8 +57,6 @@ spec:
               name: pms-config
             - mountPath: /transcode
               name: pms-transcode
-            - mountPath: /dev/dri
-              name: pms-dri
             - mountPath: /media
               name: pms-media
       initContainers: []
@@ -64,10 +67,6 @@ spec:
       volumes:
         - name: pms-transcode
           emptyDir: {}
-        - name: pms-dri
-          hostPath:
-            path: /dev/dri
-            type: Directory
         - name: pms-media
           nfs:
             server: 192.168.1.208
