@@ -22,6 +22,10 @@ spec:
             # allocation.  Do not inject individual /dev/dri/by-path symlinks:
             # kubelet cannot create them when the target is already a symlink.
             - -bypath=none
+            # Reserve one share for Plex and one for its brief weekly health
+            # check. The devices remain scoped to requesting workloads.
+            - -shared-dev-num=2
+            - -allocation-policy=packed
           securityContext:
             privileged: true
             readOnlyRootFilesystem: true

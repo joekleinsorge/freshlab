@@ -1,0 +1,73 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: plex-vaapi-smoke
+  namespace: plex
+  labels:
+    app.kubernetes.io/name: plex
+    app.kubernetes.io/component: transcode-smoke
+spec:
+  schedule: "37 4 * * 0"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 120
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: plex
+            app.kubernetes.io/component: transcode-smoke
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsUser: 911
+            runAsGroup: 911
+            runAsNonRoot: true
+            supplementalGroups: [44, 991]
+            seccompProfile:
+              type: RuntimeDefault
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/name: plex
+                  topologyKey: kubernetes.io/hostname
+          containers:
+            - name: vaapi-smoke
+              image: lscr.io/linuxserver/plex:latest
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: [ALL]
+              command: ["/bin/sh", "-ec"]
+              args:
+                - |
+                  driver=$(find "/config/Library/Application Support/Plex Media Server/Drivers" -type f -name iHD_drv_video.so -print -quit)
+                  test -n "$driver"
+                  export LIBVA_DRIVER_NAME=iHD
+                  export LIBVA_DRIVERS_PATH="$(dirname "$driver")"
+                  export LD_LIBRARY_PATH=/usr/lib/plexmediaserver/lib
+                  s6-setuidgid abc /usr/lib/plexmediaserver/Plex\ Transcoder \
+                    -v error \
+                    -init_hw_device vaapi=va:/dev/dri/renderD128 \
+                    -filter_hw_device va \
+                    -f rawvideo -pixel_format nv12 -video_size 1920x1080 -framerate 30 -i /dev/zero \
+                    -t 3 -vf format=nv12,hwupload -c:v h264_vaapi -f mpegts /tmp/vaapi-smoke.ts
+                  test -s /tmp/vaapi-smoke.ts
+              resources:
+                limits:
+                  gpu.intel.com/i915: 1
+              volumeMounts:
+                - name: plex-config
+                  mountPath: /config
+                  readOnly: true
+          volumes:
+            - name: plex-config
+              persistentVolumeClaim:
+                claimName: pms-config-plex-0

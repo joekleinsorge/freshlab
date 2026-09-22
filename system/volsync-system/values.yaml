@@ -30,7 +30,10 @@ backups:
     - {namespace: mealie, pvc: mealie-data}
     - {namespace: ollama, pvc: ollama-models}
     - {namespace: paperless, pvc: paperless-data}
-    - {namespace: plex, pvc: pms-config-plex-0}
+    # Plex configuration is small and changes while the server is live. A direct
+    # Restic copy avoids depending on Longhorn's separate backup target while
+    # preserving the normal encrypted, retained backup repository.
+    - {namespace: plex, pvc: pms-config-plex-0, copyMethod: Direct}
     - {namespace: prowlarr, pvc: prowlarr-config}
     - {namespace: qbittorrent, pvc: qbittorrent-config}
     - {namespace: radarr, pvc: radarr-config}

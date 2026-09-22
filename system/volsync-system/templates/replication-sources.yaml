@@ -15,7 +15,7 @@ spec:
     schedule: {{ $.Values.backups.schedule | quote }}
   restic:
     repository: {{ .pvc }}-volsync-restic
-    copyMethod: {{ $.Values.backups.copyMethod }}
+    copyMethod: {{ default $.Values.backups.copyMethod .copyMethod }}
     pruneIntervalDays: {{ $.Values.backups.pruneIntervalDays }}
     retain:
 {{ toYaml $.Values.backups.retain | indent 6 }}
