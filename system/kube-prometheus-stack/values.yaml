@@ -18,14 +18,23 @@ kube-prometheus-stack:
         smtp_auth_password_file: /etc/alertmanager/secrets/alertmanager-smtp/smtp-auth-password
         smtp_require_tls: true
       route:
-        receiver: email
+        # Only page for sustained, explicitly critical conditions. Warning and
+        # informational alerts remain available in Alertmanager/Grafana but do
+        # not generate inbox noise.
+        receiver: "null"
+        routes:
+          - receiver: email
+            matchers:
+              - severity="critical"
+            group_wait: 2m
+            group_interval: 30m
+            repeat_interval: 12h
         group_by:
           - alertname
           - namespace
           - persistentvolumeclaim
         group_wait: 30s
         group_interval: 5m
-        repeat_interval: 4h
       receivers:
         - name: "null"
         - name: email
@@ -34,7 +43,7 @@ kube-prometheus-stack:
               headers:
                 subject: '{{ template "freshlab.email.subject" . }}'
               html: '{{ template "freshlab.email.html" . }}'
-              send_resolved: true
+              send_resolved: false
           webhook_configs:
             - url: http://freshlab-alertmanager-eventsource-svc.argocd.svc.cluster.local:12000/alerts
               send_resolved: false
