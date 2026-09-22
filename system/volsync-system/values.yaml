@@ -33,7 +33,16 @@ backups:
     # Plex configuration is small and changes while the server is live. A direct
     # Restic copy avoids depending on Longhorn's separate backup target while
     # preserving the normal encrypted, retained backup repository.
-    - {namespace: plex, pvc: pms-config-plex-0, copyMethod: Direct}
+    - namespace: plex
+      pvc: pms-config-plex-0
+      copyMethod: Direct
+      moverSecurityContext:
+        runAsUser: 911
+        runAsGroup: 911
+        runAsNonRoot: true
+        fsGroup: 911
+        seccompProfile:
+          type: RuntimeDefault
     - {namespace: prowlarr, pvc: prowlarr-config}
     - {namespace: qbittorrent, pvc: qbittorrent-config}
     - {namespace: radarr, pvc: radarr-config}

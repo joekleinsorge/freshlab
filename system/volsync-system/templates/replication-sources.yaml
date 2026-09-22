@@ -16,6 +16,10 @@ spec:
   restic:
     repository: {{ .pvc }}-volsync-restic
     copyMethod: {{ default $.Values.backups.copyMethod .copyMethod }}
+    {{- with .moverSecurityContext }}
+    moverSecurityContext:
+{{ toYaml . | indent 6 }}
+    {{- end }}
     pruneIntervalDays: {{ $.Values.backups.pruneIntervalDays }}
     retain:
 {{ toYaml $.Values.backups.retain | indent 6 }}
