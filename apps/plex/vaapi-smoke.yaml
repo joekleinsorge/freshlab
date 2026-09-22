@@ -53,7 +53,7 @@ spec:
                   export LIBVA_DRIVER_NAME=iHD
                   export LIBVA_DRIVERS_PATH="$(dirname "$driver")"
                   export LD_LIBRARY_PATH=/usr/lib/plexmediaserver/lib
-                  s6-setuidgid abc /usr/lib/plexmediaserver/Plex\ Transcoder \
+                  /usr/lib/plexmediaserver/Plex\ Transcoder \
                     -v error \
                     -init_hw_device vaapi=va:/dev/dri/renderD128 \
                     -filter_hw_device va \
