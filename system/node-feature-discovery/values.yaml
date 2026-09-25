@@ -8,6 +8,12 @@ node-feature-discovery:
         cpu: 200m
         memory: 256Mi
   worker:
+    # Keep node labels current on the dedicated low-bandwidth node as well.
+    tolerations:
+      - key: freshlab.io/network-speed
+        operator: Equal
+        value: 100m
+        effect: NoSchedule
     # An empty JSON object preserves the chart's valid default worker config.
     # The chart serializes this field into the config file consumed by NFD.
     config: {}

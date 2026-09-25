@@ -1,4 +1,12 @@
 kured:
+  # Kured must continue to run on the dedicated low-bandwidth node so reboot
+  # coordination survives a node restart. This does not permit normal apps
+  # onto that node.
+  tolerations:
+    - key: freshlab.io/network-speed
+      operator: Equal
+      value: 100m
+      effect: NoSchedule
   configuration:
     annotateNodes: true
     rebootSentinelCommand: sh -c "! needs-restarting --reboothint"

@@ -27,10 +27,18 @@ longhorn:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
         effect: NoSchedule
+      - key: freshlab.io/network-speed
+        operator: Equal
+        value: 100m
+        effect: NoSchedule
   longhornDriver:
     tolerations:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
+        effect: NoSchedule
+      - key: freshlab.io/network-speed
+        operator: Equal
+        value: 100m
         effect: NoSchedule
   metrics:
     serviceMonitor:
