@@ -95,7 +95,6 @@ appRoutes:
   - {namespace: librespeed, name: librespeed, hostname: speed.kleinsorge.dev, service: librespeed, port: 80}
   - {namespace: mealie, name: mealie, hostname: mealie.kleinsorge.dev, service: mealie, port: 9000}
   - {namespace: nginx, name: nginx, hostname: web.kleinsorge.dev, service: nginx-service, port: 80}
-  - {namespace: pairdrop, name: pairdrop, hostname: drop.kleinsorge.dev, service: pairdrop, port: 3000}
   - {namespace: paperless, name: paperless, hostname: paperless.kleinsorge.dev, service: paperless, port: 8000}
   - {namespace: autobrr, name: autobrr, hostname: autobrr.kleinsorge.dev, service: autobrr, port: 7474, dataplaneMode: none, protected: true}
   - {namespace: plex, name: plex, hostname: plex.kleinsorge.dev, service: plex, port: 32400}
