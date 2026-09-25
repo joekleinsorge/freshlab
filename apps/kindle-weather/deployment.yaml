@@ -29,6 +29,14 @@ spec:
       labels:
         app: kindle-weather
     spec:
+      # Keep this lightweight public endpoint available when the control-plane
+      # nodes are memory-constrained. Metal0 is slower but remains a safe
+      # fallback for HTTP traffic.
+      tolerations:
+        - key: freshlab.io/network-speed
+          operator: Equal
+          value: 100m
+          effect: NoSchedule
       containers:
       - name: kindle-weather
         image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:643a4da0e618420f43d0887d6e07303dc8d609ae8d57e801c1eb8a93390d2f46
