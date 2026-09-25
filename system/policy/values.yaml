@@ -26,8 +26,6 @@ networkPolicyNamespaces:
   - librespeed
   - mealie
   - nginx
-  - ollama
-  - pairdrop
   - paperless
   - plex
   - prowlarr

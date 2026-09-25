@@ -20,7 +20,6 @@ backupNamespaces:
   - immich
   - kitchenowl
   - mealie
-  - ollama
   - paperless
   - plex
   - prowlarr
