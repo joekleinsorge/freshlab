@@ -30,8 +30,13 @@ metadata:
 spec:
   schedule: "0 4 * * *"
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
+  # Do not replay a daily sync after a lengthy control-plane outage: the media
+  # services may still be starting, and a replay would fail unnecessarily.
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 1
+  # Retain failure details in the cluster log system, but do not leave an old
+  # outage failure to keep the Argo application degraded indefinitely.
+  failedJobsHistoryLimit: 0
   jobTemplate:
     spec:
       backoffLimit: 2
