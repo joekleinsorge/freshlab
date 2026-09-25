@@ -28,7 +28,6 @@ backups:
     - {namespace: immich, pvc: immich-postgres-data}
     - {namespace: kitchenowl, pvc: kitchenowl-data}
     - {namespace: mealie, pvc: mealie-data}
-    - {namespace: ollama, pvc: ollama-models}
     - {namespace: paperless, pvc: paperless-data}
     # Plex configuration is small and changes while the server is live. A direct
     # Restic copy avoids depending on Longhorn's separate backup target while
