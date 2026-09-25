@@ -68,6 +68,11 @@ argo-cd:
     enabled: false
   controller:
     replicas: 2
+    tolerations:
+      - key: freshlab.io/network-speed
+        operator: Equal
+        value: 100m
+        effect: NoSchedule
     resources:
       requests:
         cpu: 250m
@@ -317,19 +322,27 @@ argocd-apps:
           # to trigger rolling restarts. They are controller-owned runtime
           # state, not configuration drift from Git.
           ignoreDifferences:
+            # Istiod owns these complete webhook lists, including whether the
+            # default list is omitted or empty before its controller fills it.
+            - group: admissionregistration.k8s.io
+              kind: ValidatingWebhookConfiguration
+              name: istio-validator-istio-system
+              jsonPointers: [/webhooks]
+            - group: admissionregistration.k8s.io
+              kind: ValidatingWebhookConfiguration
+              name: istiod-default-validator
+              jsonPointers: [/webhooks]
             # Rollouts owns revision routing for active and preview Services.
             # RespectIgnoreDifferences preserves it during subsequent syncs.
             - group: ''
               kind: Service
               jsonPointers:
                 - /spec/selector/rollouts-pod-template-hash
-            # Namespace labels and annotations are shared with Istio and
-            # cluster policy controllers. Those controllers add dataplane
-            # and security metadata after the namespace is created.
+            # Ignore tracking annotations only. Namespace security and mesh
+            # labels are desired configuration and must be reconciled.
             - group: ''
               kind: Namespace
               jqPathExpressions:
-                - '.metadata.labels'
                 - '.metadata.annotations'
             - group: apps
               kind: Deployment
@@ -402,6 +415,10 @@ argocd-apps:
         applicationsSync: sync
         preserveResourcesOnDeletion: true
 argo-workflows:
+  controller:
+    workflowDefaults:
+      spec:
+        serviceAccountName: freshlab-workflow-executor
   server:
     authModes:
       - sso
