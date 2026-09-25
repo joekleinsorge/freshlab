@@ -6,7 +6,8 @@ metadata:
   labels:
     app: tailscale
 spec:
-  replicas: 1
+  # Disabled until a valid Tailscale sign-in is configured.
+  replicas: 0
   selector:
     matchLabels:
       app: tailscale
@@ -40,7 +41,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: tailscale 
+  name: tailscale
   namespace: tailscale
 ---
 apiVersion: rbac.authorization.k8s.io/v1

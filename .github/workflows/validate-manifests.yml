@@ -37,5 +37,11 @@ jobs:
             helm template validation "$chart_dir" --namespace validation >/dev/null
           done < <(find apps platform system -name Chart.yaml -not -path '*/charts/*' | sort)
 
+      - name: Check health configuration regressions
+        run: |
+          ruby test/health/config_test.rb
+          python3 test/health/smoke_test.py
+          bash -n scripts/cluster-smoke-test
+
       - name: Check Ansible syntax
         run: ansible-playbook --syntax-check metal/cluster.yml

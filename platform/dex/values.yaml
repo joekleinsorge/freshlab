@@ -78,7 +78,7 @@ dex:
     - secretRef:
         name: dex-secrets
   ingress:
-    enabled: true
+    enabled: false
     className: istio
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod

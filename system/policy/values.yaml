@@ -1,4 +1,6 @@
 protectedNamespaces:
+  # The apps project cannot create namespaces; provision this before Homepage.
+  - homepage
   - policy
   - argo-rollouts
   - arc
