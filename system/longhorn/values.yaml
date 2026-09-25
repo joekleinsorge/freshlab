@@ -17,12 +17,21 @@ longhorn:
     disableSchedulingOnCordonedNode: true
     nodeDrainPolicy: block-if-contains-last-replica
     detachManuallyAttachedVolumesWhenCordoned: true
+    # System-managed Longhorn components (CSI and engine-image DaemonSets)
+    # need the same explicit admission to the dedicated low-bandwidth node.
+    taintToleration: freshlab.io/network-speed=100m:NoSchedule
   csi:
     attacherReplicaCount: 2
     provisionerReplicaCount: 2
     resizerReplicaCount: 2
     snapshotterReplicaCount: 2
   longhornManager:
+    # The upstream default permits every manager to restart together. On this
+    # compact control plane that floods etcd and temporarily removes the
+    # admission webhook. Roll one manager at a time instead.
+    updateStrategy:
+      rollingUpdate:
+        maxUnavailable: 1
     tolerations:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
