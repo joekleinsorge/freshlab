@@ -51,6 +51,32 @@ if [[ -n "${unbound}" ]]; then
   failures=$((failures + 1))
 fi
 
+echo "Checking shared public gateway acceptance and rollout..."
+gateway_status="$(kubectl -n istio-system get gateway.gateway.networking.k8s.io freshlab -o json | jq -r '
+  [ .status.conditions[]?
+    | select(.type == "Accepted" or .type == "Programmed")
+    | select(.status == "True")
+    | .type
+  ] | unique | join(",")
+')"
+if [[ "${gateway_status}" != *"Accepted"* || "${gateway_status}" != *"Programmed"* ]]; then
+  printf 'Shared gateway is not Accepted and Programmed (conditions: %s).\n' "${gateway_status:-none}" >&2
+  failures=$((failures + 1))
+fi
+
+gateway_ready="$(kubectl -n istio-system get pods \
+  -l gateway.networking.k8s.io/gateway-name=freshlab -o json | jq -r '
+    [ .items[]
+      | select(.status.phase == "Running")
+      | select((.status.containerStatuses // []) | length > 0)
+      | select(all(.status.containerStatuses[]; .ready == true))
+    ] | length
+  ')"
+if [[ "${gateway_ready}" == "0" ]]; then
+  echo "Shared gateway has no Ready generated pod." >&2
+  failures=$((failures + 1))
+fi
+
 hosts=()
 while IFS= read -r host; do
   hosts+=("${host}")

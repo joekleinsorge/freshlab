@@ -4,6 +4,7 @@
 
 - [Metal provisioning](../metal/README.md)
 - [Hardware and cluster issues](hardware-and-cluster-issues.md)
+- [Issue and remediation ledger](issues-and-remediations.md)
 - [GitOps operations](gitops-operations.md)
 
 ## Operations

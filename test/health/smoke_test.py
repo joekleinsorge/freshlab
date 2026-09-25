@@ -9,7 +9,7 @@ import unittest
 SCRIPT = Path(__file__).resolve().parents[2] / "scripts/cluster-smoke-test"
 
 class SmokeTest(unittest.TestCase):
-    def run_check(self, failing=False):
+    def run_check(self, failing=False, gateway_failing=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             kubectl = root / "kubectl"
@@ -17,14 +17,18 @@ class SmokeTest(unittest.TestCase):
 import json, os, sys
 args = sys.argv[1:]
 if args[0] == 'wait': sys.exit(0)
-if 'applications.argoproj.io' in args:
+if 'gateway.gateway.networking.k8s.io' in args:
+ data = {'status': {'conditions': [{'type': 'Accepted', 'status': 'True'}, {'type': 'Programmed', 'status': 'False' if os.getenv('GATEWAY_FAIL') else 'True'}]}}
+elif 'gateway.networking.k8s.io/gateway-name=freshlab' in args:
+ data = [] if os.getenv('GATEWAY_FAIL') else [{'status': {'phase': 'Running', 'containerStatuses': [{'ready': True}]}}]
+elif 'applications.argoproj.io' in args:
  data = [{'metadata': {'name':'app'}, 'status': {'health': {'status':'Progressing' if os.getenv('FAIL_CASE') else 'Healthy'}, 'sync': {'status':'Synced'}}}]
 elif 'deployments,statefulsets,daemonsets' in args:
  data = [{'kind':'Deployment','metadata':{'namespace':'app','name':'app'},'spec':{'replicas':1},'status':{'readyReplicas':0 if os.getenv('FAIL_CASE') else 1}},
          {'kind':'Deployment','metadata':{'namespace':'tailscale','name':'subnet-router'},'spec':{'replicas':0},'status':{}}]
 elif 'pvc' in args: data = []
 else: data = [{'spec':{'hostnames':['*.kleinsorge.dev','app.kleinsorge.dev','argocd-mcp.kleinsorge.dev']}}]
-print(json.dumps({'items':data}))
+print(json.dumps(data if isinstance(data, dict) else {'items':data}))
 """)
             curl = root / "curl"
             curl.write_text("""#!/usr/bin/env python3
@@ -38,6 +42,8 @@ print('401' if url.endswith('/mcp') else '200', end='')
             env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ["PATH"])
             if failing:
                 env["FAIL_CASE"] = "1"
+            if gateway_failing:
+                env["GATEWAY_FAIL"] = "1"
             return subprocess.run(["bash", str(SCRIPT)], env=env, text=True, capture_output=True)
 
     def test_healthy_and_disabled_workloads(self):
@@ -52,6 +58,12 @@ print('401' if url.endswith('/mcp') else '200', end='')
         self.assertIn("Unavailable workloads", result.stderr)
         self.assertIn("Checking https://app.kleinsorge.dev/", result.stdout)
         self.assertIn("2 health check(s) failed", result.stderr)
+
+    def test_gateway_failure_is_reported(self):
+        result = self.run_check(gateway_failing=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Shared gateway is not Accepted and Programmed", result.stderr)
+        self.assertIn("Shared gateway has no Ready generated pod", result.stderr)
 
 if __name__ == "__main__":
     unittest.main()

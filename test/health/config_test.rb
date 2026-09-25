@@ -14,6 +14,22 @@ end
 routes = render("system/istio-system")
 values = YAML.load_file("system/istio-system/values.yaml")
 bootstrap_namespaces = YAML.load_stream(File.read("freshlab-secrets/namespaces.yaml")).compact
+gateway = routes.find { |d| d["kind"] == "Gateway" && d.dig("metadata", "name") == "freshlab" }
+check(gateway, "Shared public Gateway is missing")
+check(gateway.dig("metadata", "annotations", "external-dns.kubernetes.io/target") == values["publicGatewayAddress"],
+      "Shared Gateway DNS target must match publicGatewayAddress")
+check(gateway.dig("spec", "infrastructure", "parametersRef") == {
+        "group" => "", "kind" => "ConfigMap", "name" => "freshlab-gateway-infrastructure"
+      }, "Shared Gateway must reference its scheduling overlay")
+gateway_infrastructure = routes.find { |d| d["kind"] == "ConfigMap" && d.dig("metadata", "name") == "freshlab-gateway-infrastructure" }
+check(gateway_infrastructure, "Shared Gateway scheduling overlay is missing")
+gateway_deployment = YAML.safe_load(gateway_infrastructure.dig("data", "deployment"))
+gateway_toleration = gateway_deployment.dig("spec", "template", "spec", "tolerations")&.find do |toleration|
+  toleration == {
+    "key" => "freshlab.io/network-speed", "operator" => "Equal", "value" => "100m", "effect" => "NoSchedule"
+  }
+end
+check(gateway_toleration, "Shared Gateway must tolerate the low-bandwidth node during capacity pressure")
 values.fetch("appRoutes").each do |route|
   namespace = routes.find { |d| d["kind"] == "Namespace" && d["metadata"]["name"] == route["namespace"] }
   check(namespace, "Missing namespace management: #{route['namespace']}")
