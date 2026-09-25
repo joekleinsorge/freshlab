@@ -16,11 +16,14 @@ kind: Gateway
 metadata:
   name: freshlab
   namespace: istio-system
+  annotations:
+    # Gateway API sources read DNS targets from the Gateway, not HTTPRoutes.
+    external-dns.alpha.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
 spec:
   gatewayClassName: istio
   addresses:
     - type: IPAddress
-      value: 192.168.1.228
+      value: {{ .Values.publicGatewayAddress | quote }}
   listeners:
     - name: http
       hostname: "*.kleinsorge.dev"

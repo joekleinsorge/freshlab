@@ -44,7 +44,6 @@ metadata:
   namespace: {{ .namespace }}
   annotations:
     external-dns.alpha.kubernetes.io/hostname: {{ .hostname | quote }}
-    external-dns.alpha.kubernetes.io/target: {{ $.Values.publicGatewayAddress | quote }}
 spec:
   parentRefs:
     - group: gateway.networking.k8s.io
