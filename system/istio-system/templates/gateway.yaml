@@ -18,7 +18,7 @@ metadata:
   namespace: istio-system
   annotations:
     # Gateway API sources read DNS targets from the Gateway, not HTTPRoutes.
-    external-dns.alpha.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
+    external-dns.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
 spec:
   gatewayClassName: istio
   addresses:
