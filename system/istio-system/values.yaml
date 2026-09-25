@@ -70,6 +70,10 @@ privilegedNamespaces:
   - plex
   - qbittorrent
 
+# All public application hostnames are served by the shared Istio Gateway.
+# ExternalDNS uses this value when reconciling their individual HTTPRoutes.
+publicGatewayAddress: 192.168.1.228
+
 appRoutes:
   - {namespace: authelia, name: authelia, hostname: authelia.kleinsorge.dev, service: authelia, port: 80}
   - {namespace: budget, name: budget, hostname: budget.kleinsorge.dev, service: budget, port: 5006}
