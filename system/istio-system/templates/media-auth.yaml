@@ -37,5 +37,8 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: media-auth
+        - group: ""
+          kind: Service
+          name: media-auth
           port: 4180
+          weight: 1
