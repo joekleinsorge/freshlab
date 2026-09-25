@@ -4,7 +4,9 @@ all:
     # The cluster already exists.  All control-plane nodes, including metal1,
     # must rejoin through the VIP if their local etcd copy is rebuilt.
     k3s_initial_bootstrap: false
-    ingress_load_balancer_ip: 192.168.1.227
+    # The public Istio Gateway is advertised at .228; keeping this aligned
+    # prevents local DNS automation from restoring the retired .227 address.
+    ingress_load_balancer_ip: 192.168.1.228
     load_balancer_ip_pool:
       - 192.168.1.224/27
   hosts:
