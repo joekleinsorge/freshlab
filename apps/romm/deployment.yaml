@@ -62,17 +62,14 @@ spec:
           persistentVolumeClaim:
             claimName: romm-redis-data-pvc
         - name: library
-          hostPath:
-            path: /path/to/library
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: romm-library-pvc
         - name: assets
-          hostPath:
-            path: /path/to/assets
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: romm-assets-pvc
         - name: config
-          hostPath:
-            path: /path/to/config
-            type: DirectoryOrCreate
+          persistentVolumeClaim:
+            claimName: romm-config-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
