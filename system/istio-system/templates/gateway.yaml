@@ -20,6 +20,14 @@ metadata:
     # Gateway API sources read DNS targets from the Gateway, not HTTPRoutes.
     external-dns.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
 spec:
+  # Istio's Gateway API controller owns the generated Deployment. Attach the
+  # scheduling policy through its supported infrastructure overlay instead of
+  # patching that generated Deployment imperatively.
+  infrastructure:
+    parametersRef:
+      group: ""
+      kind: ConfigMap
+      name: freshlab-gateway-infrastructure
   gatewayClassName: istio
   addresses:
     - type: IPAddress
@@ -45,3 +53,22 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshlab-gateway-infrastructure
+  namespace: istio-system
+data:
+  deployment: |
+    spec:
+      template:
+        spec:
+          # The public gateway is essential infrastructure and is lightweight
+          # (64 MiB requested). It may run on metal0 when control-plane nodes
+          # are memory-constrained, rather than leaving every public app down.
+          tolerations:
+            - key: freshlab.io/network-speed
+              operator: Equal
+              value: 100m
+              effect: NoSchedule
