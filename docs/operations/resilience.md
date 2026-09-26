@@ -4,6 +4,14 @@ GitOps prevents configuration drift; it cannot repair failed hardware or
 authenticate to the router. These actions are required to remove Freshlab's
 remaining external single points of failure.
 
+## Gateway continuity
+
+The shared public gateway plus the Argo CD and Workflows gateways run two
+anti-affined proxy replicas with a disruption budget. Cilium moves their VIPs
+between nodes. A node can therefore fail without losing the remaining proxy;
+if an endpoint is unavailable, check both the Cilium L2 lease holder and the
+gateway Deployment replica count before changing DNS or route configuration.
+
 ## Hardware
 
 1. Replace Metal1's failed NVMe; do not return the old drive to service.

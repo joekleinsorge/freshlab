@@ -202,7 +202,7 @@ spec:
             case "$ACTION" in
               restart-pod)
                 case "$NAMESPACE" in
-                  plex|freshrss|frigate|grocy|immich|kitchenowl|mealie|romm|seafile|uptime-kuma) ;;
+                  plex|freshrss|frigate|grocy|immich|kitchenowl|mealie|romm|uptime-kuma) ;;
                   *) echo "refusing pod restart in unapproved namespace: $NAMESPACE"; exit 1 ;;
                 esac
                 case "$POD" in

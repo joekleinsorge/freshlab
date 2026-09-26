@@ -26,7 +26,6 @@ backupNamespaces:
   - qbittorrent
   - radarr
   - romm
-  - seafile
   - seerr
   - sonarr
   - tautulli

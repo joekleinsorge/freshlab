@@ -127,9 +127,6 @@ hajimari:
           - name: Paperless
             url: https://paperless.kleinsorge.dev
             icon: mdi:file-document
-          - name: Seafile
-            url: https://files.kleinsorge.dev
-            icon: mdi:cloud
           - name: Hermes
             url: https://hermes.kleinsorge.dev
             icon: mdi:robot

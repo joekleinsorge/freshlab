@@ -49,8 +49,6 @@ backups:
     - {namespace: romm, pvc: mysql-data-pvc}
     - {namespace: romm, pvc: romm-redis-data-pvc}
     - {namespace: romm, pvc: romm-resources-pvc}
-    - {namespace: seafile, pvc: data-seafile-mariadb-0}
-    - {namespace: seafile, pvc: seafile-data}
     - {namespace: seerr, pvc: seerr-config}
     - {namespace: sonarr, pvc: sonarr-config}
     - {namespace: tautulli, pvc: tautulli-config}

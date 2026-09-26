@@ -32,7 +32,6 @@ networkPolicyNamespaces:
   - romm
   - restic-rest-server
   - seerr
-  - seafile
   - sonarr
   - tautulli
   - tools

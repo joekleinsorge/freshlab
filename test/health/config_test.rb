@@ -42,6 +42,28 @@ check(gateway_anti_affinity&.any? { |term|
 gateway_pdb = routes.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("metadata", "name") == "freshlab-public-gateway" }
 check(gateway_pdb&.dig("spec", "minAvailable") == 1,
       "Shared Gateway must retain one replica during voluntary disruption")
+
+argocd_resources = render("system/argocd")
+%w[argocd-server argocd-argo-workflows-server].each do |service_name|
+  name = "#{service_name}-gateway"
+  managed_gateway = argocd_resources.find { |d| d["kind"] == "Gateway" && d.dig("metadata", "name") == name }
+  check(managed_gateway&.dig("spec", "infrastructure", "parametersRef") == {
+          "group" => "", "kind" => "ConfigMap", "name" => "#{name}-infrastructure"
+        }, "#{name} must reference its availability overlay")
+  infrastructure = argocd_resources.find { |d| d["kind"] == "ConfigMap" && d.dig("metadata", "name") == "#{name}-infrastructure" }
+  deployment = infrastructure && YAML.safe_load(infrastructure.dig("data", "deployment"))
+  check(deployment&.dig("spec", "replicas") == 2,
+        "#{name} must keep two replicas for node failure availability")
+  anti_affinity = deployment&.dig("spec", "template", "spec", "affinity", "podAntiAffinity", "requiredDuringSchedulingIgnoredDuringExecution")
+  check(anti_affinity&.any? { |term|
+    term["topologyKey"] == "kubernetes.io/hostname" &&
+      term.dig("labelSelector", "matchLabels", "gateway.networking.k8s.io/gateway-name") == name
+  }, "#{name} replicas must be placed on separate nodes")
+  pdb = argocd_resources.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("metadata", "name") == name }
+  check(pdb&.dig("spec", "minAvailable") == 1,
+        "#{name} must retain one replica during voluntary disruption")
+end
+
 values.fetch("appRoutes").each do |route|
   next if route["createNamespace"] == false
 

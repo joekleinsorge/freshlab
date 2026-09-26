@@ -23,6 +23,14 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: {{ $gateway.host | quote }}
     external-dns.alpha.kubernetes.io/target: {{ $gateway.address | quote }}
 spec:
+  # Istio owns the generated Deployment. Apply the availability policy via its
+  # supported infrastructure overlay so a single node loss cannot remove this
+  # gateway's only proxy pod.
+  infrastructure:
+    parametersRef:
+      group: ""
+      kind: ConfigMap
+      name: {{ printf "%s-gateway-infrastructure" $gateway.serviceName }}
   gatewayClassName: istio
   addresses:
     - type: IPAddress
@@ -114,5 +122,53 @@ spec:
           port: {{ $gateway.servicePort }}
           weight: 1
 ---
+{{- end }}
+{{- end }}
+
+{{- range $gateway := $gateways }}
+{{- if $gateway.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ printf "%s-gateway" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  minAvailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      gateway.networking.k8s.io/gateway-name: {{ printf "%s-gateway" $gateway.serviceName }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-gateway-infrastructure" $gateway.serviceName }}
+  namespace: {{ $.Release.Namespace }}
+data:
+  deployment: |
+    spec:
+      replicas: 2
+      minReadySeconds: 10
+      strategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 1
+          maxUnavailable: 1
+      template:
+        spec:
+          priorityClassName: freshlab-public-gateway
+          tolerations:
+            - key: freshlab.io/network-speed
+              operator: Equal
+              value: 100m
+              effect: NoSchedule
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      gateway.networking.k8s.io/gateway-name: {{ printf "%s-gateway" $gateway.serviceName }}
+                  topologyKey: kubernetes.io/hostname
 {{- end }}
 {{- end }}
