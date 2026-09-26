@@ -101,6 +101,12 @@ hajimari:
           - name: Kiali
             url: https://kiali.kleinsorge.dev
             icon: mdi:topology
+          - name: Hubble
+            url: https://hubble.kleinsorge.dev
+            icon: mdi:hub
+          - name: Longhorn
+            url: https://longhorn.kleinsorge.dev
+            icon: mdi:harddisk
           - name: Uptime Kuma
             url: https://status.kleinsorge.dev
             icon: mdi:heart-pulse

@@ -91,12 +91,14 @@ appRoutes:
   - {namespace: grocy, name: grocy, hostname: grocy.kleinsorge.dev, service: grocy, port: 80}
   - {namespace: hajimari, name: hajimari, hostname: home.kleinsorge.dev, service: hajimari, port: 3000, dataplaneMode: none}
   - {namespace: hermes, name: hermes, hostname: hermes.kleinsorge.dev, service: hermes, port: 9119, dataplaneMode: none}
+  - {namespace: kube-system, name: hubble, hostname: hubble.kleinsorge.dev, service: hubble-ui, port: 80, createNamespace: false}
   - {namespace: immich, name: immich, hostname: photos.kleinsorge.dev, service: immich-server, port: 2283}
   - {namespace: kindle-weather, name: kindle-weather, hostname: kindle-weather.kleinsorge.dev, service: kindle-weather-service, port: 80}
   - {namespace: kitchenowl, name: kitchenowl, hostname: kitchenowl.kleinsorge.dev, service: kitchenowl, port: 80}
   - {namespace: kiali, name: kiali, hostname: kiali.kleinsorge.dev, service: kiali, port: 20001}
   - {namespace: kube-ops-view, name: kube-ops-view, hostname: view.kleinsorge.dev, service: kube-ops-view, port: 8080, dataplaneMode: none}
   - {namespace: librespeed, name: librespeed, hostname: speed.kleinsorge.dev, service: librespeed, port: 80}
+  - {namespace: longhorn, name: longhorn, hostname: longhorn.kleinsorge.dev, service: longhorn-frontend, port: 80, createNamespace: false}
   - {namespace: mealie, name: mealie, hostname: mealie.kleinsorge.dev, service: mealie, port: 9000}
   - {namespace: nginx, name: nginx, hostname: web.kleinsorge.dev, service: nginx-service, port: 80}
   - {namespace: paperless, name: paperless, hostname: paperless.kleinsorge.dev, service: paperless, port: 8000}

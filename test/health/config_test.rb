@@ -43,6 +43,8 @@ gateway_pdb = routes.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("met
 check(gateway_pdb&.dig("spec", "minAvailable") == 1,
       "Shared Gateway must retain one replica during voluntary disruption")
 values.fetch("appRoutes").each do |route|
+  next if route["createNamespace"] == false
+
   namespace = routes.find { |d| d["kind"] == "Namespace" && d["metadata"]["name"] == route["namespace"] }
   check(namespace, "Missing namespace management: #{route['namespace']}")
   expected = values["privilegedNamespaces"].include?(route["namespace"]) ? "privileged" : "baseline"
