@@ -359,6 +359,15 @@ argocd-apps:
               name: plex
               jsonPointers:
                 - /spec/volumeClaimTemplates
+            # The API server canonicalizes the unused `namespaces` field in
+            # Kyverno's cluster-scoped FlowSchema rules from [] to null.
+            # Ignore only that representation difference, not FlowSchema
+            # matching, precedence, subjects, or priority configuration.
+            - group: flowcontrol.apiserver.k8s.io
+              kind: FlowSchema
+              name: kyverno-reports-controller
+              jqPathExpressions:
+                - '.spec.rules[].resourceRules[]? | select(.clusterScope == true) | .namespaces'
             # These CRD metadata fields are rewritten by the bundled
             # operators during installation and upgrades; the schemas remain
             # managed by the chart.
