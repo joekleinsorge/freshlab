@@ -9,8 +9,11 @@ remaining external single points of failure.
 1. Replace Metal1's failed NVMe; do not return the old drive to service.
 2. Reseat or replace Metal0's Ethernet cable and switch port until it
    negotiates at 1 Gb/s full duplex.
-3. Clean Metal3's airflow path and fit a low-profile NVMe heatsink. Replace
-   its drive if heat or etcd latency recurs under load.
+3. Before the next Metal3 reboot, cordon it and verify Longhorn replica
+   health. Reseat its M.2 device, inspect the socket/standoff and airflow,
+   update the OptiPlex 3080 BIOS, and stress-test with PCIe ASPM disabled.
+   Replace the Patriot P300, then the motherboard/socket path, if PCIe RxErr
+   events recur.
 4. Before re-enabling a repaired node, burn it in, verify SMART/NVMe health,
    confirm `Ready`, and confirm Longhorn replicas are healthy.
 

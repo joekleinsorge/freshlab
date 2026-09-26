@@ -51,6 +51,14 @@ spec:
           annotations:
             summary: "Node {{ `{{ $labels.node }}` }} is under disk pressure"
             description: "Kubelet has entered DiskPressure and may evict application pods."
+        - alert: FreshlabNodePCIERxErrors
+          expr: kube_node_status_condition{condition="PCIERxErrors",status="true"} == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Node {{ `{{ $labels.node }}` }} has PCIe receive errors"
+            description: "A PCIe physical-layer receive error can stall an attached NVMe device. Cordon the node and inspect the NVMe, socket, BIOS, and PCIe power management before rebooting it."
         - alert: FreshlabSSDHealthFailure
           expr: smartctl_device_smart_status != 1
           for: 5m

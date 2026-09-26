@@ -201,6 +201,35 @@
     mode: '0644'
   tags: ['kernel', 'kubernetes']
 
+- name: Disable PCIe ASPM for nodes with an unstable PCIe storage link
+  ansible.builtin.copy:
+    dest: /etc/default/grub.d/99-freshlab-pcie-aspm.cfg
+    content: |
+      # Managed by Freshlab. See hardware-and-cluster-issues.md HW-006.
+      GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX pcie_aspm=off"
+    owner: root
+    group: root
+    mode: '0644'
+  register: pcie_aspm_grub_config
+  when: disable_pcie_aspm | default(false) | bool
+  tags: ['kernel', 'storage', 'pcie-aspm']
+
+- name: Remove PCIe ASPM override from remediated nodes
+  ansible.builtin.file:
+    path: /etc/default/grub.d/99-freshlab-pcie-aspm.cfg
+    state: absent
+  register: pcie_aspm_grub_config_removed
+  when: not (disable_pcie_aspm | default(false) | bool)
+  tags: ['kernel', 'storage', 'pcie-aspm']
+
+- name: Regenerate GRUB configuration after a PCIe ASPM change
+  ansible.builtin.command: update-grub
+  when: >-
+    (pcie_aspm_grub_config is defined and pcie_aspm_grub_config.changed) or
+    (pcie_aspm_grub_config_removed is defined and pcie_aspm_grub_config_removed.changed)
+  changed_when: true
+  tags: ['kernel', 'storage', 'pcie-aspm']
+
 - name: Configure sysctl for Kubernetes
   ansible.builtin.sysctl:
     name: "{{ item.name }}"

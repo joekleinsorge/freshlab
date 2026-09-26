@@ -8,6 +8,24 @@ kured:
       value: 100m
       effect: NoSchedule
   configuration:
-    annotateNodes: true
-    rebootSentinelCommand: sh -c "! needs-restarting --reboothint"
+    # Ubuntu creates this file after a kernel update.  Keep the host-path
+    # sentinel explicit: the upstream chart ignores rebootSentinelCommand
+    # while useRebootSentinelHostPath is enabled.
+    useRebootSentinelHostPath: true
+    rebootSentinel: /var/run/reboot-required
+    # Never let a routine package update reboot a serving node immediately.
+    # Kured checks hourly and may reboot only in this low-traffic window.
+    rebootDays:
+      - su
+    startTime: "03:00"
+    endTime: "05:00"
     timeZone: America/New_York
+    annotateNodes: true
+    # Avoid adding new workload placements while the node is being drained.
+    preferNoScheduleTaint: weave.works/kured-node-reboot
+    # Do not reboot while the cluster reports a storage or node-health fault.
+    prometheusUrl: http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc:9090
+    alertFiringOnly: true
+    alertFilterMatchOnly: true
+    alertFilterRegexp: "^(Freshlab(LonghornVolume(Faulted|Degraded)|PersistentVolumeDegraded|NodeDiskPressure|NodePCIERxErrors)|KubeNodeNotReady)$"
+    drainTimeout: 15m
