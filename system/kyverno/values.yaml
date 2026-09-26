@@ -7,3 +7,8 @@ kyverno:
     replicas: 1
   reportsController:
     replicas: 1
+    # The reports controller loses its leader lease when its API calls compete
+    # with reconciliation bursts. Give its reports/lease traffic a dedicated
+    # API Priority and Fairness flow so reporting stays available without
+    # increasing client-side request pressure on the control plane.
+    apiPriorityAndFairness: true
