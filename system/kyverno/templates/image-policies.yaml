@@ -32,7 +32,11 @@ kind: ClusterPolicy
 metadata:
   name: audit-freshlab-image-signatures
 spec:
+  # Keep API-server defaults explicit so reconciliation does not report
+  # defaulted fields as drift.
+  admission: true
   background: false
+  emitWarning: false
   validationFailureAction: Audit
   rules:
     - name: verify-freshlab-images
@@ -54,6 +58,7 @@ spec:
                     subject: "https://github.com/joekleinsorge/*"
                     rekor:
                       url: https://rekor.sigstore.dev
+                    signatureAlgorithm: sha256
           mutateDigest: false
           required: true
           useCache: true

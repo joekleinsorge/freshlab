@@ -141,7 +141,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   parentRefs:
-    - name: argocd-server-gateway
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: argocd-server-gateway
       sectionName: mcp-https
   hostnames:
     - {{ .Values.argocdMcp.host | quote }}
@@ -151,6 +153,9 @@ spec:
             type: PathPrefix
             value: /mcp
       backendRefs:
-        - name: argocd-mcp
+        - group: ""
+          kind: Service
+          name: argocd-mcp
           port: 3000
+          weight: 1
 {{- end }}
