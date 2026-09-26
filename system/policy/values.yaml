@@ -1,6 +1,4 @@
 protectedNamespaces:
-  # The apps project cannot create namespaces; provision this before Homepage.
-  - homepage
   - policy
   - argo-rollouts
   - arc
@@ -18,7 +16,6 @@ networkPolicyNamespaces:
   - grocy
   - hajimari
   - hermes
-  - homepage
   - immich
   - kindle-weather
   - kitchenowl
