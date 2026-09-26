@@ -23,6 +23,15 @@ kube-prometheus-stack:
         # not generate inbox noise.
         receiver: "null"
         routes:
+          # These are early signs of a real, preventable storage or network
+          # incident. Keep them separate from the critical page route and
+          # send at most one reminder per week to avoid alert fatigue.
+          - receiver: preventative-email
+            matchers:
+              - alertname=~"FreshlabSSDTemperatureHigh|FreshlabNodeLinkBelowGigabit|FreshlabLonghornVolumeDegraded|FreshlabLonghornDiskCapacityLow"
+            group_wait: 30m
+            group_interval: 24h
+            repeat_interval: 168h
           - receiver: email
             matchers:
               - severity="critical"
@@ -46,6 +55,13 @@ kube-prometheus-stack:
               send_resolved: false
           webhook_configs:
             - url: http://freshlab-alertmanager-eventsource-svc.argocd.svc.cluster.local:12000/alerts
+              send_resolved: false
+        - name: preventative-email
+          email_configs:
+            - to: josephkleinsorge@gmail.com
+              headers:
+                subject: '[PREVENTATIVE] {{ .CommonLabels.alertname }}'
+              html: '{{ template "freshlab.email.html" . }}'
               send_resolved: false
       templates:
         - /etc/alertmanager/config/*.tmpl

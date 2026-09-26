@@ -10,6 +10,7 @@
 ## Operations
 
 - [Backups and restores](operations/backups.md)
+- [Resilience actions outside GitOps](operations/resilience.md)
 - [Testing and benchmarks](operations/testing.md)
 - [Development environment and app scaffolding](development.md)
 - [Paperless, PairDrop, and Ollama](apps/new-services.md)

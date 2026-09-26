@@ -1,0 +1,54 @@
+name: Quarterly backup restore drill
+
+on:
+  schedule:
+    - cron: "17 7 1 1,4,7,10 *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-restore-drill
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    runs-on: self-hosted
+    timeout-minutes: 90
+    env:
+      KUBECONFIG: ${{ github.workspace }}/metal/kubeconfig.yaml
+      NAMESPACE: mealie
+      SOURCE_PVC: mealie-data
+      CAPACITY: 5Gi
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Restore and verify a disposable PVC
+        shell: bash
+        run: |
+          set -euo pipefail
+          restore_pvc="${SOURCE_PVC}-restore-drill-${GITHUB_RUN_ID}"
+          workflow_name=""
+          cleanup() {
+            kubectl -n "${NAMESPACE}" delete replicationdestination \
+              -l "freshlab.kleinsorge.dev/restore=${workflow_name}" \
+              --ignore-not-found --wait=false || true
+            kubectl -n "${NAMESPACE}" delete pvc "${restore_pvc}" \
+              --ignore-not-found --wait=false || true
+          }
+          trap cleanup EXIT
+
+          workflow_name="$(argo submit --namespace argocd \
+            --from clusterworkflowtemplate/freshlab-volsync-restore \
+            -p "namespace=${NAMESPACE}" \
+            -p "source-pvc=${SOURCE_PVC}" \
+            -p "restore-pvc=${restore_pvc}" \
+            -p "capacity=${CAPACITY}" \
+            --output name)"
+          argo wait --namespace argocd "${workflow_name}" --timeout 75m
+          kubectl -n "${NAMESPACE}" wait "pvc/${restore_pvc}" \
+            --for=jsonpath='{.status.phase}'=Bound --timeout=5m
+          kubectl -n "${NAMESPACE}" get "pvc/${restore_pvc}" -o jsonpath='{.spec.volumeName}{"\\n"}' \
+            | grep -q .

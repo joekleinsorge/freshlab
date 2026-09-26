@@ -49,5 +49,18 @@ Database volumes are crash-consistent filesystem snapshots. Add native logical
 dumps if transaction-consistent recovery becomes a requirement.
 
 The NAS is off-node, but not independent of itself. Enable NAS snapshots or
-replication for `/volume1/kube/restic`, and test at least one restore quarterly
-and after every VolSync upgrade.
+replication for `/volume1/kube/restic`.
+
+## Restore drills
+
+The `Quarterly backup restore drill` GitHub Actions workflow restores the
+non-production `mealie-data` backup to a unique temporary PVC, waits for the
+restore workflow and bound volume, then removes only that labeled restore
+destination and temporary claim. It never mounts, stops, or modifies the live
+Mealie volume. Run it manually after any VolSync upgrade as well as allowing
+the quarterly schedule to run.
+
+The drill proves that the encrypted repository, credentials, VolSync mover,
+storage class, and destination volume can complete a restore. It does not
+validate application-level data semantics; run an application-specific check
+when changing Mealie's schema or backup layout.

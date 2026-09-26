@@ -24,12 +24,24 @@ check(gateway.dig("spec", "infrastructure", "parametersRef") == {
 gateway_infrastructure = routes.find { |d| d["kind"] == "ConfigMap" && d.dig("metadata", "name") == "freshlab-gateway-infrastructure" }
 check(gateway_infrastructure, "Shared Gateway scheduling overlay is missing")
 gateway_deployment = YAML.safe_load(gateway_infrastructure.dig("data", "deployment"))
+check(gateway_deployment.dig("spec", "replicas") == 2,
+      "Shared Gateway must keep two replicas for node and rollout availability")
+check(gateway_deployment.dig("spec", "template", "spec", "priorityClassName") == "freshlab-public-gateway",
+      "Shared Gateway must retain its dedicated priority class")
 gateway_toleration = gateway_deployment.dig("spec", "template", "spec", "tolerations")&.find do |toleration|
   toleration == {
     "key" => "freshlab.io/network-speed", "operator" => "Equal", "value" => "100m", "effect" => "NoSchedule"
   }
 end
 check(gateway_toleration, "Shared Gateway must tolerate the low-bandwidth node during capacity pressure")
+gateway_anti_affinity = gateway_deployment.dig("spec", "template", "spec", "affinity", "podAntiAffinity", "requiredDuringSchedulingIgnoredDuringExecution")
+check(gateway_anti_affinity&.any? { |term|
+  term["topologyKey"] == "kubernetes.io/hostname" &&
+    term.dig("labelSelector", "matchLabels", "gateway.networking.k8s.io/gateway-name") == "freshlab"
+}, "Shared Gateway replicas must be placed on separate nodes")
+gateway_pdb = routes.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("metadata", "name") == "freshlab-public-gateway" }
+check(gateway_pdb&.dig("spec", "minAvailable") == 1,
+      "Shared Gateway must retain one replica during voluntary disruption")
 values.fetch("appRoutes").each do |route|
   namespace = routes.find { |d| d["kind"] == "Namespace" && d["metadata"]["name"] == route["namespace"] }
   check(namespace, "Missing namespace management: #{route['namespace']}")

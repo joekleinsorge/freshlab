@@ -54,6 +54,29 @@ spec:
         namespaces:
           from: All
 ---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: freshlab-public-gateway
+value: 1000000
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+description: >-
+  Keeps the public ingress gateway schedulable ahead of ordinary workloads
+  during a transient capacity event without using a reserved system priority.
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: freshlab-public-gateway
+  namespace: istio-system
+spec:
+  minAvailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      gateway.networking.k8s.io/gateway-name: freshlab
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -62,8 +85,20 @@ metadata:
 data:
   deployment: |
     spec:
+      # Two gateway pods provide continuity during a node restart or a
+      # voluntary rollout. Required anti-affinity keeps their failure domains
+      # separate; if only one node is usable, Kubernetes still retains one
+      # ready ingress pod rather than taking the service completely down.
+      replicas: 2
+      minReadySeconds: 10
+      strategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 1
+          maxUnavailable: 1
       template:
         spec:
+          priorityClassName: freshlab-public-gateway
           # The public gateway is essential infrastructure and is lightweight
           # (64 MiB requested). It may run on metal0 when control-plane nodes
           # are memory-constrained, rather than leaving every public app down.
@@ -72,3 +107,10 @@ data:
               operator: Equal
               value: 100m
               effect: NoSchedule
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      gateway.networking.k8s.io/gateway-name: freshlab
+                  topologyKey: kubernetes.io/hostname
