@@ -8,6 +8,11 @@ node-feature-discovery:
         cpu: 200m
         memory: 256Mi
   worker:
+    # NFD must label every node before feature-based workloads can be safely
+    # scheduled. Keep it above ordinary application pods, but below Longhorn
+    # and Kubernetes-reserved priorities so it cannot displace core storage or
+    # control-plane services during memory pressure.
+    priorityClassName: freshlab-node-agent
     # Keep node labels current on the dedicated low-bandwidth node as well.
     tolerations:
       - key: freshlab.io/network-speed
