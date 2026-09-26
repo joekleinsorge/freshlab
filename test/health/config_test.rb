@@ -65,8 +65,8 @@ argocd_resources = render("system/argocd")
 end
 
 root_applicationset = argocd_resources.find { |d| d["kind"] == "ApplicationSet" && d.dig("metadata", "name") == "root" }
-check(root_applicationset&.dig("spec", "syncPolicy", "applicationsSync") == "create-update-delete",
-      "ApplicationSet must remove retired applications")
+check(root_applicationset&.dig("spec", "syncPolicy", "applicationsSync") == "sync",
+      "ApplicationSet must synchronize the full application lifecycle")
 check(root_applicationset&.dig("spec", "syncPolicy", "preserveResourcesOnDeletion") == true,
       "Retired application resources must remain recoverable until explicitly removed")
 

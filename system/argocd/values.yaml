@@ -412,10 +412,10 @@ argocd-apps:
               - ServerSideApply=true
               - RespectIgnoreDifferences=true
       syncPolicy:
-        # A retired chart must also retire its generated Application. Preserve
-        # its resources below so data remains recoverable until explicitly
-        # removed, but do not leave a stale GitOps owner behind.
-        applicationsSync: create-update-delete
+        # `sync` permits create, update, and deletion. Preserve resources
+        # below so retiring a chart removes its GitOps owner while retaining
+        # data until it is explicitly removed.
+        applicationsSync: sync
         preserveResourcesOnDeletion: true
 argo-workflows:
   controller:

@@ -58,7 +58,6 @@ spec:
                     subject: "https://github.com/joekleinsorge/*"
                     rekor:
                       url: https://rekor.sigstore.dev
-                    signatureAlgorithm: sha256
           mutateDigest: false
           required: true
           useCache: true
