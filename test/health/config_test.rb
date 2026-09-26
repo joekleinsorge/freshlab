@@ -64,6 +64,12 @@ argocd_resources = render("system/argocd")
         "#{name} must retain one replica during voluntary disruption")
 end
 
+root_applicationset = argocd_resources.find { |d| d["kind"] == "ApplicationSet" && d.dig("metadata", "name") == "root" }
+check(root_applicationset&.dig("spec", "syncPolicy", "applicationsSync") == "create-update-delete",
+      "ApplicationSet must remove retired applications")
+check(root_applicationset&.dig("spec", "syncPolicy", "preserveResourcesOnDeletion") == true,
+      "Retired application resources must remain recoverable until explicitly removed")
+
 values.fetch("appRoutes").each do |route|
   next if route["createNamespace"] == false
 
