@@ -6,9 +6,9 @@ kyverno:
   cleanupController:
     replicas: 1
   reportsController:
-    replicas: 1
-    # The reports controller loses its leader lease when its API calls compete
-    # with reconciliation bursts. Give its reports/lease traffic a dedicated
-    # API Priority and Fairness flow so reporting stays available without
-    # increasing client-side request pressure on the control plane.
-    apiPriorityAndFairness: true
+    # Freshlab's custom policies use background: false and do not rely on
+    # PolicyReport resources for enforcement. The reports controller repeatedly
+    # loses its lease during API-server recovery, so leave it disabled rather
+    # than adding API load and a permanent crash loop. Admission, background,
+    # and cleanup controllers remain enabled and enforce policy normally.
+    enabled: false
