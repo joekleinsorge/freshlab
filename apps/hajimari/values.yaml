@@ -61,6 +61,9 @@ hajimari:
           - name: Immich
             url: https://photos.kleinsorge.dev
             icon: mdi:image-multiple
+          - name: RomM
+            url: https://romm.kleinsorge.dev
+            icon: mdi:gamepad-variant
       - group: Downloads
         apps:
           - name: Autobrr

@@ -267,6 +267,15 @@ kube-prometheus-stack:
                     operator: In
                     values:
                       - metal0
+      tolerations:
+        - key: freshlab.io/network-speed
+          operator: Equal
+          value: 100m
+          effect: NoSchedule
+        - key: freshlab.io/network-speed
+          operator: Equal
+          value: 100m
+          effect: PreferNoSchedule
       resources:
         requests:
           cpu: 500m

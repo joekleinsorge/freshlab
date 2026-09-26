@@ -80,6 +80,9 @@ data:
         - Immich:
             icon: immich.svg
             href: https://photos.kleinsorge.dev
+        - RomM:
+            icon: mdi-gamepad-variant
+            href: https://romm.kleinsorge.dev
     - Downloads:
         - Autobrr:
             icon: mdi-download-network
