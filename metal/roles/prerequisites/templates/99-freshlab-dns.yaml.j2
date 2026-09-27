@@ -1,0 +1,15 @@
+# Keep DHCP for addressing, but do not inherit its local DNS overrides.
+# CoreDNS forwards through the host resolver, so stale router records would
+# otherwise make internal health checks disagree with authoritative DNS.
+network:
+  version: 2
+  ethernets:
+    {{ network_interface }}:
+      dhcp4-overrides:
+        use-dns: false
+      dhcp6-overrides:
+        use-dns: false
+      nameservers:
+        addresses:
+          - {{ dns_server }}
+          - 1.1.1.1

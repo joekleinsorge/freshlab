@@ -40,6 +40,16 @@
     lock_timeout: 120
   tags: ['packages']
 
+- name: Keep host DNS independent of DHCP-provided local overrides
+  ansible.builtin.template:
+    src: 99-freshlab-dns.yaml.j2
+    dest: /etc/netplan/99-freshlab-dns.yaml
+    owner: root
+    group: root
+    mode: '0600'
+  notify: Apply Netplan DNS configuration
+  tags: ['network', 'dns']
+
 - name: Enable iSCSI for Longhorn volumes
   ansible.builtin.systemd_service:
     name: iscsid

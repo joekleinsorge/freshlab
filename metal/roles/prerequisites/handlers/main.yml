@@ -1,0 +1,4 @@
+---
+- name: Apply Netplan DNS configuration
+  ansible.builtin.command: netplan apply
+  changed_when: true
