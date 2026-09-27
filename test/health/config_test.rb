@@ -44,6 +44,21 @@ check(gateway_pdb&.dig("spec", "minAvailable") == 1,
       "Shared Gateway must retain one replica during voluntary disruption")
 
 argocd_resources = render("system/argocd")
+redis_ha = argocd_resources.find { |d| d["kind"] == "StatefulSet" && d.dig("metadata", "name") == "argocd-redis-ha-server" }
+check(redis_ha&.dig("spec", "replicas") == 3,
+      "Argo CD Redis must keep three Sentinel-backed replicas")
+check(redis_ha&.dig("spec", "volumeClaimTemplates")&.any? { |claim|
+  claim.dig("spec", "storageClassName") == "longhorn"
+}, "Argo CD Redis must retain durable Longhorn storage")
+redis_ha_pdb = argocd_resources.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("metadata", "name") == "argocd-redis-ha-pdb" }
+check(redis_ha_pdb&.dig("spec", "minAvailable") == 2,
+      "Argo CD Redis must retain quorum during voluntary disruption")
+redis_haproxy = argocd_resources.find { |d| d["kind"] == "Deployment" && d.dig("metadata", "name") == "argocd-redis-ha-haproxy" }
+check(redis_haproxy&.dig("spec", "replicas") == 3,
+      "Argo CD Redis proxy must remain available through a node failure")
+redis_haproxy_pdb = argocd_resources.find { |d| d["kind"] == "PodDisruptionBudget" && d.dig("metadata", "name") == "argocd-redis-ha-haproxy-pdb" }
+check(redis_haproxy_pdb&.dig("spec", "minAvailable") == 2,
+      "Argo CD Redis proxy must retain two replicas during voluntary disruption")
 %w[argocd-server argocd-argo-workflows-server].each do |service_name|
   name = "#{service_name}-gateway"
   managed_gateway = argocd_resources.find { |d| d["kind"] == "Gateway" && d.dig("metadata", "name") == name }

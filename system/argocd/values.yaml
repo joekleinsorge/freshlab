@@ -134,15 +134,54 @@ argo-cd:
         cpu: "1"
         memory: 1Gi
     metrics: *metrics
-  redis:
-    resources:
-      requests:
-        cpu: 100m
-        memory: 256Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
-    metrics: *metrics
+  # The single Redis pod is a control-plane single point of failure: losing
+  # its node prevents ApplicationSet from resolving Git revisions.  Use the
+  # chart's Sentinel-backed Redis HA mode so Argo CD can fail over cleanly.
+  redis-ha:
+    enabled: true
+    replicas: 3
+    persistentVolume:
+      enabled: true
+      storageClass: longhorn
+      size: 10Gi
+    redis:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    sentinel:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+    exporter:
+      enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+    podDisruptionBudget:
+      minAvailable: 2
+    haproxy:
+      replicas: 3
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
+      podDisruptionBudget:
+        minAvailable: 2
   applicationSet:
     replicas: 2
     resources:
