@@ -19,6 +19,10 @@ metadata:
   annotations:
     # Gateway API sources read DNS targets from the Gateway, not HTTPRoutes.
     external-dns.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
+    # external-dns still consumes the established alpha annotation namespace.
+    # Keep both annotations during its migration so records cannot retain a
+    # retired Gateway address.
+    external-dns.alpha.kubernetes.io/target: {{ .Values.publicGatewayAddress | quote }}
 spec:
   # Istio's Gateway API controller owns the generated Deployment. Attach the
   # scheduling policy through its supported infrastructure overlay instead of
