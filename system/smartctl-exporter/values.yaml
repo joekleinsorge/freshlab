@@ -11,7 +11,9 @@ prometheus-smartctl-exporter:
       cpu: 25m
       memory: 32Mi
     limits:
-      cpu: 100m
+      # SMART scans can briefly exceed 100m even with standby-safe probing.
+      # Avoid throttling the collector and delaying disk-health telemetry.
+      cpu: 250m
       memory: 128Mi
   serviceMonitor:
     enabled: true

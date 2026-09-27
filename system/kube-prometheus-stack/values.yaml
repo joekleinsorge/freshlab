@@ -144,7 +144,9 @@ kube-prometheus-stack:
         readOnly: true
     resources:
       limits:
-        cpu: 250m
+        # The extended host collectors can exceed 250m briefly.  A 500m cap
+        # prevents needless throttling without reserving more idle CPU.
+        cpu: 500m
         memory: 180Mi
       requests:
         cpu: 100m
@@ -309,7 +311,6 @@ kube-prometheus-stack:
                 - https://budget.kleinsorge.dev
                 - https://dex.kleinsorge.dev
                 - https://draw.kleinsorge.dev
-                - https://files.kleinsorge.dev
                 - https://flask.kleinsorge.dev
                 - https://frigate.kleinsorge.dev
                 - https://monitoring.kleinsorge.dev

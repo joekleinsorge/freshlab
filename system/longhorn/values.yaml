@@ -4,6 +4,10 @@ longhorn:
   defaultSettings:
     defaultReplicaCount: 2
     replicaAutoBalance: best-effort
+    # Rebalance before a node approaches the 25% storage reserve.  This is
+    # especially important while all Longhorn disks share their hosts' root
+    # filesystems with k3s and etcd.
+    replicaAutoBalanceDiskPressurePercentage: 70
     # Replicas must live on different nodes; a node loss must not remove both
     # copies of a volume.
     replicaSoftAntiAffinity: false
