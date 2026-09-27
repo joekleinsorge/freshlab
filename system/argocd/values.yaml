@@ -359,6 +359,13 @@ argocd-apps:
               name: plex
               jsonPointers:
                 - /spec/volumeClaimTemplates
+            # Kyverno defaults this field server-side, while Argo CD's typed
+            # schema does not declare it. Ignore only that generated field.
+            - group: kyverno.io
+              kind: ClusterPolicy
+              name: audit-freshlab-image-signatures
+              jsonPointers:
+                - /spec/rules/0/verifyImages/0/attestors/0/entries/0/keyless/signatureAlgorithm
             # These CRD metadata fields are rewritten by the bundled
             # operators during installation and upgrades; the schemas remain
             # managed by the chart.

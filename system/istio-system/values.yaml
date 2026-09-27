@@ -70,6 +70,26 @@ privilegedNamespaces:
   - plex
   - qbittorrent
 
+# These namespaces are created by the secret-bootstrap manifest. Keeping a
+# single GitOps owner prevents the route chart and bootstrap application from
+# continuously competing over the same Namespace metadata.
+externallyManagedNamespaces:
+  - autobrr
+  - grocy
+  - hermes
+  - kube-prometheus-stack
+  - mealie
+  - media-auth
+  - paperless
+  - plex
+  - prowlarr
+  - qbittorrent
+  - radarr
+  - romm
+  - seerr
+  - sonarr
+  - tautulli
+
 # All public application hostnames are served by the shared Istio Gateway.
 # ExternalDNS uses this value when reconciling their individual HTTPRoutes.
 publicGatewayAddress: 192.168.1.228

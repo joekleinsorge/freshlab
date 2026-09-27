@@ -74,15 +74,20 @@ values.fetch("appRoutes").each do |route|
   next if route["createNamespace"] == false
 
   namespace = routes.find { |d| d["kind"] == "Namespace" && d["metadata"]["name"] == route["namespace"] }
-  check(namespace, "Missing namespace management: #{route['namespace']}")
-  expected = values["privilegedNamespaces"].include?(route["namespace"]) ? "privileged" : "baseline"
-  check(namespace["metadata"]["labels"]["pod-security.kubernetes.io/enforce"] == expected,
-        "Incorrect admission policy: #{route['namespace']}")
   bootstrap = bootstrap_namespaces.find { |d| d["metadata"]["name"] == route["namespace"] }
-  if bootstrap
+  if values.fetch("externallyManagedNamespaces", []).include?(route["namespace"])
+    check(namespace.nil?, "#{route['namespace']} must have one Namespace owner")
+    check(bootstrap, "Missing bootstrap namespace management: #{route['namespace']}")
+  else
+    check(namespace, "Missing namespace management: #{route['namespace']}")
+    expected = values["privilegedNamespaces"].include?(route["namespace"]) ? "privileged" : "baseline"
+    check(namespace["metadata"]["labels"]["pod-security.kubernetes.io/enforce"] == expected,
+          "Incorrect admission policy: #{route['namespace']}")
+    if bootstrap
     (bootstrap["metadata"]["labels"] || {}).each do |key, value|
       desired = namespace["metadata"]["labels"][key]
       check(desired.nil? || desired == value, "Conflicting namespace owners: #{route['namespace']}/#{key}")
+    end
     end
   end
   if route["protected"]

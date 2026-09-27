@@ -23,7 +23,7 @@ spec:
             statusCode: 301
 ---
 {{- range .Values.appRoutes }}
-{{- if or (not (hasKey . "createNamespace")) .createNamespace }}
+{{- if and (or (not (hasKey . "createNamespace")) .createNamespace) (not (has .namespace $.Values.externallyManagedNamespaces)) }}
 apiVersion: v1
 kind: Namespace
 metadata:
