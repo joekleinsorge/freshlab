@@ -10,7 +10,10 @@ spec:
   schedule: "37 4 * * 0"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 3
-  successfulJobsHistoryLimit: 1
+  # This test mounts Plex's RWO configuration claim. Retaining its completed
+  # pod leaves Longhorn treating the claim as in use and causes repeated mount
+  # failures on the live Plex pod.
+  successfulJobsHistoryLimit: 0
   jobTemplate:
     spec:
       backoffLimit: 0
