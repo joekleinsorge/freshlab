@@ -6,9 +6,9 @@ volsync:
 
 backups:
   enabled: true
-  # Schedules are spread across the six-hour retention window so Longhorn and
-  # the control plane do not receive an all-at-once backup surge.
-  paused: false
+  # Hold replication while stale pre-recovery controller state is reset. The
+  # per-volume schedules below prevent a surge when sources are resumed.
+  paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
   pruneIntervalDays: 14
