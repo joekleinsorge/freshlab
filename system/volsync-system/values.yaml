@@ -20,7 +20,7 @@ backups:
     yearly: 2
   volumes:
     - {namespace: authelia, pvc: authelia-data, schedule: "7 0,6,12,18 * * *"}
-    - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *"}
+    - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *", paused: false}
     - {namespace: disney-alerts, pvc: disney-alerts-data, schedule: "37 0,6,12,18 * * *"}
     - {namespace: freshrss, pvc: freshrss-pvc, schedule: "52 0,6,12,18 * * *"}
     - {namespace: frigate, pvc: frigate-config, schedule: "7 1,7,13,19 * * *"}
