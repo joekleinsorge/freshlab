@@ -40,6 +40,13 @@ spec:
             tcpSocket:
               port: http
             initialDelaySeconds: 30
+          # Database recovery after an unclean shutdown can take longer than
+          # the liveness delay. Protect that one-time initialization work.
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
           resources:
             requests:
               cpu: 50m
