@@ -1,5 +1,13 @@
 {{- if .Values.backups.enabled }}
 {{- range .Values.backups.volumes }}
+{{- $schedule := $.Values.backups.schedule }}
+{{- if hasKey . "schedule" }}
+{{- $schedule = .schedule }}
+{{- end }}
+{{- $paused := $.Values.backups.paused }}
+{{- if hasKey . "paused" }}
+{{- $paused = .paused }}
+{{- end }}
 ---
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
@@ -10,9 +18,10 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     freshlab.kleinsorge.dev/backup: restic-nfs
 spec:
+  paused: {{ $paused }}
   sourcePVC: {{ .pvc }}
   trigger:
-    schedule: {{ $.Values.backups.schedule | quote }}
+    schedule: {{ $schedule | quote }}
   restic:
     repository: {{ .pvc }}-volsync-restic
     copyMethod: {{ default $.Values.backups.copyMethod .copyMethod }}

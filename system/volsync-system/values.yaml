@@ -6,6 +6,9 @@ volsync:
 
 backups:
   enabled: true
+  # Hold sources while the recovery backlog is rebalanced. Individual sources
+  # can opt in only after their next staggered schedule has been verified.
+  paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
   pruneIntervalDays: 14
@@ -16,18 +19,19 @@ backups:
     monthly: 6
     yearly: 2
   volumes:
-    - {namespace: authelia, pvc: authelia-data}
-    - {namespace: autobrr, pvc: autobrr-config}
-    - {namespace: disney-alerts, pvc: disney-alerts-data}
-    - {namespace: freshrss, pvc: freshrss-pvc}
-    - {namespace: frigate, pvc: frigate-config}
-    - {namespace: frigate, pvc: frigate-media}
-    - {namespace: grocy, pvc: grocy-data}
-    - {namespace: hermes, pvc: hermes-data}
-    - {namespace: immich, pvc: immich-postgres-data}
-    - {namespace: kitchenowl, pvc: kitchenowl-data}
+    - {namespace: authelia, pvc: authelia-data, schedule: "7 0,6,12,18 * * *"}
+    - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *"}
+    - {namespace: disney-alerts, pvc: disney-alerts-data, schedule: "37 0,6,12,18 * * *"}
+    - {namespace: freshrss, pvc: freshrss-pvc, schedule: "52 0,6,12,18 * * *"}
+    - {namespace: frigate, pvc: frigate-config, schedule: "7 1,7,13,19 * * *"}
+    - {namespace: frigate, pvc: frigate-media, schedule: "22 1,7,13,19 * * *"}
+    - {namespace: grocy, pvc: grocy-data, schedule: "37 1,7,13,19 * * *"}
+    - {namespace: hermes, pvc: hermes-data, schedule: "52 1,7,13,19 * * *"}
+    - {namespace: immich, pvc: immich-postgres-data, schedule: "7 2,8,14,20 * * *"}
+    - {namespace: kitchenowl, pvc: kitchenowl-data, schedule: "22 2,8,14,20 * * *"}
     - namespace: mealie
       pvc: mealie-data
+      schedule: "37 2,8,14,20 * * *"
       # Mealie writes some historical database backups as UID/GID 1001 with
       # restrictive permissions. Match the workload identity so Restic can
       # read every file without granting the mover root access.
@@ -45,6 +49,7 @@ backups:
     # normal encrypted, retained backup repository.
     - namespace: plex
       pvc: pms-config-plex-0
+      schedule: "7 3,9,15,21 * * *"
       copyMethod: Direct
       moverSecurityContext:
         runAsUser: 911
@@ -54,12 +59,12 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-    - {namespace: prowlarr, pvc: prowlarr-config}
-    - {namespace: qbittorrent, pvc: qbittorrent-config}
-    - {namespace: radarr, pvc: radarr-config}
-    - {namespace: romm, pvc: mysql-data-pvc}
-    - {namespace: romm, pvc: romm-redis-data-pvc}
-    - {namespace: romm, pvc: romm-resources-pvc}
-    - {namespace: seerr, pvc: seerr-config}
-    - {namespace: sonarr, pvc: sonarr-config}
-    - {namespace: tautulli, pvc: tautulli-config}
+    - {namespace: prowlarr, pvc: prowlarr-config, schedule: "22 3,9,15,21 * * *"}
+    - {namespace: qbittorrent, pvc: qbittorrent-config, schedule: "37 3,9,15,21 * * *"}
+    - {namespace: radarr, pvc: radarr-config, schedule: "52 3,9,15,21 * * *"}
+    - {namespace: romm, pvc: mysql-data-pvc, schedule: "7 4,10,16,22 * * *"}
+    - {namespace: romm, pvc: romm-redis-data-pvc, schedule: "22 4,10,16,22 * * *"}
+    - {namespace: romm, pvc: romm-resources-pvc, schedule: "37 4,10,16,22 * * *"}
+    - {namespace: seerr, pvc: seerr-config, schedule: "52 4,10,16,22 * * *"}
+    - {namespace: sonarr, pvc: sonarr-config, schedule: "7 5,11,17,23 * * *"}
+    - {namespace: tautulli, pvc: tautulli-config, schedule: "22 5,11,17,23 * * *"}
