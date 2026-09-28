@@ -6,9 +6,9 @@ volsync:
 
 backups:
   enabled: true
-  # Hold sources while the recovery backlog is rebalanced. Individual sources
-  # can opt in only after their next staggered schedule has been verified.
-  paused: true
+  # Schedules are spread across the six-hour retention window so Longhorn and
+  # the control plane do not receive an all-at-once backup surge.
+  paused: false
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
   pruneIntervalDays: 14
