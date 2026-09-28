@@ -144,11 +144,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tailscale
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: autobrr
   labels:
     pod-security.kubernetes.io/enforce: baseline

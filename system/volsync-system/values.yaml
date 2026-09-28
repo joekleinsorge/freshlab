@@ -18,7 +18,6 @@ backups:
   volumes:
     - {namespace: authelia, pvc: authelia-data}
     - {namespace: autobrr, pvc: autobrr-config}
-    - {namespace: bazarr, pvc: bazarr-config}
     - {namespace: disney-alerts, pvc: disney-alerts-data}
     - {namespace: freshrss, pvc: freshrss-pvc}
     - {namespace: frigate, pvc: frigate-config}
@@ -30,8 +29,8 @@ backups:
     - {namespace: mealie, pvc: mealie-data}
     - {namespace: paperless, pvc: paperless-data}
     # Plex configuration is small and changes while the server is live. A direct
-    # Restic copy avoids depending on Longhorn's separate backup target while
-    # preserving the normal encrypted, retained backup repository.
+    # Restic copy avoids snapshotting its live SQLite database and preserves the
+    # normal encrypted, retained backup repository.
     - namespace: plex
       pvc: pms-config-plex-0
       copyMethod: Direct

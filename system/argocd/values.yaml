@@ -248,8 +248,6 @@ argocd-apps:
           server: https://kubernetes.default.svc
         - namespace: runners
           server: https://kubernetes.default.svc
-        - namespace: tailscale
-          server: https://kubernetes.default.svc
       clusterResourceWhitelist:
         - group: rbac.authorization.k8s.io
           kind: ClusterRole

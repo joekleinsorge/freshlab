@@ -1,0 +1,12 @@
+apiVersion: longhorn.io/v1beta2
+kind: BackupTarget
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+spec:
+  # VolSync uses CSI snapshots for crash-consistent Restic backups. Longhorn
+  # requires its default target to be available before it can create those
+  # snapshots. This is the existing off-node NAS export; Restic stores its
+  # repositories beneath its own restic/ directory on the same export.
+  backupTargetURL: nfs://192.168.1.208:/volume1/kube
+  pollInterval: 5m0s
