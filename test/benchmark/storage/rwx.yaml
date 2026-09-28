@@ -35,10 +35,10 @@ spec:
           command: [/bin/sh, -ec]
           args:
             - |
-              echo "Sequential write (1 GiB, fsync):"
-              time dd if=/dev/zero of=/data/test.bin bs=1M count=1024 conv=fsync
-              echo "Sequential read (1 GiB):"
-              time dd if=/data/test.bin of=/dev/null bs=1M
+              echo "Sequential direct write (1 GiB):"
+              time dd if=/dev/zero of=/data/test.bin bs=1M count=1024 oflag=direct
+              echo "Sequential direct read (1 GiB):"
+              time dd if=/data/test.bin of=/dev/null bs=1M iflag=direct
               rm -f /data/test.bin
           resources:
             requests: {cpu: 100m, memory: 32Mi}
