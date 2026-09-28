@@ -6,7 +6,10 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
+  # Temporarily hold the workload offline while its Longhorn filesystem is
+  # repaired with exclusive block-device access. Restore this to 1 after the
+  # repair verification succeeds.
+  replicas: 0
   strategy:
     type: Recreate
   selector:

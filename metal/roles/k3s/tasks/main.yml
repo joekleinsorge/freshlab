@@ -16,6 +16,7 @@
     owner: root
     group: root
     mode: 0755
+  notify: Restart k3s service
 
 - name: Ensure config directories exist
   ansible.builtin.file:
@@ -83,6 +84,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: 0644
+  notify: Restart k3s service
   loop:
     - src: config.yaml.j2
       dest: "{{ k3s_config_file }}"

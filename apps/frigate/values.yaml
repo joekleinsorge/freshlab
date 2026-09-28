@@ -251,10 +251,13 @@ frigate:
       initialDelaySeconds: 60
       failureThreshold: 5
       timeoutSeconds: 10
-    # The chart's HTTP startup probe conflicts with the historical server-side
-    # probe field. Liveness and readiness already cover startup protection.
+    # Frigate may need several minutes to initialize cameras and storage after
+    # a restart. Keep liveness from killing that healthy initialization work.
     startup:
-      enabled: false
+      enabled: true
+      failureThreshold: 30
+      periodSeconds: 10
+      timeoutSeconds: 10
 
   service:
     # -- Type of Service to use

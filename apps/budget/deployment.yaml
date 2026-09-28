@@ -5,6 +5,7 @@ metadata:
   labels:
     app: budget
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: budget

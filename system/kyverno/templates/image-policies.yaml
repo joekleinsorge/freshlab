@@ -56,9 +56,9 @@ spec:
                 - keyless:
                     issuer: https://token.actions.githubusercontent.com
                     subject: "https://github.com/joekleinsorge/*"
-                    signatureAlgorithm: sha256
                     rekor:
                       url: https://rekor.sigstore.dev
+                  signatureAlgorithm: sha256
           mutateDigest: false
           required: true
           useCache: true

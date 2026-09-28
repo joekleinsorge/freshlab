@@ -99,6 +99,11 @@
   ansible.builtin.command: multipath -ll
   register: multipath_devices
   changed_when: false
+  # `multipath -ll` returns 1 when the optional device-mapper multipath
+  # kernel driver is not loaded. That is the expected state on nodes with no
+  # multipath devices, and its empty stdout is what the following assertion
+  # validates.
+  failed_when: multipath_devices.rc not in [0, 1]
   check_mode: false
   tags: ['storage']
 
