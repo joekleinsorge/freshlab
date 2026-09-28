@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: qbittorrent-config-volsync-restic
+    namespace: qbittorrent
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:nmjNqKPcNyiK8/TR857xEZYK5tDbW9jtHesV53xWUpz9WDN6t7vd0m+IN1OEqDFAxDkFE7iSETI1ECcRzJR7gUW3wOhC7iUj2PMBWoZBAel/M58klRmVTr0Pn3Gka3qI3vmuzQ==,iv:Y1DEttpO8z/dKFvPOrgvSgZ2YBuI7gJh6ngBljPz5Og=,tag:rmXFJB7RSOhYodxWzD7jEg==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:42UhhYMyOWR83Y4u4erhZpaHJgKZQ2fXfC0pE/sJZio4mBfKK5RoYyRZ+cbX8bkclUU+9OSxCNV9GIEX/lNqNg==,iv:qMRppHHMPDLq5rBpZGdP7eyb34h1FG8AOS0LQiwK76g=,tag:12OSXwBWzNophDGAfXFaFw==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:MSbCnNYBeJI=,iv:F2E7FCoDC6kPaTdyrFbao5l+gjk2oECV5OCssUP5EA0=,tag:gmAjTRCufWuZsx6gl1W0IQ==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:8h+EIEKGECrIdmgLzZINxV1RU9VLXwJkDUMh4YPlxGF2TpXk0EffCf8liKVQ0G2S,iv:oRq5lcyA19M0PU2Eirfv5vASvOdo9rF5wF+dTTshQ7o=,tag:gW39xJbNc9issAmY1pe5dw==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBWWjB1T2hhT1U3ZU9PempF
+            dS9hd0FZRnh5S1g1SUdibWdqaUl4Y2xZRXpzClR3NTV1akdwU0dXaFNsc0VWS3RB
+            RDdPNStJV25qMHpkL01zOUZxUkZZVmsKLS0tIDlZSzFaaVJNeTJGMWF5N1Y2aVdv
+            NGo2dGFlOStLZ1hXU3k3Z0ltT3BDK2cKqTFDffyP4G4jqvhmCNJVnDG7+HGClWfp
+            Qlco5vVdnCimsC6jwAFomIOdQatsHDDjbdWyDPrx03VUroAEiRN+xg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:c2QyCrKkojgCH5c0pgPhaYJDa7cjMmCk+fvchKaCFSl1UqLBXRB6t1IdGr06xGV7oE4/KSpryrKkTFZvqbTMAOQITqK8YiRhOVDH4E7QbiconPkQwxCH5MjfMB6wT1qX4/3smkbJyS+JwVMxMDQfsVAdXx/TZPwyvgfXYa7BDEI=,iv:m70EAkrmA8KNWl6S3TC6X7fR4xX8uSyI2EiL8gAqgCw=,tag:ponvs9GZHBere9YQb+AAwA==,type:str]
+    version: 3.13.3

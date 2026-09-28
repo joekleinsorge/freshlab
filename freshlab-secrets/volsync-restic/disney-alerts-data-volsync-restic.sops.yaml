@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: disney-alerts-data-volsync-restic
+    namespace: disney-alerts
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:Fp7u7wxlXcRJPQo2PvaDQr6dSAAoBQfQoOpZG6sP/6CL79UwcIZc2oLI5VNrXZFfSxSd7KU407gJvBzyar7+QXV2bBkDu4V0HpzJymsY/TZ7fNvnF/gPdeIT5yZV3njMdasuZg==,iv:xJg50fwc2JnrZkOErjMGWNXdpXdqtjX2KCDgfwEopZ0=,tag:wA5x7fInz3WlcGDjzyyDYA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:AAJ/vYeKtOCVws1YYP2FD3FtQbxrOJgS80dl5V/r1qrtcdej0vUj8+PD3yDhybr7B0iFHV0+CWbgHd0nYYLozw==,iv:Jt3om5RIksJ1pylEH2AN/VkO6JfP5OahWO82hzp1l/Q=,tag:4Fq9OGNdpOC7F7Q3drzMAg==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:TqbSjfJ3ldo=,iv:PqjiFgsHzMTZXfCR9wQ7cftDFJIYA2wj5ywC/squOJ4=,tag:Ueru0JTP4ul/SLGMBOiQDw==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:cV9wAsQD/ODud1Y/s8qOlMnCEeASRt5VVM2QIr/0LHOlyvtjpRY2QAEj3F0htc0y,iv:gxtoNQtf9NxQE4YlqXnE8wqGzgFqvWB2gOEOjAYX+MM=,tag:LtfIEgQqHaK9xGBxQ8ZY+w==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB1M2dFMmZ1WEJVZ0tjNnha
+            N3FGc1FwbVRabG9CMDV1SVhWRmt4Ry9HcUFBCjNTT1Q2WTlmM0cxblBxNW1oQW9L
+            ZW4zTnNUWHd2VWx2ZzVCSFkya1lHRnMKLS0tIG1hTFVHY0l5YXlrUlZ6OWZ0YjBW
+            dzVPZUdEYm8ra21DVElYU2pSN3hKbGcKsVUgfT14NAcUrCRv8TP6/pin9s38IXub
+            T3f1eTyqvnMrMZL636qNsSuHC8asLdZcTGYdwTmF6KLfmW2V4AB9ig==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:tOdPb7exNf17FFRPQ7rqbK6dFX6kzO6lm9KTcTztepeUdovL6yCnyQ33EvKgK4H0Leiiztk6asK8zdTC2XqYSalJ+F7g1b8sEVJeQGXavYRCXk3y4nZB84VvpFdJQH+Yr7Xz3AuDot5HGgUFzS7PyhDhLCitfV5hvU62gTjLP9k=,iv:lNyIJk6EpWqHWd4xXvSSaFXBl1Ls9h0dmDAp5JMW3Ho=,tag:vrziJT27srcYKkv8bSp+PQ==,type:str]
+    version: 3.13.3

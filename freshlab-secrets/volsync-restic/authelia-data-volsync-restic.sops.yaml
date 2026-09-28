@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: authelia-data-volsync-restic
+    namespace: authelia
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:MMNqnkpmUBT5osZqkpJsNsXAsrxVUPIzuDYoSzCviYXaXBQpdkucX4NR/TnsOXtXCHr2bA6ozSnoF3FmscPIv37oAxTB9g8M3LbAY5af33bU+bPNzkSIhY1SsEYPotE=,iv:H1kfcaIsdIPlE7Kjb/V63br79NNSsLczikoZxasfNkI=,tag:rAZb6DlqHQkGAXySCV81zQ==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:48nQd7m0irsLcGTY46p3FYvB4wZVyvsikL3XQkwJneyfj6gsWGELyvT3I7r9GmbsMvwsPbnsw+8Ducdvn+X5ng==,iv:U/gmGb+RxYXk/82FxAD6qF5b6YTSiIVMtzzYpJfrO7k=,tag:ONqwQq7S7bXVezqtKL8UCQ==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:VmsAGLh5nFs=,iv:D5THaVRKYkyEQmUJiasyapSQqJNUgUjlheUm3x39wcg=,tag:Q+FJ1tSf8X6V4UWfgEj7fg==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:AaQwvPwoEtmBapCnAYGAGqO94Y9LTXmSgB1ERjmD+V5HKvzpeqcI451/EA1qwpkO,iv:R4Vd5uRt+Dciyv3qlKedaHRHCQ/v5fkQQuMY+FWDRlk=,tag:3KmcJMxnB+CLvzu7nm7UCg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4K1FCMmsxUGtUVHBYRjds
+            NXhYS0pJMHBocGl4aHNSdkxpc1lEQW1RUG13ClN1ZVNMdXBUSGZBWFErZGdPSzZD
+            cE13am1EM2tKRWQwbmpKc3FMdDV4dTQKLS0tIG1hQ2oxVWZUc2ttZ0dZemlZbjMv
+            TzhNRFlYamNYZkJkNHIzNzlQa2EvcW8KLRIdgWSgLLde3fw81aQ78Hd3q8OfIL2q
+            JnkEfJeAoV5LKmYjfVoMeK0rpc5wr0CD5bsHDCxYM80gMmGjf6rMjA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:43Z"
+    mac: ENC[AES256_GCM,data:+RrIoEscFBlywAgRSVRB9Jln/8d5X9H8pBapVhfrGfW/BQS5ucXes5BfyHKvuNAtaVbF8zRA9AK3mgU/50ON5Rum2zoC6e8FY5szziVlYsb8aLpfKy4kPOJIIH9vjGumszLNUdlDxYID8NoVRuhLHjCBEut9mp9XBpKOw7OB1Bk=,iv:dzxoNUkL5QE27kOt6MC2nK23hwttGooTwmRMTp5RHh4=,tag:MYN36oE3CI8ZMEJtVoyTdA==,type:str]
+    version: 3.13.3

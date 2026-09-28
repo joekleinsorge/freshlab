@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: paperless-data-volsync-restic
+    namespace: paperless
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:XFtMDZ4AwRyOvIsOuVnasdmYUKHttv159FCUXhxzI4KFveP21xCujS7u5NHx4rELBZuHVZHzuHf6EOLtVBf64QiFjtpITUC6gLLnraLzhFe7HT/m4MHG5GnfIdBwxPhZ,iv:hDXVX7njyFMj5TutQyPEWnzX4QWbDvSqUY73/VL/xMk=,tag:048+L0r5eB/7sPEegGB5XA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:Piwc4TSvDXiymzC4gceGrpp/09on3Jq3JbHPWCy22NAxNk5qR3GGSlW0XSY5SCYZgz8c0aRVxFfyHdmjok0agA==,iv:LPTglSErz40pwO/QsliN8YvAGPxCjSgtiubk22YlnXA=,tag:CG9K+x9DNIRBXIFD54BgAA==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:rD+/a7DXyjE=,iv:r9kphRu1qYz/XeRvxIWv0xJ9Il5w8UNcCizs5ua4/HA=,tag:H9vDGJvF5/whxgKE0mZ0eg==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:K7lso+F1sm7U20Wo1C2Forxks5YfePlHeAfFcGMD+F33q+dJM5WubZxh3PasyRas,iv:z8FhfKJUHLYyH3xmK+HyWd2uXuYBnbZ33k04Lz297cs=,tag:Sm2so2JOmi3CG8ddK5+o0A==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBERzNDNGF1L1dQOTBrRWZS
+            Mm0wY3d0ZGRlbGNpUnVGMjkrMUlWTzNod0dNCnpUMzBWMjVtckNnL2xTYmErQ3V3
+            RGtIODArc0Q2aTA2T0ZrenBkaFcvQzAKLS0tIHNLdlFWeVk5NDl6MTR6MzJvcmNo
+            WGtac0RRUlFwODcxUVN3dkJURCt3WEEKNrnRWPCHV40nxfYKv3x5KboWbjfS1Qr9
+            jCkNZo7Ceul5KkhRvv755nA30r0BVp/IUu3gXH0/nqvu3Wg1wchpgA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:yL3av7O9+tT9/Qa0sqH5RX07iNP823cMA5VgcVPyLihjXzahNTso8ssRTnEL5umw8ero7TOiu1pwVq6BGNjswzn/Uhfp/Jay7d0//rrcIMiJ0FJXjtiJyVB0JU9kPDEpCgfIDdfdCIt1nxKS3ITaG4WfmSfQxa2iB6R1KXdCRk4=,iv:IsfXMiXsQ76cEU+djr77eyPLHfYntBDdpiTgSwApdbg=,tag:Q8p3K23A/8ox4yD/kDpSYw==,type:str]
+    version: 3.13.3

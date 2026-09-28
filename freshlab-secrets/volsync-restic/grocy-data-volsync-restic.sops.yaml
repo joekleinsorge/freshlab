@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: grocy-data-volsync-restic
+    namespace: grocy
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:Ag3/qKaLINEECP480oJPV238e3IFkWWlu0w9LEmRNpYFJMLDILezHF22hQkZ+h0xzvS90ExYkkGM05r03uHdgzHiPNajuDNBIT1noJTCqiOfNFHC7eIA79Kwe9I=,iv:S9F1zRaD+a7IssHPSeVyC7OyYhK5g6nY6/n33MBPPbo=,tag:Tx9q+S2jDVjrpIm/gRJ3vA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:RZsdCf8i7VwB8JTe60QBKRBHJCccwwcsNwIrY6deWeDd3P4rmBVyznFkZ4g2tEDmTB8cr40TmP/b6g6FDms/bQ==,iv:gnn4pcdd0CgHXHFRVbANQYvdQWiN26UHTbWdZRViM5g=,tag:BJcJm/Ev5kcorP1b40LHAQ==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:yeSWcRCE99w=,iv:dMHTQiRvM5ZOvYWs7z+F+87gTkaUAb8YI/DUAM6Ifrw=,tag:iW4kfzRdMRj4NliA9ZheJw==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:2M8GChRhBG3nxmtXMjNk8rdsiRQ22/iovoLn770nE4IcZR1xDAQ9bzPxrbUDWpZR,iv:roVuyXz7OarzO2NRZRyEKS5XKqqMsNt1yp1K6XT62T8=,tag:L6HqzLkPn8Hqw9k1AdCVWw==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGU1UzbVhLOWFqT1BsN0hC
+            bjZZMkx5MUIyS0FXSkZRZXU0RmtGa1FHWlhZCnpvM2dCU2sxdFdzRTBaS0dlUlFv
+            cjg1SnU2bFBaVkE3WXJXVW1ENGgxTWMKLS0tIGc1RFIyalloWHF1aXA0QUhmMlF0
+            M2ppZFhZcDQwS2xBWE5wZC9JckxRN3cK5E7hN5I72iIqAtZEw6HF1LRYCQGPVxtK
+            2MjFw96ydS81e7ofOL0bkAH3WKPQA5GUkopWT8QJivcz4vYrn5aWZA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:aIMYmePJEchp/YyZ6dHurO28sKloTnSIUrvYTfkJeQROhvtwLoaFW1BACh1B//cJGw92SQ43gNvxIM63OrHAH1kL5Zwkbuk0S8u595043U3DyutLgaVV36/rRXECJjYFgXXF+aLvCV+iCJZ7NV3IrWVvtRUxk9oyr78U/DOBJ7k=,iv:kmMbSu1dwcH6j3OGPx48A0B38H2sSCHXrSnEsUNSmuQ=,tag:zJ02F8aX+iRN5QRNbMiOow==,type:str]
+    version: 3.13.3

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: mealie-data-volsync-restic
+    namespace: mealie
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:6GRvyAZBj+kkyMZhK3lpQd7wnKjXzJTnBJuKrZJtoz9TLeqGvs836fwIBp43EmUogdfwWPWH3wAYwDnmTQHcsLExYJks/s6jCP3PQOFePDpDydoEIbe8qUQnb4dy,iv:t6GDxzR6h662k1A5ZdcqlDNfhiH9zxNXZBdSIQWC2Jk=,tag:Z886Ggmz5JwY58aT/NqSew==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:SB5EPIXEdQW6Ge4dd1+bofDT79jmQYk7iNyznBd8X4APVHN6fg4McnwUHxqrxar913blRIW+m32r/XqQsNgTHw==,iv:cF5j4G7B5Y7m6GwfxKV+q/E/EqNysnIuSkEQUqXrgr4=,tag:HShg8aQZGjZrZbEes1KLDA==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:vfNjpvzgIOs=,iv:sjvHvR+l1WYG1ZcW7dtDFNtuNv7A+GwoJt2GVYSJ8Rw=,tag:LYCCC0MXWxrlDYqhn7avUA==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:Q7ifdDtLuBpPKp4kL/R8q/iD5k6Fov5pNvYGfaaWfqyKjThiFaj0ZddCTmgPiw30,iv:VfYsTfBzEVcRd+xWg+JldAhqkxM42LEnyxHVtOvlqLo=,tag:nd74dLVZKLYQxS7COV5RVg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBvRkp0Z1JFdVFvbVlsU2dw
+            K0JhNUttYlhTMk9LbWFQd2E2cEdpQ2VSeW1ZCmM5K0UxT2dKdXRXcmhvQ1lEMkdH
+            Y05FM2xWSS80dS92TDA5SU5mY1Y4Z2MKLS0tIGJaY0JxYWt1ZXNMWWc0dkxZL0RE
+            cnBhWCtqQVMvSlR1Q0xXQjZ6aFhoUDQK72R0RQj4SwSyPWXaOHI/H5pivJhJXLDm
+            X2lUqLbkX54StGH37yPViYvU8TU4qMUf0Dt6MBaDV3unW74dPCOVKA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:XZdBQCCs2CuyVBtQE4CxBoVOjTKLy9FsyooDzmOkBAZ2FxSgiXGLUlpBzpjfw8aMwGBHHAf79bB6XxWVfWKmSXZsYkzwjYlvnZNCXBEa1M38HIv1cFavG2BsszvMDwXqJxHhsutzPxnM1h957MVP2e0zTBguIvmt/HdqPIXIhXg=,iv:SoqmGg9WRu6AVDDevFu9DHokouaFMJwLXMZ7LWRl9nQ=,tag:21lL1ybOVcH2zDF9L0rZtA==,type:str]
+    version: 3.13.3

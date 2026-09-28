@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: pms-config-plex-0-volsync-restic
+    namespace: plex
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:eGeWYMLH6A//aVB8zFHwipHituz3/M8vDDm3/k6bloM4Wt9YvMGgs7uCYyjyixWqe95WdggnnMemqAKn+nrNv3bWQkE2ODxZRn+aBe/8xK7sTE89dLLd5w==,iv:QYrZ85SPpeu30zYn0jvKAcAj9SGGI2f3wmLlTSYp4zg=,tag:L7RsXs2XvAzm5MLRlGlmVQ==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:bGSPFXC6qbeRvgdpC99kCfT8UmeMWDjhFjSSXeG5z/9SgG/ppQ9j3/MqwOLhWMDIe+PesFS+J7yINEqG8UwXYw==,iv:tpRXWfX5HvoLEryveZzJjQ5YKRb7pXtHv4+ypY4FT4Y=,tag:t187scIDHxm7Dd7CWydGPQ==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:k4VvFOsonfFe3Fj42aWU,iv:oB5Ce/ueMIuO4Ln68UABqaPTZPlRtwj0B8SnS1nCTQc=,tag:qSHmttv0NoSz2tAxDJbyZw==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:ghprjSXGRMRVq+GhMN7aadGPryrh9b4RlsuA4wzJNgHSwX76kQUi7Dn8barzeE1M,iv:fakPvWbElCHa9mnq6DoDh/WTWOckW41DC1/lEM1/KcQ=,tag:A9U+ut5OisxE3AXUwvOEsg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB4WDdOWFQxMVAxaEhIUUtx
+            OG5objg3bGpxbUNhSzIwZ0pOb0M0TTR1Y0NBCjJ4a0lLdUtxZ3VQWStNeUphY1dO
+            Y3NMdkRnd0pJVHdyQU43R1h0WVA2elEKLS0tIHVIOVM5U3hVOHJjVTVxK05LSS9r
+            ZTBGc05KdnRlUVYrcVVRVU9kV2R0QTQKXk5iOGfLp45xToPh+9HK+tWF+a0Mxjg/
+            69XXOFp4Zpbr0Rjhu3JOPCBa2UufdVHXPLA3gQRZQDOgxvKRnwyR6Q==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:zyNXbl400LqwHCLHo/wY1POclSdY/U822punJR0ndD94O48GX5F0BJVAAb86U/Ew7kpoSo5MTvCcKkkH3Is8IgpSV98jPmXTyqjVCpX9uV8PVWFAk+oVyoM+kwW8VLFyKk8H4e029oy2Fayy+FGbC9w/Fbk3p6EArg/RNKhTAmw=,iv:HEJaMZEgrEmucez4jO8ObYFae2XgEj0sv7Kjn5IV5dM=,tag:kf1hQuYhVoWQeB2bivqfNw==,type:str]
+    version: 3.13.3

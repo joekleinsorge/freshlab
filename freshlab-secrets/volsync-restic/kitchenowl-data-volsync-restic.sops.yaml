@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: kitchenowl-data-volsync-restic
+    namespace: kitchenowl
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:rkF0t3M51tuJTafLfqmTGjip6es+kxumCS6BjFDbeN/HPbR4/+dXyYBA200bRLHSffWLGdFJK4mIVqSYnMJ5qSbgrOeUwToplmBeLuUyHn2RDWBehMCtJAUzj9HW1UKnRA==,iv:y0Lw4VdrHMF2q/o8Hm+mmuXcwmkLlRHBxvUhJ8hL67c=,tag:j+uPfpolJlgvGIcb6cA2nA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:fH2PfUhlnC+5pvglkZbbX1K+gexWY2QL2eK/PMMXeFNM5k9oyA29bibzQta8qML21+C5Yep8nfuVGfD1GUjpyg==,iv:yG96Il/M1S/JJjz8uDCfD2plkY0JXoDEWuj/ALe+jZ8=,tag:VlM3d/W/woR2YQu0fyNO/g==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:+O61ZOvDEEc=,iv:aVnHaHbshhtA/JK1wRD+V3GH+p6O3XXtWn0FI/VKuqw=,tag:hwYDa9wljGTCRtAtPJKRlg==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:btjXH3GJCCxoJz7A0WhlcMcxWkNZP8SjIXA4Z+brcTwdk2B5ldfemYb7D+yEqMOX,iv:a3ll7WZbcXYMvkM2hYXjxyGJoFAi9Oyb+J0++t5Aqq4=,tag:b2RlIXWmvadohlrlV8Sg+w==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUnVhVGxYRGVjL1k0VUQv
+            Tm1XYVhlaHJHK1c4aWRJbnoxOStZMEJKRVNnCjVqQzVlNmI4dFQxY015SU1laG9x
+            RDlJTktOR21xc3FTRkZoQTJNeHpnTkEKLS0tIFRhdnUycTJSUUN2Z2R6Z3JrVFU0
+            ZnFkMkFqeFEvRXh4V2xEc2EzZ2lCZVEKBhnqlkquHtpeCwxaIrzhxoPxkjjl5Zkz
+            CE1H3kYLgi6x+SJse2Nf953Y6ienNeOIimNnr4R6TCRTl94YvIlLRw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:WE/viFRBHVJwsbf17b2PJ1t67HbLkncqyUUU6PVakEq6nZnJwSK2xCL35S7/iBnCeOcuhWwQZL9vdrJBZv18dTzQIs8tCt0m+Kj5XFvfR2X18WFKZT9K/EMsj/5PGn8Y/uyzYY5rXS/APxsem7q9iPLgM+f/etyL+UmlP8X9MJg=,iv:/IPnbyA6SjEXqb0lgd01QBK3F+j3iiiCUw3KC8EkobM=,tag:pmxLRqEYGBykynhDJsItYA==,type:str]
+    version: 3.13.3

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: mysql-data-pvc-volsync-restic
+    namespace: romm
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:wbWMQ3K3GGmMGDJnV52Vu7LLqEKRp8VT599OiN3qXqKmpNMNADb2z+chK9Rrx1fil6KfkUgntTHOfLX2erV7r2vywpF8iesWT/J/MZxKdIrlaAGe4fVRewpT7iDnCdrv,iv:7RZzjTKpaq5ATSXpVI8ONRfKeYJXVIIEQLLZI97hbyI=,tag:lbzL2eIOGiLBcv6QhYzvOQ==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:QmOGSxt/n1OAA8tp+EM+KUtXuMynQmpF6JSoaApFaeu/QYH7dsKTjIiSGSLL6cVZ4dob5u1zY4AmIH3Nhb8QNw==,iv:RkTxMLQwM0Iy7P22K45hNjc51c92Sag73JQ+ZGy3xAU=,tag:OmCjZKp4OmH0uI4NfWSDgg==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:NpfDp/QTZh8=,iv:Jey70hKB+UsXgVrPoeSUc0q1rhPh01lcjjz9vVKOhYk=,tag:Ql35a1WjdbXc2HDlC9gVSA==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:Vh2N5lPgyY8dkhqD8gnBL+y45bdb/KO7ivvLTVW+c7OcnKTPAMK9coKpivdFeBws,iv:uTlmHv62QcznESzJR8PPLbGIc59mjlFOyc+pKceeiIc=,tag:f+5a6PhlOy2YwqXMs/jAdQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBFQlMrTkdsV0RlWFY1cUti
+            RWIvSldqWTIvSVFqdnpzOFZQMjNuc2NVcTJZCjIxTXhvTVdjb2xDQjRkTjNoNURl
+            ejA0cGtmS0k2UVFkeC9yd3g3UFBoRW8KLS0tIFZFcmtEOGY0RkJuZDdISjNYL0FS
+            bWlOSnZYL2RpejlJSkVDOU9kMmRnSjAKatoHQhZM/kSMfogvhDC9vNJadKDDUxas
+            Bu1q/o5am2PH2N2endKe4nqnIqeBhvMVg7E+Na4iXjjnt3avp/OPYg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:yktq+RU9fAPhyBefr6zIs8sYmUAIkXHGJbJKzJlMg/w1mYPBLx3WZlu/+r1IdjkZCoFuJCDIVsP1W8+67bOX1li9yahnx+AqPAkBKRV2dJMrjfK2Fr+sSaQ75MRl68/eUTXCJWguxSQ7r+crbnSGnE7WYNLGal6d/toblClDe9Y=,iv:08DzurnEF9tKsJQZsGADFF3y88sm9rgRkkMDNw70fFY=,tag:ZSOdV8fHbhA1u+br+z9Zyw==,type:str]
+    version: 3.13.3

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: frigate-media-volsync-restic
+    namespace: frigate
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:1LH258f9qXNQtWf9I3aDILHEYaxg/jjcg1jNSfQjkbDO2onTtp8gCyP2OAQE9wUGm1Kw2V19xg3dd0mdvpLOF3+h3AJMTlt3FO9CeCQEx8jNx2CXsvxJOfV9GXjBR2w=,iv:IW8DDBhjERQ+IPlS5NTFHuSLUnrpW7taTXBaSk/fp0c=,tag:NtYY/cqPgsDCKfKSc7l+GA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:eoqxCtocP7MZE+CBuAx/iJpiXriXidyF1cDleaFlYPFztgoxV2UXJDuxTodhRphEjyR+Vlf2xPSdsIq0ZVGRIw==,iv:YEBWteL8Mm6Izake1Nvv/UHyWormtlM168YSJB2A0mo=,tag:wy3gTlZlLmnIINnfjOxYvA==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:t0qaBE3aGDc=,iv:SeJJghVcAtX9qaNnS4zcxgQkdGa9Hi3TTeWsxgxw54I=,tag:D+D47/YnWy7j9U3fyzSzbQ==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:renXieMYxHntBOvWsERPC3SUkzrsuZrseUbWKge/AU/BYhGRc12SWnmp9QIC9TCQ,iv:b60/R10TTJuWa5SmdB+AKevTXYdhK7zTlDk8SdUC50c=,tag:dt8Bp70klsn9IiByr3ouaQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNc3hoK0F6SWRHNXJ5Z29O
+            dmxUS1pCSW0rajNoMVdFdFVuVnY3aHk3dUQ0ClNONVU1ZERRT3pwSlR4cFpHVEhm
+            SWlTNzFRWEdnMnVCZG9QdDhkQkNoUjQKLS0tIFRQcVBKcmdxQm1QS3o1WXZialFp
+            SDRJRW1wMG5ld3dCRVUxM3dzZjIvRXMKUMr8+BbnTDEV19N16wU8CjYVQGLARPbG
+            Epgz54UG6nrYuVeghvJrfsVRJtyMLUGclhAB8WPqBwgEZDJWW5wzFg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:wbUEAtBSQRKlRv4NQXAtVPeeb7TV24GZ0V43kcsdJYAwebdPcfAv63dcERCeVIpy60dRdjs39+XN8msPgJKm1QqmZTgjU1xmjED53XdjHFsH0e3CB63MjQ+Iz4oU1X00+6m7N4JrkjH/AAJ4R0XqzVWbpgXNIjWGikb381bVjhA=,iv:v1k2dphLms7HhGgFfteqPqyQIkOD8XlhKLYk+QYlobg=,tag:GB+kcQJwu7wjSA8uLU337Q==,type:str]
+    version: 3.13.3

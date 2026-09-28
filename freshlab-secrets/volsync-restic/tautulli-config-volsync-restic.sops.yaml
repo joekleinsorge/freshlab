@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: tautulli-config-volsync-restic
+    namespace: tautulli
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:0iphYVIjXRLiSFEchKjMqhwfOppNzktnxbQVWFASJu9bzVZY8mSgxOqSyh87VdBBOlY/xgqN2f6Ww7cEvlpyhlE1DIRhM4aDeUCeR8r2Nlb83ahGPFm7BV5b0QIsmdUzvw==,iv:cCOx7V/t9i/B9BO+HFszhI6AACcPisEnCkdfbpDM7fw=,tag:juvGHe62W0P03wBGmM5ZLg==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:IFp2sM1K0zouMA9IBkHlGWhp3Yms1NM6D6R3lNJYgwnHis5DPFTbwWlz70jA2jPstyMh/dCr6PMl+RsACYtvGA==,iv:b4bn0RV4c6wcdSkmGpbEYCY8dHI7OAbnPgkwlrroESg=,tag:9nBau6JehGNil3mUupYc4Q==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:OnhDz5QoZ1Q=,iv:zhg436495gmrbermDUNUgtkcQNjMKs9n28309O56CME=,tag:W28klQFrBSFyQj1YyvfWwA==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:fAyqUHIrmnQqHUhLeK+KWvLojz3t8gi56e1bzUFs5yVLcMdf67CmQ9+dna0DScdX,iv:ZDsGJ61nXv7cZQ+6RPpB24oas6ZESciBRLuPOf46uWs=,tag:nx91YbXokIHA2d8WDFiWDA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4a0pKNDI5a0JoMkxQV3lE
+            bUZwU2RRY09WbWlnZVgvV2w5K3dKMFowODFzClVHM2RvdDVPRmozZE9xV3hPeWdu
+            UFB3RmpqUVFZTGwveUFNNFlqaVhpMW8KLS0tIG5sRy84MCtuczR3cDQ3V2I1WmhC
+            NXJ2QU43TjFiWDFjS0ZOdFJoZzFoR0kKVp+i0JwF6dQrNsVfQUg03ILYl3VkHVa3
+            6U6bP/wGTNw5hOFTgbf2tDiEgRWU4euUAYZJ0slo+3DE1GH+YTX4OQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:VNuZ4FVGa5d3k/EPilAV28MQ+ksLS/WQTHx9TMPGDSlMdBzqFsyKjOVu5SJIoN+DUf4+yktkxMSMz74yOtJ9n4oCkC40E43mF+7LEL7A/VpJu3OwUbo8VfvMIS6svTWKTERoyj401bECAu3rmcgyMtGdI6h/QkeZvjUPTQH09L0=,iv:jhcggDpCg1EDPgCXu9nfQTtkxswThvTu7FYLV1puq48=,tag:hUPh8GJDEd4ts2XsbE93xg==,type:str]
+    version: 3.13.3

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: immich-postgres-data-volsync-restic
+    namespace: immich
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:gEs+dQT7/2gSPEXkE4VmoKSU4Pd9XwLLecH6jWO/nXNZcmxiz422RoblKro0Q0Y7HM9glW/mh162YJLssnPnIU8YIJxZaGdbfSi6NuWz7Zi8+Wx9iFEk4LFojH45FJwe8fhGFSr8,iv:el68n2o8Ba138RTy31l14eaq6+y+wSeb6dCJgcVj1z8=,tag:O7t1dUaiseAVjiOG9ma1UA==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:tq+5kf2WILvCMWaNDQprxX1bLg9zVGSP1MErBYjGiWPsjHuw43gIkgsGnXjZ7+Ff4YWLH8yGpNC9QLt4vf8klw==,iv:aum6/Wff43uJ0PJ6QtKFDUh8M8eRp5vuA/04xgZ802o=,tag:uIsaF6M0LLgXM2WLtWlWeA==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:8FT6NJ0Uas0=,iv:XtYZFuXcBIBiSJvnz5LQ1WXMD9eAlBhvfZRGxT3eX4M=,tag:u1sC3mhheioMSNHKhVpozQ==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:piW3nJfwyK6jiCY8cIYijacflUDYqaZzrne6Oik76UH+z6CtwXGgQ99cK7H0oij9,iv:IbvxygPLFf5KulOsTFyFmuHIhZ/YJ9yuo/r/7iRyJas=,tag:LAq7erBmhYr3Jr76fbyLsA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4SUVNWEJMWkNyZ2ZGOGsx
+            VzdEYjNqczNQVmp2MFlkanlXNjhkSUJJdWgwCnBjM2RsejJHWWhPY2xLUGVyUVpo
+            TzUvaUt5UGkvSit5c0ZEWkJNeHRsMzAKLS0tIFV3dDUrWks1bHQ0bXdnajZWbm8x
+            NU5FMUszamRlZURXT2NNL2x1OGpSOUEKaCe8ailM0gNsx9lxboKCzWVSjyo/eVno
+            o3wFJEYzluakN/AOFQwRY1W1SG6xIkZiUy+8Q9dzlzRrfzFSIFxIzg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:vfNBSqvIPhy4jXXAGfQ36q6mKxjjAYn5YsmbEkz/AR9HGk+5nKAwN1HF/d9ScvCt+hovUhtc9Wz3BG+cUOuZMLD1LLyBJ4HJEONPk27JXCDtWMxYWM2fznBuAvuMrhZqx9w7SunKVfcQXG98PN3W0ifnNAnNxJOfQIMr71t8rI8=,iv:h8fphyXZLztRBJgY2Z4CP63pZ+p2PrtH8lnbI1S6G+I=,tag:N7TNAgXQRoxvH3asUYArMA==,type:str]
+    version: 3.13.3

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: freshrss-pvc-volsync-restic
+    namespace: freshrss
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:QKnAfieCkO3ASwltrG25gS5yDdkmET2nNBa8L+HJxPycK7BGE8gHVKu9Qf7zUT9A/WoRq8Ph5pVWk0eupUHQZTMJkZLjNLEvGE7iUyNIwbvpH+tiljUywKH3iI2a7A==,iv:aCXzv2FSuXG13nAVpR5myOyrVkRLERjzl2EAOAiYMeA=,tag:CytQQDtFzLIMv+LmYf6WEQ==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:R1rMMPQt6rK5WYkNhIz3ueMX86Qp1MPsOY8aMqDVoclKxlyimiT3oUbKGjzdjc/kR1p3mr99L5ILlwETJc3VtA==,iv:VUYJowGXQQvs+B4C/cBnzsDhVnnD2QqWQtwhh0ADmZ8=,tag:NgzPnWnVTD3kY7bGo5kgLg==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:7E8I3bLH7/8=,iv:AcgR8FukwvcgUEdNmmpBwNfsVlmTTFASAVEsfT5Ew/4=,tag:vwae5AjtA8rDeGX2qEURMA==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:WIyqIjr6tJKQ/KDSgtQK5DpL+bi/jr0F2ncvuZqsJVT7s0Iv3A5ExqSCk6rulW9C,iv:OfARabNyg8wmO+T+k5SRxIhmiz/BS2zzU+3gilgmn5w=,tag:ELesTsD3fKVrkQjSLAdEdA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBXNUpYU3A2anRZSWFRTlUw
+            Y3A5MmpWMjJ3ZFV4TjhIS2l1REM1OWpPSFRFCng5UDhVYU5Sakp0Sk0wdXQwM29n
+            WEFDMmVuZzllajN4dW9RQ0hGRHUyWk0KLS0tIGFGL1d1SmttZk0rZHBnV0pXTCtR
+            NW0xdnJiZndmR1JHejROS3AzT2lOcXMKrMVg5Zz12OPOd0csw86sugcGsbVjxaa/
+            tOjlYg1rMsAyLwOdF0ZAZ2HIhISTekLklRhfD1BKCf4BvZjxFdKWWg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-09-28T16:40:44Z"
+    mac: ENC[AES256_GCM,data:SxScrD3B9RC/IFdA2lkcacXq/e5GF0s0PXBfbjU7++3TdaSrx/BJ3P/lX+V5p+pPrsPYdCH6iZUwrtTl5rnQJRctcXb2zYTWbNlPmt/XX502Cf5yvbDJ7PGC1kZPprYLJHqNK5ozWf+trKB7j4n+Bl9GMcsDy3FKnYSIvyDCfpc=,iv:tgV7lkws9VDj0MnB50EDexvgSFxXCmVSTZk/PXUx2vg=,tag:BkXLzT2aUpZFeP2zLTe/gg==,type:str]
+    version: 3.13.3
