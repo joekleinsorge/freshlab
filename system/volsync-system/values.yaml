@@ -22,13 +22,13 @@ backups:
     - {namespace: authelia, pvc: authelia-data, schedule: "7 0,6,12,18 * * *", paused: false}
     - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *", paused: false}
     - {namespace: disney-alerts, pvc: disney-alerts-data, schedule: "37 0,6,12,18 * * *", paused: false}
-    - {namespace: freshrss, pvc: freshrss-pvc, schedule: "52 0,6,12,18 * * *"}
+    - {namespace: freshrss, pvc: freshrss-pvc, schedule: "52 0,6,12,18 * * *", paused: false}
     - {namespace: frigate, pvc: frigate-config, schedule: "7 1,7,13,19 * * *"}
     - {namespace: frigate, pvc: frigate-media, schedule: "22 1,7,13,19 * * *"}
-    - {namespace: grocy, pvc: grocy-data, schedule: "37 1,7,13,19 * * *"}
+    - {namespace: grocy, pvc: grocy-data, schedule: "37 1,7,13,19 * * *", paused: false}
     - {namespace: hermes, pvc: hermes-data, schedule: "52 1,7,13,19 * * *"}
     - {namespace: immich, pvc: immich-postgres-data, schedule: "7 2,8,14,20 * * *"}
-    - {namespace: kitchenowl, pvc: kitchenowl-data, schedule: "22 2,8,14,20 * * *"}
+    - {namespace: kitchenowl, pvc: kitchenowl-data, schedule: "22 2,8,14,20 * * *", paused: false}
     - namespace: mealie
       pvc: mealie-data
       schedule: "37 2,8,14,20 * * *"
