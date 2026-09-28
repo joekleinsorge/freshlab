@@ -43,7 +43,7 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-    - {namespace: paperless, pvc: paperless-data}
+    - {namespace: paperless, pvc: paperless-data, schedule: "52 2,8,14,20 * * *"}
     # Plex configuration is small and changes while the server is live. A direct
     # Restic copy avoids snapshotting its live SQLite database and preserves the
     # normal encrypted, retained backup repository.
