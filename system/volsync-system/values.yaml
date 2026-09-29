@@ -47,6 +47,9 @@ backups:
       pvc: frigate-media
       schedule: "22 1,7,13,19 * * *"
       paused: false
+      # Initial snapshot export is complete. Direct Restic copies make recurring
+      # media backups incremental without another Longhorn snapshot export.
+      copyMethod: Direct
       moverSecurityContext: *uid0
     - namespace: grocy
       pvc: grocy-data
@@ -104,8 +107,7 @@ backups:
     - namespace: plex
       pvc: pms-config-plex-0
       schedule: "7 3,9,15,21 * * *"
-      # Pause while all orphaned Restic locks are cleared with no active mover.
-      paused: true
+      paused: false
       copyMethod: Direct
       # Restic metadata for this established repository exceeds VolSync's 1Gi
       # default cache. This is controller-managed, disposable storage only.
