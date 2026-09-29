@@ -11,6 +11,15 @@ backups:
   paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
+  # Backups must be able to read application-owned mode-0600 keys, logs, and
+  # databases. The VolSync chart retains its hardened container controls
+  # (dropped capabilities, no privilege escalation, read-only root filesystem)
+  # while this pod identity provides read coverage for application volumes.
+  moverSecurityContext:
+    runAsUser: 0
+    runAsGroup: 0
+    seccompProfile:
+      type: RuntimeDefault
   pruneIntervalDays: 14
   retain:
     hourly: 4
