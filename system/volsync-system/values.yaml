@@ -132,7 +132,7 @@ backups:
       moverResources:
         requests:
           cpu: 250m
-          memory: 4Gi
+          memory: 3Gi
         limits:
           cpu: "1"
           memory: 6Gi
