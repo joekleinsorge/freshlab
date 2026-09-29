@@ -95,6 +95,41 @@
     daemon_reload: true
   tags: ['storage', 'monitoring']
 
+- name: Install etcd latency metrics collector
+  ansible.builtin.template:
+    src: collect-etcd-latency-metrics.sh.j2
+    dest: /usr/local/sbin/collect-etcd-latency-metrics
+    owner: root
+    group: root
+    mode: '0750'
+  when: "'masters' in group_names"
+  tags: ['storage', 'monitoring', 'etcd']
+
+- name: Install etcd latency metrics service and timer
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - freshlab-etcd-latency-metrics.service
+    - freshlab-etcd-latency-metrics.timer
+  when: "'masters' in group_names"
+  tags: ['storage', 'monitoring', 'etcd']
+
+- name: Enable etcd latency metrics timer
+  ansible.builtin.systemd_service:
+    name: freshlab-etcd-latency-metrics.timer
+    enabled: true
+    state: started
+    daemon_reload: true
+  # In check mode the preceding template is not written, so systemd cannot
+  # discover the new unit yet. A normal run reloads the manager before it is
+  # enabled and started.
+  when: "'masters' in group_names and not ansible_check_mode"
+  tags: ['storage', 'monitoring', 'etcd']
+
 - name: Check for active multipath devices
   ansible.builtin.command: multipath -ll
   register: multipath_devices

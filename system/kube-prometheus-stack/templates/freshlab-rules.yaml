@@ -59,6 +59,13 @@ spec:
           annotations:
             summary: "Node {{ `{{ $labels.node }}` }} has PCIe receive errors"
             description: "A PCIe physical-layer receive error can stall an attached NVMe device. Cordon the node and inspect the NVMe, socket, BIOS, and PCIe power management before rebooting it."
+        - alert: FreshlabEtcdSlowWALFsync
+          expr: freshlab_etcd_slow_wal_fsync_events > 0
+          labels:
+            severity: critical
+          annotations:
+            summary: "etcd WAL fsync is slow on {{ `{{ $labels.instance }}` }}"
+            description: "etcd recorded a WAL fdatasync above its one-second safety threshold in the last two minutes. Cordon the node after verifying replica health, then inspect NVMe, PCIe, and host I/O before a control-plane restart occurs."
         - alert: FreshlabSSDHealthFailure
           expr: smartctl_device_smart_status != 1
           for: 5m

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Export a recent, concrete etcd storage-stall signal without exposing the
+# datastore metrics endpoint or its mTLS credentials outside the host.
+set -u
+
+output_dir="/var/lib/node_exporter/textfile_collector"
+output="${output_dir}/etcd-latency.prom"
+temporary="${output}.tmp"
+
+# etcd emits this exact message when a WAL fdatasync exceeds its one-second
+# safety threshold. Scan a little beyond the one-minute timer interval so a
+# delayed invocation cannot miss a short-lived event.
+slow_fsync_count=$(
+  /usr/bin/journalctl --unit k3s --since '2 minutes ago' --no-pager --output=cat 2>/dev/null \
+    | /usr/bin/grep --fixed-strings --count '"msg":"slow fdatasync"' || true
+)
+
+if ! [[ "${slow_fsync_count}" =~ ^[0-9]+$ ]]; then
+  slow_fsync_count=0
+fi
+
+{
+  echo '# HELP freshlab_etcd_slow_wal_fsync_events Number of etcd WAL fdatasync operations above the one-second safety threshold in the last two minutes.'
+  echo '# TYPE freshlab_etcd_slow_wal_fsync_events gauge'
+  echo "freshlab_etcd_slow_wal_fsync_events ${slow_fsync_count}"
+} >"${temporary}"
+
+/usr/bin/chmod 0644 "${temporary}"
+/usr/bin/mv "${temporary}" "${output}"

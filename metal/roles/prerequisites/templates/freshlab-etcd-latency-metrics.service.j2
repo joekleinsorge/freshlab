@@ -1,0 +1,7 @@
+[Unit]
+Description=Export recent etcd WAL fsync latency for Prometheus node exporter
+After=k3s.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/collect-etcd-latency-metrics
