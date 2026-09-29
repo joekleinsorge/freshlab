@@ -11,15 +11,6 @@ backups:
   paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
-  # Backups must be able to read application-owned mode-0600 keys, logs, and
-  # databases. The VolSync chart retains its hardened container controls
-  # (dropped capabilities, no privilege escalation, read-only root filesystem)
-  # while this pod identity provides read coverage for application volumes.
-  moverSecurityContext:
-    runAsUser: 0
-    runAsGroup: 0
-    seccompProfile:
-      type: RuntimeDefault
   pruneIntervalDays: 14
   retain:
     hourly: 4
@@ -31,10 +22,25 @@ backups:
     - {namespace: authelia, pvc: authelia-data, schedule: "7 0,6,12,18 * * *", paused: false}
     - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *", paused: false}
     - {namespace: disney-alerts, pvc: disney-alerts-data, schedule: "37 0,6,12,18 * * *", paused: false}
-    - {namespace: freshrss, pvc: freshrss-pvc, schedule: "52 0,6,12,18 * * *", paused: false}
+    - namespace: freshrss
+      pvc: freshrss-pvc
+      schedule: "52 0,6,12,18 * * *"
+      paused: false
+      moverSecurityContext: &uid1001
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - {namespace: frigate, pvc: frigate-config, schedule: "7 1,7,13,19 * * *"}
     - {namespace: frigate, pvc: frigate-media, schedule: "22 1,7,13,19 * * *"}
-    - {namespace: grocy, pvc: grocy-data, schedule: "37 1,7,13,19 * * *", paused: false}
+    - namespace: grocy
+      pvc: grocy-data
+      schedule: "37 1,7,13,19 * * *"
+      paused: false
+      moverSecurityContext: *uid1001
     - {namespace: hermes, pvc: hermes-data, schedule: "52 1,7,13,19 * * *"}
     - {namespace: immich, pvc: immich-postgres-data, schedule: "7 2,8,14,20 * * *"}
     - {namespace: kitchenowl, pvc: kitchenowl-data, schedule: "22 2,8,14,20 * * *", paused: false}
