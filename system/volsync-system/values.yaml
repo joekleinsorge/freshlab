@@ -106,6 +106,9 @@ backups:
       schedule: "7 3,9,15,21 * * *"
       paused: false
       copyMethod: Direct
+      # Restic metadata for this established repository exceeds VolSync's 1Gi
+      # default cache. This is controller-managed, disposable storage only.
+      cacheCapacity: 5Gi
       moverSecurityContext:
         runAsUser: 911
         runAsGroup: 911

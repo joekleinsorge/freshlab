@@ -25,6 +25,9 @@ spec:
   restic:
     repository: {{ .pvc }}-volsync-restic
     copyMethod: {{ default $.Values.backups.copyMethod .copyMethod }}
+    {{- with .cacheCapacity }}
+    cacheCapacity: {{ . | quote }}
+    {{- end }}
     {{- with .moverSecurityContext }}
     moverSecurityContext:
 {{ toYaml . | indent 6 }}
