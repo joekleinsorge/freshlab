@@ -4,6 +4,8 @@ metadata:
   name: romm
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: romm
@@ -77,6 +79,8 @@ metadata:
   name: romm-db
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: romm-db
