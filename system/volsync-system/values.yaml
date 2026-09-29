@@ -131,11 +131,11 @@ backups:
       # complete without making other backup movers unbounded.
       moverResources:
         requests:
-          cpu: 100m
-          memory: 256Mi
+          cpu: 250m
+          memory: 4Gi
         limits:
-          cpu: 500m
-          memory: 2Gi
+          cpu: "1"
+          memory: 6Gi
       # Restic metadata for this established repository exceeds VolSync's 1Gi
       # default cache. This is controller-managed, disposable storage only.
       cacheCapacity: 5Gi
