@@ -104,7 +104,8 @@ backups:
     - namespace: plex
       pvc: pms-config-plex-0
       schedule: "7 3,9,15,21 * * *"
-      paused: false
+      # Pause while all orphaned Restic locks are cleared with no active mover.
+      paused: true
       copyMethod: Direct
       # Restic metadata for this established repository exceeds VolSync's 1Gi
       # default cache. This is controller-managed, disposable storage only.
