@@ -126,6 +126,16 @@ backups:
       schedule: "7 3,9,15,21 * * *"
       paused: false
       copyMethod: Direct
+      # The established Plex repository needs more memory while Restic builds
+      # its large metadata index. Keep a workload-specific ceiling so it can
+      # complete without making other backup movers unbounded.
+      moverResources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 2Gi
       # Restic metadata for this established repository exceeds VolSync's 1Gi
       # default cache. This is controller-managed, disposable storage only.
       cacheCapacity: 5Gi
