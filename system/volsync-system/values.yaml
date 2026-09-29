@@ -74,12 +74,31 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-    - {namespace: prowlarr, pvc: prowlarr-config, schedule: "22 3,9,15,21 * * *"}
+    - namespace: prowlarr
+      pvc: prowlarr-config
+      schedule: "22 3,9,15,21 * * *"
+      paused: false
+      moverSecurityContext: &uid3000
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - {namespace: qbittorrent, pvc: qbittorrent-config, schedule: "37 3,9,15,21 * * *"}
-    - {namespace: radarr, pvc: radarr-config, schedule: "52 3,9,15,21 * * *"}
+    - namespace: radarr
+      pvc: radarr-config
+      schedule: "52 3,9,15,21 * * *"
+      paused: false
+      moverSecurityContext: *uid3000
     - {namespace: romm, pvc: mysql-data-pvc, schedule: "7 4,10,16,22 * * *"}
     - {namespace: romm, pvc: romm-redis-data-pvc, schedule: "22 4,10,16,22 * * *"}
     - {namespace: romm, pvc: romm-resources-pvc, schedule: "37 4,10,16,22 * * *"}
     - {namespace: seerr, pvc: seerr-config, schedule: "52 4,10,16,22 * * *"}
     - {namespace: sonarr, pvc: sonarr-config, schedule: "7 5,11,17,23 * * *"}
-    - {namespace: tautulli, pvc: tautulli-config, schedule: "22 5,11,17,23 * * *"}
+    - namespace: tautulli
+      pvc: tautulli-config
+      schedule: "22 5,11,17,23 * * *"
+      paused: false
+      moverSecurityContext: *uid3000
