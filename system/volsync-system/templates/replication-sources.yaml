@@ -28,6 +28,10 @@ spec:
     {{- with .cacheCapacity }}
     cacheCapacity: {{ . | quote }}
     {{- end }}
+    {{- with .moverAffinity }}
+    moverAffinity:
+{{ toYaml . | indent 6 }}
+    {{- end }}
     {{- with (default $.Values.backups.moverResources .moverResources) }}
     moverResources:
 {{ toYaml . | indent 6 }}

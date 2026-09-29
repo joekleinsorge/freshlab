@@ -118,19 +118,26 @@ backups:
       schedule: "52 2,8,14,20 * * *"
       paused: false
       moverSecurityContext: *uid0
-    # Plex configuration is small and changes while the server is live. A direct
-    # Restic copy avoids snapshotting its live SQLite database and preserves the
-    # normal encrypted, retained backup repository.
+    # Plex configuration is backed up to the established encrypted repository.
     - namespace: plex
       pvc: pms-config-plex-0
       schedule: "7 3,9,15,21 * * *"
-      # Direct Restic scans of this live, node-pinned volume can consume enough
-      # memory to destabilize its control-plane host. Keep it paused until the
-      # backup is moved to a safe snapshot-based or non-control-plane path.
-      paused: true
-      copyMethod: Direct
-      # The established Plex repository needs more memory while Restic builds
-      # its large metadata index. Keep a workload-specific ceiling so it can
+      # A CSI snapshot gives Restic a stable point-in-time copy and permits its
+      # resource-intensive scan to run away from Plex's live RWO attachment.
+      paused: false
+      copyMethod: Snapshot
+      # Never let this multi-gigabyte mover share an etcd control-plane host.
+      # If no worker has capacity, it remains pending instead of destabilizing
+      # Kubernetes while Plex is serving clients.
+      moverAffinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      # The established Plex repository needs substantial memory while Restic
+      # builds its metadata index. Keep a workload-specific ceiling so it can
       # complete without making other backup movers unbounded.
       moverResources:
         requests:
