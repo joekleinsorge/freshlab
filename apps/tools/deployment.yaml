@@ -16,7 +16,6 @@ spec:
     spec:
       containers:
       - name: tools
-        image: iib0011/omni-tools:latest
+        image: iib0011/omni-tools@sha256:9658e0442a35563d047333d9dbc33804bedc2716fab8bcdf4f41fa9701b573be
         ports:
         - containerPort: 80
-

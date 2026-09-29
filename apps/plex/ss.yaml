@@ -40,8 +40,8 @@ spec:
           - name: TZ
             value: America/New_York
           - name: VERSION
-            value: latest
-          image: lscr.io/linuxserver/plex:latest
+            value: docker
+          image: lscr.io/linuxserver/plex@sha256:be083133dfe001b6caed5a321720e6db9d38fdde1ea8f9d29340d40057a7fa53
           imagePullPolicy: IfNotPresent
           name: plex-pms
           resources:

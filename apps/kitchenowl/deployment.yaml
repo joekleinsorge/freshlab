@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: kitchenowl
-          image: tombursch/kitchenowl:latest
+          image: tombursch/kitchenowl@sha256:bd821a41b8cb27fd7fcf429acd1fc67e9f889485a2cd1193d68c2d804a8e1bef
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
