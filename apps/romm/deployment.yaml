@@ -15,7 +15,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: romm
-          image: rommapp/romm:latest
+          image: rommapp/romm@sha256:0d66b4ea152a237c7f24b95e87459f46d3c596a7c0b35a82f26bc971487278b3
           ports:
             - containerPort: 8080
           env:
@@ -87,7 +87,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: mariadb:latest
+          image: mariadb@sha256:d4fdec0510ad498e4f3127da30a99df3745bd6d5e611ae6ac5f76403d9284a8d
           env:
             - name: MARIADB_ROOT_PASSWORD
               value: "romm-root-pass"
