@@ -32,6 +32,18 @@ kube-prometheus-stack:
             group_wait: 30m
             group_interval: 24h
             repeat_interval: 168h
+          # A control-plane recovery makes many workloads briefly appear
+          # unavailable at once.  Coalesce those dependent signals and wait
+          # for recovery before paging; node and storage failures still use
+          # the immediate critical route below.
+          - receiver: email
+            matchers:
+              - alertname=~"Freshlab(Deployment|StatefulSet)Unavailable|FreshlabApplicationEndpointDown"
+            group_by:
+              - alertname
+            group_wait: 15m
+            group_interval: 4h
+            repeat_interval: 12h
           - receiver: email
             matchers:
               - severity="critical"

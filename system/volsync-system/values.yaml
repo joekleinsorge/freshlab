@@ -18,6 +18,16 @@ backups:
   paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
+  # Mover Jobs are intentionally below serving workloads.  They previously
+  # ran as BestEffort, allowing backup work to contend without bounds during
+  # a storage recovery.
+  moverResources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 512Mi
   pruneIntervalDays: 14
   retain:
     hourly: 4
