@@ -82,4 +82,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 10Gi
+            # Plex metadata and preview art have outgrown the original claim.
+            # Longhorn supports online expansion; 20Gi restores operating
+            # headroom without changing the application's storage topology.
+            storage: 20Gi
