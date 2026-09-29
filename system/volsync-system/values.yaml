@@ -124,7 +124,10 @@ backups:
     - namespace: plex
       pvc: pms-config-plex-0
       schedule: "7 3,9,15,21 * * *"
-      paused: false
+      # Direct Restic scans of this live, node-pinned volume can consume enough
+      # memory to destabilize its control-plane host. Keep it paused until the
+      # backup is moved to a safe snapshot-based or non-control-plane path.
+      paused: true
       copyMethod: Direct
       # The established Plex repository needs more memory while Restic builds
       # its large metadata index. Keep a workload-specific ceiling so it can
