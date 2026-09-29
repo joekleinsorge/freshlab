@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-plex-direct-access
+  namespace: plex
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: plex
+      app.kubernetes.io/name: plex
+  policyTypes:
+    - Ingress
+  ingress:
+    # LAN clients and remote clients forwarded by UniFi may reach Plex only
+    # on its direct-access port. Other ports retain the existing restrictions.
+    - ports:
+        - protocol: TCP
+          port: 32400
