@@ -145,6 +145,7 @@ backups:
     - namespace: romm
       pvc: mysql-data-pvc
       schedule: "7 4,10,16,22 * * *"
+      paused: false
       moverSecurityContext:
         runAsUser: 999
         runAsGroup: 999
