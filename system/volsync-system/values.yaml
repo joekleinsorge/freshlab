@@ -34,7 +34,15 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-    - {namespace: frigate, pvc: frigate-config, schedule: "7 1,7,13,19 * * *"}
+    - namespace: frigate
+      pvc: frigate-config
+      schedule: "7 1,7,13,19 * * *"
+      paused: false
+      moverSecurityContext: &uid0
+        runAsUser: 0
+        runAsGroup: 0
+        seccompProfile:
+          type: RuntimeDefault
     - {namespace: frigate, pvc: frigate-media, schedule: "22 1,7,13,19 * * *"}
     - namespace: grocy
       pvc: grocy-data
@@ -81,7 +89,11 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-    - {namespace: paperless, pvc: paperless-data, schedule: "52 2,8,14,20 * * *"}
+    - namespace: paperless
+      pvc: paperless-data
+      schedule: "52 2,8,14,20 * * *"
+      paused: false
+      moverSecurityContext: *uid0
     # Plex configuration is small and changes while the server is live. A direct
     # Restic copy avoids snapshotting its live SQLite database and preserves the
     # normal encrypted, retained backup repository.
