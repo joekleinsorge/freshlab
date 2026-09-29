@@ -139,9 +139,25 @@ backups:
       schedule: "52 3,9,15,21 * * *"
       paused: false
       moverSecurityContext: *uid3000
-    - {namespace: romm, pvc: mysql-data-pvc, schedule: "7 4,10,16,22 * * *"}
-    - {namespace: romm, pvc: romm-redis-data-pvc, schedule: "22 4,10,16,22 * * *"}
-    - {namespace: romm, pvc: romm-resources-pvc, schedule: "37 4,10,16,22 * * *"}
+    - namespace: romm
+      pvc: mysql-data-pvc
+      schedule: "7 4,10,16,22 * * *"
+      moverSecurityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        runAsNonRoot: true
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    - namespace: romm
+      pvc: romm-redis-data-pvc
+      schedule: "22 4,10,16,22 * * *"
+      moverSecurityContext: *uid0
+    - namespace: romm
+      pvc: romm-resources-pvc
+      schedule: "37 4,10,16,22 * * *"
+      moverSecurityContext: *uid0
     - namespace: seerr
       pvc: seerr-config
       schedule: "52 4,10,16,22 * * *"
