@@ -42,7 +42,7 @@ backups:
     - namespace: freshrss
       pvc: freshrss-pvc
       schedule: "52 0,6,12,18 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: &uid1001
         runAsUser: 1001
         runAsGroup: 1001
@@ -124,7 +124,7 @@ backups:
       schedule: "7 3,9,15,21 * * *"
       # A CSI snapshot gives Restic a stable point-in-time copy and permits its
       # resource-intensive scan to run away from Plex's live RWO attachment.
-      paused: false
+      paused: true
       copyMethod: Snapshot
       # Never let this multi-gigabyte mover share an etcd control-plane host.
       # If no worker has capacity, it remains pending instead of destabilizing
