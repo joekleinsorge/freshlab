@@ -40,6 +40,9 @@ spec:
     moverSecurityContext:
 {{ toYaml . | indent 6 }}
     {{- end }}
+    {{- with .unlock }}
+    unlock: {{ . | quote }}
+    {{- end }}
     pruneIntervalDays: {{ $.Values.backups.pruneIntervalDays }}
     retain:
 {{ toYaml $.Values.backups.retain | indent 6 }}

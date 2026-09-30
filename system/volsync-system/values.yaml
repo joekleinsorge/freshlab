@@ -157,6 +157,9 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
+      # The interrupted direct mover left this repository lock behind. VolSync
+      # will run its safe Restic unlock workflow once before the next backup.
+      unlock: plex-restic-lock-20260929
     - namespace: prowlarr
       pvc: prowlarr-config
       schedule: "22 3,9,15,21 * * *"
