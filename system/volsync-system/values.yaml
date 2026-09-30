@@ -42,7 +42,7 @@ backups:
     - namespace: freshrss
       pvc: freshrss-pvc
       schedule: "52 0,6,12,18 * * *"
-      paused: false
+      paused: true
       moverSecurityContext: &uid1001
         runAsUser: 1001
         runAsGroup: 1001
