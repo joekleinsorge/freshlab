@@ -14,4 +14,124 @@ data:
       repeat_alert_seconds: 1800
       browser_concurrency: 1
       artifact_dir: "/data/artifacts"
-    watches: []
+    watches:
+      - name: cottage-april
+        url: "https://disneyworld.disney.go.com/resorts/vero-beach-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 1800
+        timeout_seconds: 90
+        wait_until: domcontentloaded
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        alerts:
+          once: true
+          quiet_start: "20:26"
+          quiet_end: "07:26"
+        availability:
+          kind: json_value
+          mode: truthy
+          path: available
+        metadata:
+          resort: vero_beach
+          check_in: "04/01/2027"
+          check_out: "04/30/2027"
+          adults: "2"
+          children: "0"
+          room_types: "3 Bedroom Beach Cottage"
+          browser: auto
+      - name: fort-wilderness-halloween-overnight-campsites
+        url: "https://disneyworld.disney.go.com/resorts/campsites-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 60
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        booking:
+          mode: book_when_available
+          armed: true
+          currency: USD
+          payment_method_label: "Disney saved payment method"
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_campsites
+          check_in: "10/31/2026"
+          check_out: "11/01/2026"
+          adults: "2"
+          children: "3"
+          child_ages: "0|2|4"
+          room_types: ""
+          browser: auto
+          priority: "true"
+          booking_group: fort-wilderness-halloween-2026
+      - name: fort-wilderness-halloween-overnight-cabins
+        url: "https://disneyworld.disney.go.com/resorts/dvc-cabins-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 60
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        booking:
+          mode: book_when_available
+          armed: true
+          currency: USD
+          payment_method_label: "Disney saved payment method"
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_cabins
+          check_in: "10/31/2026"
+          check_out: "11/01/2026"
+          adults: "2"
+          children: "3"
+          child_ages: "0|2|4"
+          room_types: ""
+          browser: auto
+          priority: "true"
+          booking_group: fort-wilderness-halloween-2026
+      - name: fort-wilderness-halloween-weekend-campsites
+        url: "https://disneyworld.disney.go.com/resorts/campsites-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 60
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        booking:
+          mode: book_when_available
+          armed: true
+          currency: USD
+          payment_method_label: "Disney saved payment method"
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_campsites
+          check_in: "10/30/2026"
+          check_out: "11/01/2026"
+          adults: "2"
+          children: "3"
+          child_ages: "0|2|4"
+          room_types: ""
+          browser: auto
+          priority: "true"
+          booking_group: fort-wilderness-halloween-2026
+      - name: fort-wilderness-halloween-weekend-cabins
+        url: "https://disneyworld.disney.go.com/resorts/dvc-cabins-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 60
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        booking:
+          mode: book_when_available
+          armed: true
+          currency: USD
+          payment_method_label: "Disney saved payment method"
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_cabins
+          check_in: "10/30/2026"
+          check_out: "11/01/2026"
+          adults: "2"
+          children: "3"
+          child_ages: "0|2|4"
+          room_types: ""
+          browser: auto
+          priority: "true"
+          booking_group: fort-wilderness-halloween-2026
