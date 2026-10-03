@@ -54,7 +54,7 @@ spec:
               readOnly: true
       containers:
         - name: app
-          image: ghcr.io/joekleinsorge/disney-availability-alerts@sha256:721f2e51821a753bf90676ca804603d7d4cff940b9dc8406e339a891776e1178
+          image: ghcr.io/joekleinsorge/disney-availability-alerts@sha256:1599a12f699a378fb84cc014ca7ee2956109a8db2bfe45d72dfcdf78443ccb13
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
