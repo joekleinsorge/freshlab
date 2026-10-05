@@ -145,4 +145,8 @@ spec:
             secretName: disney-browser-state
             defaultMode: 0440
         - name: tmp
-          emptyDir: {}
+          # Chrome's profile and cache churn here on every check; on the node
+          # disk it wrote ~12 MB/s and starved etcd on metal2 (2026-10-05).
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
