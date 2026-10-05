@@ -92,7 +92,9 @@ spec:
           resources:
             requests:
               cpu: 100m
-              memory: 1Gi
+              # Fits on the two remaining nodes while metal0 is down; real use is
+              # ~300-600Mi and the limit below still allows Chrome bursts.
+              memory: 512Mi
             limits:
               cpu: "2"
               memory: 4Gi
