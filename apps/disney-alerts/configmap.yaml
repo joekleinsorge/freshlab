@@ -47,8 +47,9 @@ data:
         timeout_seconds: 120
         browser_storage_state: "/secrets/disney-storage-state.json"
         booking:
-          mode: book_when_available
-          armed: true
+          # Alert-only until checkout's payment step is proven live (2026-10-05).
+          mode: notify_only
+          armed: false
           currency: USD
           payment_method_label: "Disney saved payment method"
         availability: {kind: json_value, path: available, mode: truthy}
@@ -71,8 +72,9 @@ data:
         timeout_seconds: 120
         browser_storage_state: "/secrets/disney-storage-state.json"
         booking:
-          mode: book_when_available
-          armed: true
+          # Alert-only until checkout's payment step is proven live (2026-10-05).
+          mode: notify_only
+          armed: false
           currency: USD
           payment_method_label: "Disney saved payment method"
         availability: {kind: json_value, path: available, mode: truthy}
@@ -95,8 +97,9 @@ data:
         timeout_seconds: 120
         browser_storage_state: "/secrets/disney-storage-state.json"
         booking:
-          mode: book_when_available
-          armed: true
+          # Alert-only until checkout's payment step is proven live (2026-10-05).
+          mode: notify_only
+          armed: false
           currency: USD
           payment_method_label: "Disney saved payment method"
         availability: {kind: json_value, path: available, mode: truthy}
@@ -119,8 +122,9 @@ data:
         timeout_seconds: 120
         browser_storage_state: "/secrets/disney-storage-state.json"
         booking:
-          mode: book_when_available
-          armed: true
+          # Alert-only until checkout's payment step is proven live (2026-10-05).
+          mode: notify_only
+          armed: false
           currency: USD
           payment_method_label: "Disney saved payment method"
         availability: {kind: json_value, path: available, mode: truthy}
