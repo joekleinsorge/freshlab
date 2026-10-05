@@ -50,7 +50,8 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: tautulli-config
+            # Restored from VolSync after the original faulted (2026-10-05).
+            claimName: tautulli-config-restore-20261005
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
