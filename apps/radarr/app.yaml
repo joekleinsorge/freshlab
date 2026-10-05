@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: radarr
-          image: ghcr.io/linuxserver/radarr:6.3.0.10514-ls314
+          image: ghcr.io/linuxserver/radarr:6.3.0.10514-ls314@sha256:119aaa4a4f7349bcd2a136c5373a0d7925b5479915c7dfe0c0ad352db2a6d438
           env:
             - name: PUID
               value: "3000"

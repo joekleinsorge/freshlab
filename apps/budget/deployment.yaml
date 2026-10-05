@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: budget
-        image: docker.io/actualbudget/actual-server:26.9.0-alpine
+        image: docker.io/actualbudget/actual-server:26.9.0-alpine@sha256:1c14eef351234f4b5dd0433865b5de89d70bdbdc57368d5b07e910662c6498f9
         ports:
         - containerPort: 5006
           name: http
