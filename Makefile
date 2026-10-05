@@ -17,6 +17,14 @@ git-hooks:
 smoke-test:
 	./scripts/cluster-smoke-test
 
+# Static checks run by the git hooks, over the whole repository.
+lint:
+	pre-commit run --all-files
+
+# Repository policy checks that need no cluster access.
+validate:
+	./scripts/check-image-pinning.sh
+
 backup-status:
 	kubectl get replicationsources.volsync.backube -A \
 		-o custom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,LAST:.status.lastSyncTime,NEXT:.status.nextSyncTime,RESULT:.status.latestMoverStatus.result'
@@ -52,6 +60,8 @@ help:
 		'  make metal        Provision or manage the metal cluster' \
 		'  make system       Deploy the system workloads' \
 		'  make smoke-test   Verify live nodes, Argo applications, and HTTPS routes' \
+		'  make lint         Run the pre-commit checks on every file' \
+		'  make validate     Check repository policy (image digest pinning)' \
 		'  make backup-status Show the latest and next VolSync backup runs' \
 		'  make restore ...   Restore a backup into a new PVC' \
 		'  make paperless-password Show the generated Paperless admin password' \
