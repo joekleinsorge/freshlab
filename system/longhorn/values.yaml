@@ -2,6 +2,10 @@ longhorn:
   preUpgradeChecker:
     jobEnabled: true
   defaultSettings:
+    # When a node dies, delete its Deployment/StatefulSet pods so Longhorn can
+    # detach their volumes and the pods restart elsewhere. "do-nothing" left 15
+    # apps stuck for 43h when metal0 failed on 2026-10-04.
+    nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
     defaultReplicaCount: 2
     replicaAutoBalance: best-effort
     # Rebalance before a node approaches the 25% storage reserve.  This is
