@@ -21,7 +21,11 @@ spec:
       template:
         metadata:
           labels:
-            app.kubernetes.io/name: plex
+            # Not "plex": the media-priority policy would add Plex's priority
+            # class, which the priority admission check rejects for this pod.
+            # The affinity below still places it beside the Plex pod.
+            app.kubernetes.io/name: plex-vaapi-smoke
+            app.kubernetes.io/part-of: plex
             app.kubernetes.io/component: transcode-smoke
         spec:
           restartPolicy: Never
