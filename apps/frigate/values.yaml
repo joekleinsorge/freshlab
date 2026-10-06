@@ -348,7 +348,9 @@ frigate:
       ##
       ## If you want to reuse an existing claim, you can pass the name of the PVC using
       ## the existingClaim variable
-      # existingClaim: your-claim
+      # The original Longhorn volume faulted after all replicas failed. Keep it
+      # intact for forensics; use the independently restored VolSync claim.
+      existingClaim: frigate-media-restore-20261003
       # subPath: some-subpath
 
       # -- [access mode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) to use for the PVC
@@ -362,10 +364,11 @@ frigate:
 
   resources:
     requests:
-      cpu: 250m
-      memory: 1Gi
+      cpu: 500m
+      memory: 2Gi
       ephemeral-storage: 2Gi
     limits:
+      cpu: "2"
       memory: 4Gi
       ephemeral-storage: 20Gi
 

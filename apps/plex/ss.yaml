@@ -45,7 +45,12 @@ spec:
           imagePullPolicy: IfNotPresent
           name: plex-pms
           resources:
+            requests:
+              cpu: "500m"
+              memory: 2Gi
             limits:
+              cpu: "2"
+              memory: 4Gi
               # Device-plugin allocation grants access to just the assigned DRM
               # devices.  This avoids a privileged container and a broad hostPath.
               gpu.intel.com/i915: 1
@@ -80,9 +85,10 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        storageClassName: longhorn-critical
         resources:
           requests:
             # Plex metadata and preview art have outgrown the original claim.
-            # Longhorn supports online expansion; 20Gi restores operating
+            # Longhorn supports online expansion; 15Gi restores operating
             # headroom without changing the application's storage topology.
-            storage: 20Gi
+            storage: 15Gi
