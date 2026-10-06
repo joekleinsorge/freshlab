@@ -6,7 +6,9 @@ longhorn:
     # detach their volumes and the pods restart elsewhere. "do-nothing" left 15
     # apps stuck for 43h when metal0 failed on 2026-10-04.
     nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
-    defaultReplicaCount: 2
+    # Secondary applications use one local replica. Plex and Frigate retain
+    # explicitly managed multi-node replicas.
+    defaultReplicaCount: 1
     replicaAutoBalance: best-effort
     # Rebalance before a node approaches the 25% storage reserve.  This is
     # especially important while all Longhorn disks share their hosts' root
@@ -15,11 +17,27 @@ longhorn:
     # Replicas must live on different nodes; a node loss must not remove both
     # copies of a volume.
     replicaSoftAntiAffinity: false
-    # Do not accept more logical Longhorn capacity than the SSDs can provide.
-    # This keeps a full recording volume from starving kubelet and etcd.
-    storageOverProvisioningPercentage: 100
-    storageMinimalAvailablePercentage: 25
-    storageReservedPercentageForDefaultDisk: 30
+    # Reserve sufficient physical headroom while allowing Frigate's mostly
+    # sparse restored 150Gi volume to maintain two replicas on the remaining
+    # nodes during a worker outage.
+    storageOverProvisioningPercentage: 110
+    storageMinimalAvailablePercentage: 15
+    storageReservedPercentageForDefaultDisk: 5
+    # A transient replica-path stall previously exhausted Frigate's two
+    # replicas.  Give a replica 20 seconds to recover, then replenish a lost
+    # replica immediately rather than leaving a volume degraded for 10 minutes.
+    engineReplicaTimeout:
+      v1: 20
+      v2: 20
+    replicaReplenishmentWaitInterval: 0
+    # Do not admit new stateful workloads without their requested redundancy.
+    # This trades a pending pod for a recoverable volume instead of silently
+    # running it with a single copy.
+    allowVolumeCreationWithDegradedAvailability: false
+    # An on-demand backup otherwise leaves its Longhorn snapshot behind.  On a
+    # compact cluster, a retained media snapshot can consume enough space to
+    # prevent replica rebuilds even though the backup itself has completed.
+    autoCleanupSnapshotAfterOnDemandBackupCompleted: true
     autoSalvage: true
     autoDeletePodWhenVolumeDetachedUnexpectedly: true
     disableSchedulingOnCordonedNode: true
