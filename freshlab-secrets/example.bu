@@ -4,4 +4,4 @@ passwd:
   users:
     - name: core
       ssh_authorized_keys:
-        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpkB8+wI+Sk48XhLwMKsdEtVUZBNRY5gVMfVZEwzLyR 
+        - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOpkB8+wI+Sk48XhLwMKsdEtVUZBNRY5gVMfVZEwzLyR

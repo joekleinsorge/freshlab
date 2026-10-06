@@ -7,7 +7,7 @@ metadata:
   labels:
     name: arc-runners
 spec:
-  project: default 
+  project: default
   sources:
     - chart: gha-runner-scale-set
       repoURL: 'ghcr.io/actions/actions-runner-controller-charts'
@@ -16,7 +16,7 @@ spec:
         valueFiles:
           - $values/values.yaml
     - repoURL: 'https://github.com/joekleinsorge/freshlab.git'
-      targetRevision: main 
+      targetRevision: main
       ref: platform/runners
   destination:
     name: in-cluster

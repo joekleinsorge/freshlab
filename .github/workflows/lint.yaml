@@ -1,5 +1,5 @@
 name: Lint
-on: 
+on:
   push: null
   pull_request: null
 

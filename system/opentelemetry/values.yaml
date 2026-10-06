@@ -21,7 +21,7 @@ opentelemetry-collector:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-      
+
       hostmetrics:
         collection_interval: 30s
         scrapers:
@@ -63,7 +63,7 @@ opentelemetry-collector:
         endpoint: tempo.tempo.svc.cluster.local:4317
         tls:
           insecure: true
-      
+
       debug:
         verbosity: detailed
 
@@ -75,11 +75,11 @@ opentelemetry-collector:
           enabled: true
           interval: 5s
           exporter_failure_threshold: 5
-      
+
       pprof:
         endpoint: 0.0.0.0:1777
         block_profile_fraction: 0
-      
+
       zpages:
         endpoint: 0.0.0.0:55679
 
@@ -162,7 +162,7 @@ opentelemetry-collector:
       memory: 256Mi
 
   nodeSelector: {}
-  
+
   tolerations:
     - operator: Exists
       effect: NoSchedule

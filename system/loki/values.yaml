@@ -10,7 +10,7 @@ loki-stack:
       table_manager:
         retention_deletes_enabled: true
         retention_period: 168h
-  
+
   promtail:
     # Alloy collects node and application logs; keep a single collector to
     # avoid duplicate streams and needless disk/CPU use.

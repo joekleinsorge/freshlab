@@ -2,9 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: arc-system2
-  finalizers: 
+  finalizers:
     - resources-finalizer.argocd.argoproj.io
-  labels: 
+  labels:
     name: arc-system2
 spec:
   project: default
@@ -20,7 +20,7 @@ spec:
   #       valueFiles:
   #         - $values/values.yaml
     # - repoURL: 'https://github.com/joekleinsorge/freshlab.git'
-    #   targetRevision: main 
+    #   targetRevision: main
     #   ref: platform/arc
   destination:
     name: in-cluster
@@ -39,5 +39,5 @@ spec:
       limit: 5
       backoff:
         duration: 5s
-        factor: 2 
+        factor: 2
         maxDuration: 3m
