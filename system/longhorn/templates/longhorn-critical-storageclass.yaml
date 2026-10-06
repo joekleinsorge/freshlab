@@ -2,6 +2,10 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: longhorn-critical
+  annotations:
+    # StorageClass parameters are immutable; let Argo recreate the class when
+    # they change. Existing volumes keep their own settings.
+    argocd.argoproj.io/sync-options: Force=true,Replace=true
 provisioner: driver.longhorn.io
 parameters:
   numberOfReplicas: "2"
