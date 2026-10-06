@@ -6,6 +6,9 @@ longhorn:
     # detach their volumes and the pods restart elsewhere. "do-nothing" left 15
     # apps stuck for 43h when metal0 failed on 2026-10-04.
     nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+    # One rebuild per node: parallel rebuilds plus image pulls saturated metal2's
+    # NVMe, which etcd shares, and knocked the node NotReady (2026-10-05).
+    concurrentReplicaRebuildPerNodeLimit: 1
     # Secondary applications use one local replica. Plex and Frigate retain
     # explicitly managed multi-node replicas.
     defaultReplicaCount: 1
