@@ -298,3 +298,23 @@ test/health/
 ```
 
 For any disagreement between documentation and implementation, inspect current code and configuration before changing behavior.
+
+## Contributing and Standards
+
+- Development flow, validation, and commit conventions: `CONTRIBUTING.md`
+- Review-time judgement rules: `CODING_STANDARDS.md`
+- Decisions: ADRs in `docs/adr/`; shared vocabulary in `CONTEXT.md` (both created on first need)
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live in GitHub Issues for `joekleinsorge/freshlab`, managed with `gh`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one root `CONTEXT.md` plus `docs/adr/`. See `docs/agents/domain.md`.

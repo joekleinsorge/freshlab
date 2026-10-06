@@ -1,5 +1,11 @@
 # Freshlab documentation
 
+## Contributing
+
+- [Contributing workflow](../CONTRIBUTING.md)
+- [Coding standards](../CODING_STANDARDS.md)
+- [Agent skill configuration](agents/)
+
 ## Architecture and provisioning
 
 - [Metal provisioning](../metal/README.md)
