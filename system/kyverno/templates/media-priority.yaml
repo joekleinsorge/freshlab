@@ -1,0 +1,48 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: freshlab-media-critical
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+value: 900000
+preemptionPolicy: PreemptLowerPriority
+globalDefault: false
+description: Plex and Frigate serving workloads preempt secondary applications.
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: freshlab-media-workload-priority
+spec:
+  background: false
+  rules:
+    - name: prioritize-plex
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - plex
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: plex
+      mutate:
+        patchStrategicMerge:
+          spec:
+            priorityClassName: freshlab-media-critical
+    - name: prioritize-frigate
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - frigate
+              selector:
+                matchLabels:
+                  app.kubernetes.io/name: frigate
+      mutate:
+        patchStrategicMerge:
+          spec:
+            priorityClassName: freshlab-media-critical
