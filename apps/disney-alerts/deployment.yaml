@@ -20,6 +20,9 @@ spec:
         app: disney-alerts
     spec:
       automountServiceAccountToken: false
+      # Same class as Plex/Frigate: they preempted this pod on 2026-10-05, and a
+      # missed Disney opening is worse than a delayed transcode.
+      priorityClassName: freshlab-media-critical
       imagePullSecrets:
         - name: ghcr-pull
       nodeSelector:
