@@ -118,12 +118,12 @@ spec:
       rules:
         - alert: FreshlabLonghornVolumeDegraded
           expr: max by (volume, pvc, pvc_namespace) (longhorn_volume_robustness{state="degraded"}) == 1
-          for: 15m
+          for: 5m
           labels:
-            severity: warning
+            severity: critical
           annotations:
             summary: "Longhorn volume {{ `{{ $labels.pvc_namespace }}` }}/{{ `{{ $labels.pvc }}` }} is degraded"
-            description: "At least one replica is unavailable; the volume has reduced node-failure tolerance."
+            description: "At least one replica is unavailable. Investigate and restore redundancy before a second failure faults the volume."
         - alert: FreshlabLonghornVolumeFaulted
           expr: max by (volume, pvc, pvc_namespace) (longhorn_volume_robustness{state="faulted"}) == 1
           for: 2m
@@ -134,7 +134,7 @@ spec:
             description: "The volume is unavailable or at immediate risk of data loss."
         - alert: FreshlabLonghornDiskUnschedulable
           expr: longhorn_disk_status{condition="schedulable"} == 0
-          for: 10m
+          for: 5m
           labels:
             severity: critical
           annotations:
