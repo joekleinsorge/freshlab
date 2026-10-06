@@ -36,21 +36,6 @@ backups:
     monthly: 6
     yearly: 2
   volumes:
-    - {namespace: authelia, pvc: authelia-data, schedule: "7 0,6,12,18 * * *", paused: false}
-    - {namespace: autobrr, pvc: autobrr-config, schedule: "22 0,6,12,18 * * *", paused: false}
-    - {namespace: disney-alerts, pvc: disney-alerts-data, schedule: "37 0,6,12,18 * * *", paused: false}
-    - namespace: freshrss
-      pvc: freshrss-pvc
-      schedule: "52 0,6,12,18 * * *"
-      paused: false
-      moverSecurityContext: &uid1001
-        runAsUser: 1001
-        runAsGroup: 1001
-        runAsNonRoot: true
-        fsGroup: 1001
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
     - namespace: frigate
       pvc: frigate-config
       schedule: "7 1,7,13,19 * * *"
@@ -62,80 +47,25 @@ backups:
           type: RuntimeDefault
     - namespace: frigate
       pvc: frigate-media
+      # The original claim is faulted while metal0 is offline. Keep the
+      # established ReplicationSource and repository names, but back up the
+      # independently restored claim now used by Frigate.
+      sourcePVC: frigate-media-restore-20261003
       schedule: "22 1,7,13,19 * * *"
       paused: false
       # Initial snapshot export is complete. Direct Restic copies make recurring
       # media backups incremental without another Longhorn snapshot export.
       copyMethod: Direct
-      moverSecurityContext: *uid0
-    - namespace: grocy
-      pvc: grocy-data
-      schedule: "37 1,7,13,19 * * *"
-      paused: false
-      moverSecurityContext: *uid1001
-    - namespace: hermes
-      pvc: hermes-data
-      schedule: "52 1,7,13,19 * * *"
-      paused: false
-      moverSecurityContext:
-        runAsUser: 10000
-        runAsGroup: 10000
-        runAsNonRoot: true
-        fsGroup: 10000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - namespace: immich
-      pvc: immich-postgres-data
-      schedule: "7 2,8,14,20 * * *"
-      paused: false
-      moverSecurityContext:
-        runAsUser: 26
-        runAsGroup: 999
-        runAsNonRoot: true
-        fsGroup: 999
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - {namespace: kitchenowl, pvc: kitchenowl-data, schedule: "22 2,8,14,20 * * *", paused: false}
-    - namespace: mealie
-      pvc: mealie-data
-      schedule: "37 2,8,14,20 * * *"
-      paused: false
-      # Mealie writes some historical database backups as UID/GID 1001 with
-      # restrictive permissions. Match the workload identity so Restic can
-      # read every file without granting the mover root access.
-      moverSecurityContext:
-        runAsUser: 1001
-        runAsGroup: 1001
-        runAsNonRoot: true
-        fsGroup: 1001
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - namespace: paperless
-      pvc: paperless-data
-      schedule: "52 2,8,14,20 * * *"
-      paused: false
+      # The recovery mover left a stale repository lock; remove it once before
+      # resuming recurring backups from the restored media claim.
+      unlock: frigate-restic-lock-20261004
       moverSecurityContext: *uid0
     # Plex configuration is backed up to the established encrypted repository.
     - namespace: plex
       pvc: pms-config-plex-0
       schedule: "7 3,9,15,21 * * *"
-      # A CSI snapshot gives Restic a stable point-in-time copy and permits its
-      # resource-intensive scan to run away from Plex's live RWO attachment.
-      paused: true
+      paused: false
       copyMethod: Snapshot
-      # Never let this multi-gigabyte mover share an etcd control-plane host.
-      # If no worker has capacity, it remains pending instead of destabilizing
-      # Kubernetes while Plex is serving clients.
-      moverAffinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/control-plane
-                    operator: DoesNotExist
       # The established Plex repository needs substantial memory while Restic
       # builds its metadata index. Keep a workload-specific ceiling so it can
       # complete without making other backup movers unbounded.
@@ -159,70 +89,4 @@ backups:
           type: RuntimeDefault
       # The interrupted direct mover left this repository lock behind. VolSync
       # will run its safe Restic unlock workflow once before the next backup.
-      unlock: plex-restic-lock-20260929
-    - namespace: prowlarr
-      pvc: prowlarr-config
-      schedule: "22 3,9,15,21 * * *"
-      paused: false
-      moverSecurityContext: &uid3000
-        runAsUser: 3000
-        runAsGroup: 3000
-        runAsNonRoot: true
-        fsGroup: 3000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - namespace: qbittorrent
-      pvc: qbittorrent-config
-      schedule: "37 3,9,15,21 * * *"
-      paused: false
-      moverSecurityContext: *uid3000
-    - namespace: radarr
-      pvc: radarr-config
-      schedule: "52 3,9,15,21 * * *"
-      paused: false
-      moverSecurityContext: *uid3000
-    - namespace: romm
-      pvc: mysql-data-pvc
-      schedule: "7 4,10,16,22 * * *"
-      paused: false
-      moverSecurityContext:
-        runAsUser: 999
-        runAsGroup: 999
-        runAsNonRoot: true
-        fsGroup: 999
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - namespace: romm
-      pvc: romm-redis-data-pvc
-      schedule: "22 4,10,16,22 * * *"
-      paused: false
-      moverSecurityContext: *uid0
-    - namespace: romm
-      pvc: romm-resources-pvc
-      schedule: "37 4,10,16,22 * * *"
-      paused: false
-      moverSecurityContext: *uid0
-    - namespace: seerr
-      pvc: seerr-config
-      schedule: "52 4,10,16,22 * * *"
-      paused: false
-      moverSecurityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
-    - namespace: sonarr
-      pvc: sonarr-config
-      schedule: "7 5,11,17,23 * * *"
-      paused: false
-      moverSecurityContext: *uid3000
-    - namespace: tautulli
-      pvc: tautulli-config
-      schedule: "22 5,11,17,23 * * *"
-      paused: false
-      moverSecurityContext: *uid3000
+      unlock: plex-restic-lock-20261004

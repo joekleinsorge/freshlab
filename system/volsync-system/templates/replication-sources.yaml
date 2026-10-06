@@ -19,7 +19,7 @@ metadata:
     freshlab.kleinsorge.dev/backup: restic-nfs
 spec:
   paused: {{ $paused }}
-  sourcePVC: {{ .pvc }}
+  sourcePVC: {{ default .pvc .sourcePVC }}
   trigger:
     schedule: {{ $schedule | quote }}
   restic:
