@@ -20,6 +20,10 @@ spec:
         app: disney-alerts
     spec:
       automountServiceAccountToken: false
+      # The app runs as PID 1 and never reaps Chrome's children; 18k zombies
+      # exhausted the pod PID limit and silently stopped checks (2026-10-07).
+      # A shared namespace makes the pause container PID 1, which reaps them.
+      shareProcessNamespace: true
       # Same class as Plex/Frigate: they preempted this pod on 2026-10-05, and a
       # missed Disney opening is worse than a delayed transcode.
       priorityClassName: freshlab-media-critical
@@ -111,15 +115,28 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 12
-          livenessProbe:
+          # /healthz stays 200 while the check loop is wedged, so liveness also
+          # requires a watch to have been checked within 90 minutes (longest
+          # poll is 30m, max error backoff 60m + jitter). Needs >=1 enabled watch.
+          startupProbe:
             exec:
-              command:
+              command: &check-fresh
                 - /bin/sh
                 - -c
-                - wget -q -T 3 -O /dev/null http://127.0.0.1:8080/healthz
-            initialDelaySeconds: 120
+                - >-
+                  wget -q -T 3 -O /dev/null http://127.0.0.1:8080/healthz &&
+                  python3 -c 'import sqlite3, sys, datetime as d;
+                  t = sqlite3.connect("file:/data/state.db?mode=ro", uri=True).execute("select max(last_checked_at) from watch_status").fetchone()[0];
+                  sys.exit(0 if t and d.datetime.now(d.timezone.utc) - d.datetime.fromisoformat(t) < d.timedelta(minutes=90) else 1)'
+            periodSeconds: 60
+            timeoutSeconds: 15
+            # Up to 30 minutes for the first check after a restart.
+            failureThreshold: 30
+          livenessProbe:
+            exec:
+              command: *check-fresh
             periodSeconds: 30
-            timeoutSeconds: 10
+            timeoutSeconds: 15
             failureThreshold: 6
           securityContext:
             allowPrivilegeEscalation: false
