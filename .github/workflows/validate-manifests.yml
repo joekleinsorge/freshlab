@@ -38,7 +38,12 @@ jobs:
         run: |
           while IFS= read -r chart; do
             chart_dir="$(dirname "$chart")"
-            helm dependency build "$chart_dir"
+            # Dependencies are vendored under charts/, and build would need a
+            # `helm repo add` for every HTTP repository (some now defunct).
+            # Only fetch what is missing; un-vendored charts come from OCI.
+            if helm dependency list "$chart_dir" | awk 'NR > 1 && NF && $NF != "ok" { missing = 1 } END { exit !missing }'; then
+              helm dependency build "$chart_dir"
+            fi
             helm lint "$chart_dir"
             helm template validation "$chart_dir" --namespace validation >/dev/null
           done < <(find apps platform system -name Chart.yaml -not -path '*/charts/*' | sort)
