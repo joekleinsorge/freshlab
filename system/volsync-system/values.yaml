@@ -87,6 +87,7 @@ backups:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
-      # The interrupted direct mover left this repository lock behind. VolSync
-      # will run its safe Restic unlock workflow once before the next backup.
-      unlock: plex-restic-lock-20261004
+      # Interrupted movers leave repository locks behind (most recently in the
+      # 2026-10-10 control-plane crash). Changing this value makes VolSync run
+      # its safe Restic unlock workflow once before the next backup.
+      unlock: plex-restic-lock-20261010
