@@ -20,19 +20,38 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      # Renovate 44 requires Node 24; the runner image's default is older.
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
       - name: Validate Renovate configuration
-        run: npx --yes renovate@44.83.0 renovate-config-validator
+        run: npx --yes --package renovate@44.83.0 renovate-config-validator
 
       - name: Reject plaintext Kubernetes secret values
         run: |
           ! rg --glob '!freshlab-secrets/*.sops.yaml' \
             'JWT_SECRET_KEY:[[:space:]]*[0-9a-f]{64,}' .
 
+      # Match the Helm major/minor bundled in Argo CD's repo-server.  The
+      # runner's preinstalled Helm 3 cannot render the Immich chart that
+      # Argo CD (Helm 4) renders successfully.
+      - name: Set up Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v4.2.1
+
       - name: Render and lint Helm charts
         run: |
           while IFS= read -r chart; do
             chart_dir="$(dirname "$chart")"
-            helm dependency build "$chart_dir"
+            # Dependencies are vendored under charts/, and build would need a
+            # `helm repo add` for every HTTP repository (some now defunct).
+            # Only fetch what is missing; un-vendored charts come from OCI.
+            if helm dependency list "$chart_dir" | awk 'NR > 1 && NF && $NF != "ok" { missing = 1 } END { exit !missing }'; then
+              helm dependency build "$chart_dir"
+            fi
             helm lint "$chart_dir"
             helm template validation "$chart_dir" --namespace validation >/dev/null
           done < <(find apps platform system -name Chart.yaml -not -path '*/charts/*' | sort)
