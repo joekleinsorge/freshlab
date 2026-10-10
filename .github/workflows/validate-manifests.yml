@@ -27,7 +27,7 @@ jobs:
           node-version: 24
 
       - name: Validate Renovate configuration
-        run: npx --yes renovate@44.83.0 renovate-config-validator
+        run: npx --yes --package renovate@44.83.0 renovate-config-validator
 
       - name: Reject plaintext Kubernetes secret values
         run: |
