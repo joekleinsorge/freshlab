@@ -366,6 +366,21 @@
         name: systemd-journald
         state: restarted
       when: journald_config.changed
+
+    # rsyslog copies every journal line into /var/log/syslog, which has no
+    # size cap.  k3s alone wrote ~880 MB there on metal1 during etcd stalls,
+    # adding writes to the same disk etcd was waiting on.  k3s logs stay in
+    # the size-capped journal (`journalctl -u k3s`).
+    - name: Keep k3s logs out of rsyslog
+      ansible.builtin.copy:
+        dest: /etc/rsyslog.d/30-freshlab-drop-k3s.conf
+        content: |
+          # Managed by Freshlab. k3s logs are kept in the journal only.
+          if $programname == 'k3s' then stop
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart rsyslog
   tags: ['logs']
 
 - name: Verify Kubernetes API port availability
