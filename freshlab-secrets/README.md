@@ -30,6 +30,12 @@ sops -d freshlab-secrets/kindle.sops.yaml | kubectl apply -f -
 Commit the encrypted file. The `freshlab-secrets` Argo CD Application detects
 the change and reconciles it automatically.
 
+Disney checkout credentials (`DISNEY_EMAIL`, `DISNEY_PASSWORD`,
+`DISNEY_CARD_LAST4`, and `DISNEY_CARD_SECURITY_CODE`) are stored in
+`disney-alerts-app.sops.yaml`, with owner approval on 2026-10-11. The app
+loads them from `disney-alerts-secrets`; never copy their plaintext into Git
+or deployment manifests. Updating these settings does not arm any watches.
+
 ## Recovery: apply secrets manually
 
 The helper remains available for bootstrap recovery or when Argo CD is down.
