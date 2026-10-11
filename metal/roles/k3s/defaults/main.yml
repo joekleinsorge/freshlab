@@ -28,6 +28,27 @@ k3s_server_config:
   etcd-snapshot-compress: true
   etcd-snapshot-schedule-cron: "17 */6 * * *"
   etcd-snapshot-retention: 28
+  # The Patriot P300 NVMe drives have no DRAM cache or power-loss protection,
+  # and ~10-15% of etcd WAL fsyncs exceed 32 ms under load.  With upstream
+  # defaults, a multi-second stall made the embedded controllers miss lease
+  # renewal and k3s exited (64 restarts on metal3 by 2026-10-09).  These
+  # values ride out stalls at the cost of slower failover after a real node
+  # loss (~60 s instead of ~15 s).  See hardware-and-cluster-issues.md HW-008.
+  etcd-arg:
+    - heartbeat-interval=500
+    - election-timeout=5000
+  kube-controller-manager-arg:
+    - leader-elect-lease-duration=60s
+    - leader-elect-renew-deadline=40s
+    - leader-elect-retry-period=5s
+  kube-scheduler-arg:
+    - leader-elect-lease-duration=60s
+    - leader-elect-renew-deadline=40s
+    - leader-elect-retry-period=5s
+  kube-cloud-controller-manager-arg:
+    - leader-elect-lease-duration=60s
+    - leader-elect-renew-deadline=40s
+    - leader-elect-retry-period=5s
 k3s_kubelet_args:
   # Keep enough memory and local storage available for the operating system and
   # Kubernetes daemons.  Eviction and image garbage collection protect the

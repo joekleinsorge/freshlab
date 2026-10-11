@@ -13,7 +13,7 @@ longhorn:
     # explicitly managed multi-node replicas.
     defaultReplicaCount: 1
     replicaAutoBalance: best-effort
-    # Rebalance before a node approaches the 25% storage reserve.  This is
+    # Rebalance before a node approaches the minimal-available floor.  This is
     # especially important while all Longhorn disks share their hosts' root
     # filesystems with k3s and etcd.
     replicaAutoBalanceDiskPressurePercentage: 70
@@ -24,7 +24,12 @@ longhorn:
     # sparse restored 150Gi volume to maintain two replicas on the remaining
     # nodes during a worker outage.
     storageOverProvisioningPercentage: 110
-    storageMinimalAvailablePercentage: 15
+    # Longhorn shares each root filesystem with the kubelet, which soft-evicts
+    # at 15% free and holds DiskPressure until 17% (eviction-minimum-reclaim).
+    # At 15% here, rebuilds during metal0's outage filled metal3 into that band
+    # and the kubelet evicted longhorn-manager, faulting four volumes
+    # (2026-10-10).  Stay above the band with room for logs and images.
+    storageMinimalAvailablePercentage: 20
     storageReservedPercentageForDefaultDisk: 5
     # A transient replica-path stall previously exhausted Frigate's two
     # replicas.  Give a replica 20 seconds to recover, then replenish a lost
