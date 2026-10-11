@@ -39,7 +39,7 @@ spec:
           effect: NoSchedule
       containers:
       - name: kindle-weather
-        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:643a4da0e618420f43d0887d6e07303dc8d609ae8d57e801c1eb8a93390d2f46
+        image: ghcr.io/joekleinsorge/kindle-weather/kindle-weather@sha256:3b0fd1493f6e270f1160f44f575491a174c6d729fcf3117e83b6fc9f4631931b
         env:
         - name: CACHE_EXPIRATION
           value: "1800"
