@@ -35,8 +35,8 @@ longhorn:
     # replicas.  Give a replica 20 seconds to recover, then replenish a lost
     # replica immediately rather than leaving a volume degraded for 10 minutes.
     engineReplicaTimeout:
-      v1: 20
-      v2: 20
+      v1: "20"
+      v2: "20"
     replicaReplenishmentWaitInterval: 0
     # Do not admit new stateful workloads without their requested redundancy.
     # This trades a pending pod for a recoverable volume instead of silently

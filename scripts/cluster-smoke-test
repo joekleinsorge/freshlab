@@ -51,6 +51,19 @@ if [[ -n "${unbound}" ]]; then
   failures=$((failures + 1))
 fi
 
+echo "Checking Longhorn volume health and replica redundancy..."
+unhealthy_volumes="$(kubectl -n longhorn get volumes.longhorn.io -o json | jq -r '
+  .items[]
+  | select(.status.robustness == "faulted"
+      or (.status.state != "detached" and .status.robustness != "healthy"))
+  | [.status.kubernetesStatus.namespace, .status.kubernetesStatus.pvcName,
+     .metadata.name, .status.state, .status.robustness] | @tsv
+')"
+if [[ -n "${unhealthy_volumes}" ]]; then
+  printf 'Unhealthy Longhorn volumes:\n%s\n' "${unhealthy_volumes}" >&2
+  failures=$((failures + 1))
+fi
+
 echo "Checking shared public gateway acceptance and rollout..."
 gateway_status="$(kubectl -n istio-system get gateway.gateway.networking.k8s.io freshlab -o json | jq -r '
   [ .status.conditions[]?
