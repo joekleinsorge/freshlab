@@ -28,6 +28,13 @@ FreshRSS's engine also needed its nonexistent failed replica reference removed
 and its running replacement reconnected before rebuilding resumed. This was a
 temporary recovery operation, not a change to desired replica counts.
 
+The final FreshRSS retry was queued behind an optional 53 GB Prometheus replica.
+Prometheus required one replica and retained its healthy `RW` source. Temporarily
+disabling balancing on that volume and removing only its never-healthy `WO`
+replacement freed the slot. FreshRSS and Autobrr then recovered; the balancing
+override was restored to `ignored`. All active volumes were healthy and the full
+cluster and 40-endpoint smoke test passed after recovery.
+
 Manager startup additionally reported that numeric `engine-replica-timeout`
 values could not be parsed into the expected map of strings. Helm values now
 quote the existing 20-second values so the intended setting can be applied.
