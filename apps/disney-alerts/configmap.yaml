@@ -139,3 +139,103 @@ data:
           browser: auto
           priority: "true"
           booking_group: fort-wilderness-halloween-2026
+      - name: fort-wilderness-halloween-2027-overnight-campsites
+        url: "https://disneyworld.disney.go.com/resorts/campsites-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 300
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        alerts: {once: true}
+        booking:
+          # Alerts only: a year out, the owner books by hand.
+          mode: notify_only
+          armed: false
+          currency: USD
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_campsites
+          check_in: "10/31/2027"
+          check_out: "11/01/2027"
+          adults: "2"
+          children: "3"
+          child_ages: "1|3|5"
+          room_types: ""
+          browser: auto
+          priority: "false"
+          booking_group: fort-wilderness-halloween-2027
+      - name: fort-wilderness-halloween-2027-overnight-cabins
+        url: "https://disneyworld.disney.go.com/resorts/dvc-cabins-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 300
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        alerts: {once: true}
+        booking:
+          # Alerts only: a year out, the owner books by hand.
+          mode: notify_only
+          armed: false
+          currency: USD
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_cabins
+          check_in: "10/31/2027"
+          check_out: "11/01/2027"
+          adults: "2"
+          children: "3"
+          child_ages: "1|3|5"
+          room_types: ""
+          browser: auto
+          priority: "false"
+          booking_group: fort-wilderness-halloween-2027
+      - name: fort-wilderness-halloween-2027-weekend-campsites
+        url: "https://disneyworld.disney.go.com/resorts/campsites-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 300
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        alerts: {once: true}
+        booking:
+          # Alerts only: a year out, the owner books by hand.
+          mode: notify_only
+          armed: false
+          currency: USD
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_campsites
+          check_in: "10/30/2027"
+          check_out: "11/01/2027"
+          adults: "2"
+          children: "3"
+          child_ages: "1|3|5"
+          room_types: ""
+          browser: auto
+          priority: "false"
+          booking_group: fort-wilderness-halloween-2027
+      - name: fort-wilderness-halloween-2027-weekend-cabins
+        url: "https://disneyworld.disney.go.com/resorts/dvc-cabins-at-fort-wilderness-resort/rates-rooms/room-only/"
+        fetcher: disney_resort
+        enabled: true
+        poll_seconds: 300
+        timeout_seconds: 120
+        browser_storage_state: "/secrets/disney-storage-state.json"
+        alerts: {once: true}
+        booking:
+          # Alerts only: a year out, the owner books by hand.
+          mode: notify_only
+          armed: false
+          currency: USD
+        availability: {kind: json_value, path: available, mode: truthy}
+        metadata:
+          resort: fort_wilderness_cabins
+          check_in: "10/30/2027"
+          check_out: "11/01/2027"
+          adults: "2"
+          children: "3"
+          child_ages: "1|3|5"
+          room_types: ""
+          browser: auto
+          priority: "false"
+          booking_group: fort-wilderness-halloween-2027
