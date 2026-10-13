@@ -18,9 +18,10 @@ metal:
     masters:
       hosts:
         metal1: {ansible_host: 192.168.1.101, disk: nvme0n1, network_interface: enp2s0}
-        metal2: {ansible_host: 192.168.1.102, disk: nvme0n1, network_interface: enp2s0}
-        # The NVMe root port repeatedly reports PCIe physical-layer RxErr.
-        # Disable ASPM until the M.2 device/socket and firmware are remediated.
+        # metal2 and metal3: the NVMe root port repeatedly reports PCIe
+        # physical-layer RxErr.  Disable ASPM until the M.2 device/socket and
+        # firmware are remediated (docs/hardware-and-cluster-issues.md HW-006).
+        metal2: {ansible_host: 192.168.1.102, disk: nvme0n1, network_interface: enp2s0, disable_pcie_aspm: true}
         metal3: {ansible_host: 192.168.1.103, disk: nvme0n1, network_interface: enp2s0, disable_pcie_aspm: true}
     workers:
       hosts:
