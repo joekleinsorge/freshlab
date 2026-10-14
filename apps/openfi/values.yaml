@@ -1,18 +1,18 @@
-# Set to the published linux/amd64 image digest before reconciling this chart.
+# Published linux/amd64 image digest for the reviewed release.
 image: "ghcr.io/joekleinsorge/openfi@sha256:5817be8e2742a007704d315635e4f6af0bd2fcb12b7b49f33a0c3554ec9208fd"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
-# Keep serving disabled until the private SQLite database is installed.
-replicas: 0
+# The private SQLite database is already installed on the retained PVC.
+replicas: 1
 route:
-  enabled: false
+  enabled: true
   hostname: fi.kleinsorge.dev
   gatewayName: freshlab
   gatewayNamespace: istio-system
   dnsTarget: 192.168.1.228
 backup:
-  enabled: false
-  # Provision via Freshlab's SOPS secret workflow; never put credentials here.
+  enabled: true
+  # Runtime secret provisioned outside Git; keep backup credentials private.
   repositorySecret: openfi-data-volsync-restic
   schedule: "47 2,8,14,20 * * *"

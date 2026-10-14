@@ -1,41 +1,19 @@
-# Freshlab deployment staging
+# OpenFI on Freshlab
 
-This chart is prepared for Freshlab's existing Istio Gateway, Longhorn, and
-VolSync. It is not deployed by this repository. Copy it into Freshlab's
-`apps/openfi` directory and let its root ApplicationSet reconcile the chart.
-The image, replica count, route, and backup settings must be finalized first.
-Keep all household data and account credentials outside both repositories.
+This chart is deployed by Freshlab's root Argo CD ApplicationSet from `apps/openfi`.
+It uses a retained Longhorn claim and a single Recreate deployment for SQLite.
+The chart, image digest, route, and backup policy contain no household records
+or login credentials.
 
-1. Run the Python tests and build the current reviewed application for
-   `linux/amd64` using the repository Dockerfile. Publish the image to the
-   chosen registry, then set `image` to its immutable `@sha256:` reference.
-   For a private registry, provision an image-pull Secret through Freshlab's
-   encrypted secret workflow and set `imagePullSecrets` to its name.
-2. Validate the chart with `helm lint` and `helm template`, plus Freshlab's
-   `make lint` and `make validate`. Reconcile initially with `replicas: 0`
-   and the route disabled. This creates the retained Longhorn claim.
-3. Install the private SQLite database onto `openfi-data` while the app is
-   stopped, using an ephemeral pod mounting the claim as UID/GID 10001.
-   Transfer a consistent SQLite backup, never an active database without its
-   WAL. Check SQLite integrity and file mode 0600. Do not put the database,
-   source JSON, exports, or credentials in a ConfigMap, image, or Git.
-4. Provision `openfi-data-volsync-restic` using the existing encrypted Restic
-   repository-secret pattern. Enable backups, set one replica, and verify the
-   health endpoint, login, saved plan, original source profile, and scenarios
-   through port forwarding before enabling the TLS route. SQLite is single
-   process; the deployment uses Recreate to avoid overlapping instances.
-5. Enable the route after confirming Gateway TLS and DNS configuration.
-   The proposed hostname is `fi.kleinsorge.dev`. Native local-account login
-   protects saved financial data; this app does not currently support Dex.
-   Do not assume proxy headers provide authentication. Confirm unauthenticated
-   requests to saved-plan endpoints return 401.
-6. Verify an encrypted VolSync backup and a restore to a separate temporary
-   claim. Snapshot copies must retain the entire data directory (SQLite plus
-   any WAL files). Before upgrades also use `scripts/backup.py` for an online
-   SQLite backup. Keep the prior image digest and a matching database backup.
+The private SQLite database is installed on the PVC. A unique Restic repository
+secret is provisioned in the `openfi` namespace outside Git; its repository
+encryption key is retained in the ignored `data/private/openfi-restic.json` file.
+VolSync snapshots the PVC on the configured schedule. Keep the source household
+file and login credentials in the ignored private data directory as well.
 
-The chart keeps PVC pruning disabled. Restore into a new claim and validate
-it before repointing the deployment; do not delete the original claim.
+Before upgrades, create an online backup with `scripts/backup.py`. To recover,
+restore the PVC to a separate claim and verify SQLite integrity before
+repointing the deployment.
 
 ## Private source import
 
