@@ -10,7 +10,9 @@ metadata:
     external-dns.alpha.kubernetes.io/target: {{ .Values.route.dnsTarget | quote }}
 spec:
   parentRefs:
-    - name: {{ .Values.route.gatewayName }}
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.route.gatewayName }}
       namespace: {{ .Values.route.gatewayNamespace }}
       sectionName: https
   hostnames: [{{ .Values.route.hostname | quote }}]
@@ -18,5 +20,9 @@ spec:
     - matches:
         - path: {type: PathPrefix, value: /}
       backendRefs:
-        - {name: openfi, port: 80}
+        - group: ""
+          kind: Service
+          name: openfi
+          port: 80
+          weight: 1
 {{- end }}
