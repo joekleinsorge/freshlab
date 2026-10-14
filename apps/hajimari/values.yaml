@@ -130,6 +130,11 @@ hajimari:
           - name: Hermes
             url: https://hermes.kleinsorge.dev
             icon: mdi:robot
+      - group: Finance
+        apps:
+          - name: OpenFI
+            url: https://fi.kleinsorge.dev
+            icon: mdi:finance
       - group: Tools
         apps:
           - name: Excalidraw
