@@ -6,6 +6,14 @@
 {{- fail "SQLite deployment supports only zero or one replica" -}}
 {{- end -}}
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: openfi
+  labels:
+    istio.io/dataplane-mode: none
+    pod-security.kubernetes.io/enforce: baseline
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openfi-data

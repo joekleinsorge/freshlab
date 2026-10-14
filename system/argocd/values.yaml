@@ -270,6 +270,17 @@ argocd-apps:
           kind: ClusterRoleBinding
         - group: storage.k8s.io
           kind: StorageClass
+    openfi:
+      namespace: argocd
+      description: Private financial planner isolated to its own namespace
+      sourceRepos:
+        - https://github.com/joekleinsorge/freshlab
+      destinations:
+        - namespace: openfi
+          server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+        - group: ''
+          kind: Namespace
     freshlab-secrets:
       namespace: argocd
       description: SOPS-encrypted Secrets reconciled by KSOPS
@@ -354,7 +365,7 @@ argocd-apps:
           destination:
             name: in-cluster
             namespace: '{{.path.basename}}'
-          project: '{{index .path.segments 0}}'
+          project: '{{if eq .path.basename "openfi"}}openfi{{else}}{{index .path.segments 0}}{{end}}'
           # Reloader intentionally injects content-hash environment variables
           # to trigger rolling restarts. They are controller-owned runtime
           # state, not configuration drift from Git.
