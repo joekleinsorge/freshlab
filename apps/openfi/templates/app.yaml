@@ -70,9 +70,6 @@ spec:
             - {name: FIRE_PORT, value: "8080"}
             - {name: FIRE_DB, value: /data/planner.sqlite3}
             - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
-            - name: FIRE_OIDC_EMAIL
-              valueFrom:
-                secretKeyRef: {name: openfi-auth, key: dexEmail}
             - name: FIRE_OIDC_OWNER_EMAIL
               valueFrom:
                 secretKeyRef: {name: openfi-auth, key: ownerEmail}

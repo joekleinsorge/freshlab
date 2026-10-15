@@ -33,7 +33,7 @@ dex:
         preferredUsername: owner
         emailVerified: true
         groups:
-          - openfi-users
+          - freshlab-admins
         userID: "2"
     staticClients:
       - id: grafana-sso
