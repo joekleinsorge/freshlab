@@ -115,7 +115,7 @@ spec:
             - --upstream=http://127.0.0.1:8080/
             - --redirect-url=https://fi.kleinsorge.dev/oauth2/callback
             - --email-domain=*
-            - --allowed-group=openfi-users
+            - --allowed-group=freshlab-admins
             - --scope=openid profile email groups
             - --code-challenge-method=S256
             - --cookie-domain=fi.kleinsorge.dev
