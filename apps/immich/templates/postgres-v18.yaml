@@ -51,6 +51,7 @@ spec:
                 rm -f /tmp/postgres-password
               fi
               postgres -D "$PGDATA" \
+                -c listen_addresses='*' \
                 -c shared_preload_libraries=vchord.so \
                 -c 'search_path="$user", public, vectors' \
                 -c wal_level=logical &
