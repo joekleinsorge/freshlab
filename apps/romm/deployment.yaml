@@ -81,7 +81,7 @@ spec:
             claimName: romm-assets-pvc
         - name: config
           persistentVolumeClaim:
-            claimName: romm-config-pvc
+            claimName: romm-config-recovery-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
