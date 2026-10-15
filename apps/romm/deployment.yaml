@@ -73,8 +73,9 @@ spec:
           persistentVolumeClaim:
             claimName: romm-redis-data-pvc
         - name: library
-          persistentVolumeClaim:
-            claimName: romm-library-pvc
+          nfs:
+            server: 192.168.1.208
+            path: /volume1/Media/Games
         - name: assets
           persistentVolumeClaim:
             claimName: romm-assets-pvc
