@@ -42,6 +42,7 @@ immich:
   server:
     controllers:
       main:
+        replicas: 0
         pod:
           labels:
             istio.io/dataplane-mode: none
@@ -79,6 +80,7 @@ immich:
   machine-learning:
     controllers:
       main:
+        replicas: 0
         pod:
           labels:
             istio.io/dataplane-mode: none
