@@ -111,6 +111,7 @@
               '--namespace',
               cilium_namespace,
               '--create-namespace',
+              '--reset-values',
               '--values',
               cilium_values_file.path,
               '--wait',
