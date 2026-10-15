@@ -40,6 +40,8 @@ loki:
     compactor:
       retention_enabled: true
       delete_request_store: filesystem
+    memberlistConfig:
+      join_members: []
     serviceMonitor:
       enabled: true
   singleBinary:
