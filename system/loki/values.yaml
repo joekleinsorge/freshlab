@@ -44,7 +44,8 @@ loki:
       retention_enabled: true
       delete_request_store: filesystem
     memberlistConfig:
-      join_members: []
+      join_members:
+        - localhost:7946
     serviceMonitor:
       enabled: true
   singleBinary:
