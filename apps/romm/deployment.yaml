@@ -41,19 +41,55 @@ spec:
                   name: romm-secrets
                   key: ROMM_AUTH_SECRET_KEY
             - name: IGDB_CLIENT_ID
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: IGDB_CLIENT_ID
+                  optional: true
             - name: IGDB_CLIENT_SECRET
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: IGDB_CLIENT_SECRET
+                  optional: true
             - name: MOBYGAMES_API_KEY
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: MOBYGAMES_API_KEY
+                  optional: true
             - name: STEAMGRIDDB_API_KEY
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: STEAMGRIDDB_API_KEY
+                  optional: true
             - name: SCREENSCRAPER_USER
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: SCREENSCRAPER_USER
+                  optional: true
             - name: SCREENSCRAPER_PASSWORD
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: SCREENSCRAPER_PASSWORD
+                  optional: true
             - name: RETROACHIEVEMENTS_API_KEY
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secrets
+                  key: RETROACHIEVEMENTS_API_KEY
+                  optional: true
+            - name: HASHEOUS_API_ENABLED
+              value: "true"
+            - name: HLTB_API_ENABLED
+              value: "true"
+            - name: STEAM_API_ENABLED
+              value: "true"
+            - name: FLASHPOINT_API_ENABLED
+              value: "true"
           volumeMounts:
             - name: romm-resources
               mountPath: /romm/resources
