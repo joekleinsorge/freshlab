@@ -43,6 +43,10 @@ loki:
     compactor:
       retention_enabled: true
       delete_request_store: filesystem
+    frontend:
+      scheduler_address: 127.0.0.1:9095
+    query_scheduler:
+      use_scheduler_ring: false
     memberlistConfig:
       join_members:
         - localhost:7946
