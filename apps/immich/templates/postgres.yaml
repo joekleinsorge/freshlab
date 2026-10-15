@@ -13,7 +13,19 @@ metadata:
   name: immich-postgres
 spec:
   selector:
-    app: immich-postgres
+    app: immich-postgres-v18
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-postgres-v16
+spec:
+  selector:
+    app: immich-postgres-v16
   ports:
     - name: postgres
       port: 5432
@@ -22,17 +34,17 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: immich-postgres
+  name: immich-postgres-v16
 spec:
-  serviceName: immich-postgres
-  replicas: 1
+  serviceName: immich-postgres-v16
+  replicas: 0
   selector:
     matchLabels:
-      app: immich-postgres
+      app: immich-postgres-v16
   template:
     metadata:
       labels:
-        app: immich-postgres
+        app: immich-postgres-v16
     spec:
       initContainers:
         - name: volume-permissions
