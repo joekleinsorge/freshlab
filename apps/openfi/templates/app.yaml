@@ -132,6 +132,10 @@ spec:
                 secretKeyRef: {name: openfi-auth, key: cookieSecret}
           ports:
             - {name: auth, containerPort: 4180}
+          startupProbe:
+            httpGet: {path: /ping, port: auth}
+            periodSeconds: 2
+            failureThreshold: 60
           readinessProbe:
             httpGet: {path: /ping, port: auth}
           livenessProbe:
