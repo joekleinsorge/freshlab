@@ -66,27 +66,79 @@ spec:
             capabilities:
               drop: [ALL]
           env:
-            - {name: FIRE_HOST, value: "0.0.0.0"}
+            - {name: FIRE_HOST, value: "127.0.0.1"}
             - {name: FIRE_PORT, value: "8080"}
             - {name: FIRE_DB, value: /data/planner.sqlite3}
             - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
+            - name: FIRE_OIDC_EMAIL
+              valueFrom:
+                secretKeyRef: {name: openfi-auth, key: dexEmail}
+            - name: FIRE_OIDC_OWNER_EMAIL
+              valueFrom:
+                secretKeyRef: {name: openfi-auth, key: ownerEmail}
           ports:
-            - {name: http, containerPort: 8080}
+            - {name: app, containerPort: 8080}
           resources:
             requests: {cpu: 100m, memory: 128Mi}
             limits: {cpu: "1", memory: 512Mi}
           startupProbe:
-            httpGet: {path: /api/health, port: http}
+            exec:
+              command: [python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=2)"]
             periodSeconds: 2
             failureThreshold: 30
           readinessProbe:
-            httpGet: {path: /api/health, port: http}
+            exec:
+              command: [python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=2)"]
           livenessProbe:
-            httpGet: {path: /api/health, port: http}
+            exec:
+              command: [python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=2)"]
             periodSeconds: 30
           volumeMounts:
             - {name: data, mountPath: /data}
             - {name: tmp, mountPath: /tmp}
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.12.0@sha256:786bed0f000c0f8a7b31619244ebab02406a8856a4faf3f5fb1df61fbd6c30ed
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://dex.kleinsorge.dev
+            - --http-address=0.0.0.0:4180
+            - --upstream=http://127.0.0.1:8080/
+            - --redirect-url=https://fi.kleinsorge.dev/oauth2/callback
+            - --email-domain=*
+            - --allowed-group=openfi-users
+            - --scope=openid profile email groups
+            - --code-challenge-method=S256
+            - --cookie-domain=fi.kleinsorge.dev
+            - --cookie-samesite=lax
+            - --cookie-secure=true
+            - --whitelist-domain=fi.kleinsorge.dev
+            - --reverse-proxy=true
+            - --pass-user-headers=true
+            - --skip-provider-button=true
+            - --skip-auth-route=GET=^/api/health$
+          env:
+            - name: OAUTH2_PROXY_CLIENT_ID
+              value: openfi-sso
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef: {name: openfi-auth, key: clientSecret}
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef: {name: openfi-auth, key: cookieSecret}
+          ports:
+            - {name: auth, containerPort: 4180}
+          readinessProbe:
+            httpGet: {path: /ping, port: auth}
+          livenessProbe:
+            httpGet: {path: /ping, port: auth}
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {cpu: 250m, memory: 256Mi}
       volumes:
         - name: data
           persistentVolumeClaim: {claimName: openfi-data}
@@ -102,7 +154,7 @@ spec:
   selector:
     app.kubernetes.io/name: openfi
   ports:
-    - {name: http, port: 80, targetPort: http}
+    - {name: http, port: 80, targetPort: auth}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -124,4 +176,4 @@ spec:
         - ipBlock: {cidr: 192.168.1.101/32}
         - ipBlock: {cidr: 192.168.1.102/32}
         - ipBlock: {cidr: 192.168.1.103/32}
-      ports: [{protocol: TCP, port: 8080}]
+      ports: [{protocol: TCP, port: 4180}]

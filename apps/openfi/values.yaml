@@ -1,5 +1,5 @@
 # Published linux/amd64 image digest for the reviewed release.
-image: "ghcr.io/joekleinsorge/openfi@sha256:5817be8e2742a007704d315635e4f6af0bd2fcb12b7b49f33a0c3554ec9208fd"
+image: "ghcr.io/joekleinsorge/openfi@sha256:2d9060eb3f56e4d91331059b1ac25111899ca025a586704dcbea3241eba41557"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi

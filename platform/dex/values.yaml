@@ -26,6 +26,15 @@ dex:
         groups:
           - freshlab-admins
         userID: "1"
+      - email: owner@openfi.local
+        hashFromEnv: DEX_OPENFI_PASSWORD_HASH
+        username: owner
+        name: OpenFI Owner
+        preferredUsername: owner
+        emailVerified: true
+        groups:
+          - openfi-users
+        userID: "2"
     staticClients:
       - id: grafana-sso
         name: Grafana
@@ -69,6 +78,11 @@ dex:
         redirectURIs:
           - 'https://auth.kleinsorge.dev/oauth2/callback'
         secretEnv: MEDIA_STACK_SSO_CLIENT_SECRET
+      - id: openfi-sso
+        name: OpenFI
+        redirectURIs:
+          - 'https://fi.kleinsorge.dev/oauth2/callback'
+        secretEnv: OPENFI_SSO_CLIENT_SECRET
       - id: hermes-dashboard
         name: Hermes Dashboard
         public: true

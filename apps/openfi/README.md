@@ -11,6 +11,13 @@ encryption key is retained in the ignored `data/private/openfi-restic.json` file
 VolSync snapshots the PVC on the configured schedule. Keep the source household
 file and login credentials in the ignored private data directory as well.
 
+Public access is authenticated by OAuth2 Proxy against Dex. The Dex `openfi-users`
+group is allow-listed, and the trusted Dex email is mapped to the existing
+owner account without changing the SQLite household. OIDC client/cookie secrets,
+the Dex password hash, and the email mapping are provisioned as runtime Secrets
+outside Git. The planner listens on pod loopback and is reachable externally
+only through the authenticated proxy.
+
 Before upgrades, create an online backup with `scripts/backup.py`. To recover,
 restore the PVC to a separate claim and verify SQLite integrity before
 repointing the deployment.
