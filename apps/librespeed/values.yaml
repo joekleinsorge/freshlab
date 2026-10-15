@@ -1,4 +1,7 @@
 librespeed:
+  image:
+    repository: linuxserver/librespeed
+    tag: v6.3.0-ls294@sha256:376c85ebfc8630b16351a2d02b1e10fcb2853e9ca5c3a80a07bcc4b738b844d9
   ingress:
     main:
       enabled: false

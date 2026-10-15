@@ -19,7 +19,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: paperless
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.20.15@sha256:6c86cad803970ea782683a8e80e7403444c5bf3cf70de63b4d3c8e87500db92f
+          image: ghcr.io/paperless-ngx/paperless-ngx:3.3.1@sha256:cb91bfb468e63025a9d10c01b54c33665113668eee61b490db96de19b860b9c4
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
@@ -74,7 +74,7 @@ spec:
             - {name: data, mountPath: /usr/src/paperless/consume, subPath: consume}
             - {name: data, mountPath: /usr/src/paperless/export, subPath: export}
         - name: redis
-          image: docker.io/library/redis:8.2.1-alpine@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232
+          image: docker.io/library/redis:8.10.2-alpine@sha256:3811787313eba226a2ef38658c6ccb91cd5e110edc89c37767de373120a0e5a0
           imagePullPolicy: IfNotPresent
           args: [redis-server, --save, "", --appendonly, "no"]
           ports:

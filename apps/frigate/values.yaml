@@ -2,6 +2,7 @@ frigate:
   strategyType: Recreate
   image:
     repository: ghcr.io/blakeblackshear/frigate
+    tag: 0.18.1@sha256:ae4ee2505e4dba6313b02bf5e8eea6c35fb1119f7087b9f684082be0a9fa0a71
     pullPolicy: IfNotPresent
   env:
     TZ: UTC
@@ -372,7 +373,7 @@ frigate:
       memory: 4Gi
       ephemeral-storage: 20Gi
 
-   # -- Node Selector configuration
+  # -- Node Selector configuration
   nodeSelector: {}
   affinity:
     nodeAffinity:
@@ -385,6 +386,3 @@ frigate:
 
   # -- Node toleration configuration
   tolerations: []
-
-  # -- Set Pod affinity rules
-  affinity: {}

@@ -16,6 +16,8 @@ kubeconfig.yaml
 *.log
 *.png
 *.tgz
+!apps/*/charts/*.tgz
+!platform/*/charts/*.tgz
 *kubeconfig.yaml
 Chart.lock
 .vscode
