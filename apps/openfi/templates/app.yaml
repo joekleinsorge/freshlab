@@ -106,6 +106,11 @@ spec:
           args:
             - --provider=oidc
             - --oidc-issuer-url=https://dex.kleinsorge.dev
+            - --skip-oidc-discovery=true
+            - --login-url=http://dex.dex.svc.cluster.local:5556/auth
+            - --redeem-url=http://dex.dex.svc.cluster.local:5556/token
+            - --oidc-jwks-url=http://dex.dex.svc.cluster.local:5556/keys
+            - --skip-claims-from-profile-url=true
             - --http-address=0.0.0.0:4180
             - --upstream=http://127.0.0.1:8080/
             - --redirect-url=https://fi.kleinsorge.dev/oauth2/callback
@@ -182,8 +187,13 @@ spec:
         - {protocol: UDP, port: 53}
         - {protocol: TCP, port: 53}
     - to:
-        - ipBlock: {cidr: {{ .Values.route.dnsTarget }}/32}
-      ports: [{protocol: TCP, port: 443}]
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: dex
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: dex
+      ports: [{protocol: TCP, port: 5556}]
   ingress:
     - from:
         - namespaceSelector:
