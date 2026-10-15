@@ -50,6 +50,9 @@ spec:
                 initdb -D "$PGDATA" --username="$POSTGRES_USER" --pwfile=/tmp/postgres-password --auth-local=trust --auth-host=scram-sha-256
                 rm -f /tmp/postgres-password
               fi
+              if ! grep -qF 'host immich immich 10.0.0.0/8 scram-sha-256' "$PGDATA/pg_hba.conf"; then
+                printf '%s\n' 'host immich immich 10.0.0.0/8 scram-sha-256' >> "$PGDATA/pg_hba.conf"
+              fi
               postgres -D "$PGDATA" \
                 -c listen_addresses='*' \
                 -c shared_preload_libraries=vchord.so \
