@@ -15,6 +15,9 @@ loki:
     commonConfig:
       replication_factor: 1
       path_prefix: /var/loki
+      ring:
+        kvstore:
+          store: memberlist
     storage:
       bucketNames:
         chunks: loki
