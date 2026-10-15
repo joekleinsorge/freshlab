@@ -124,6 +124,7 @@ spec:
             - --pass-user-headers=true
             - --skip-provider-button=true
             - --skip-auth-route=GET=^/api/health$
+            - --skip-auth-route=GET=^/api/auth/me$
           env:
             - name: OAUTH2_PROXY_CLIENT_ID
               value: openfi-sso
