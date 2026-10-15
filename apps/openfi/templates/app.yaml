@@ -166,7 +166,20 @@ spec:
     matchLabels:
       app.kubernetes.io/name: openfi
   policyTypes: [Ingress, Egress]
-  egress: []
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - {protocol: UDP, port: 53}
+        - {protocol: TCP, port: 53}
+    - to:
+        - ipBlock: {cidr: {{ .Values.route.dnsTarget }}/32}
+      ports: [{protocol: TCP, port: 443}]
   ingress:
     - from:
         - namespaceSelector:
