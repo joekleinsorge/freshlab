@@ -41,14 +41,26 @@ spec:
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 26
-          command: [postgres]
+          command: ["sh", "-ec"]
           args:
-            - -c
-            - shared_preload_libraries=vchord.so
-            - -c
-            - search_path="$user", public, vectors
-            - -c
-            - wal_level=logical
+            - |
+              if [ ! -s "$PGDATA/PG_VERSION" ]; then
+                umask 077
+                printf '%s\n' "$POSTGRES_PASSWORD" > /tmp/postgres-password
+                initdb -D "$PGDATA" --username="$POSTGRES_USER" --pwfile=/tmp/postgres-password --auth-local=trust --auth-host=scram-sha-256
+                rm -f /tmp/postgres-password
+              fi
+              postgres -D "$PGDATA" \
+                -c shared_preload_libraries=vchord.so \
+                -c 'search_path="$user", public, vectors' \
+                -c wal_level=logical &
+              postgres_pid=$!
+              trap 'kill -TERM "$postgres_pid"; wait "$postgres_pid"' TERM INT
+              until pg_isready -U "$POSTGRES_USER" -d postgres >/dev/null 2>&1; do sleep 1; done
+              if ! psql -U "$POSTGRES_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'immich'" | grep -q 1; then
+                createdb -U "$POSTGRES_USER" immich
+              fi
+              wait "$postgres_pid"
           env:
             - name: POSTGRES_DB
               value: immich
