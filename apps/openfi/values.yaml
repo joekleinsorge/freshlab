@@ -1,5 +1,5 @@
-# Pinned digest for the newest published OpenFI build (2ffc6b9).
-image: "ghcr.io/joekleinsorge/openfi@sha256:2b249240103762c64c1d2413f78162b940b5064d988f8e6522d1600d5ec5a91c"
+# Pinned digest for the newest published OpenFI build (caf1bba).
+image: "ghcr.io/joekleinsorge/openfi@sha256:65d0f6b9d574347c35ca1fbecb30774ffc753f1196f4281a62395e089ef9b715"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
