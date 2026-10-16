@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI planning integrity build (2d36aad, engine 2.3.0).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d4edb07a4ac4ff8688de2314a172a9dd9bc2f04e3d85b59c66d7a242f44fb5bb"
+# Pinned digest for the OpenFI planning integrity build (d732784, engine 2.3.0; compact history).
+image: "ghcr.io/joekleinsorge/openfi@sha256:9006b79bba17f0bedca09a5e1109caf9860c8e1733c7519336b0e830e574bd1d"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
