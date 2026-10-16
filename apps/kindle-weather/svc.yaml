@@ -13,7 +13,10 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8080
-  type: ClusterIP
+      nodePort: 30080
+  # Plain HTTP is needed by the legacy Kindle browser. The pod NetworkPolicy
+  # limits access to this NodePort to the local LAN.
+  type: NodePort
 ---
 apiVersion: v1
 kind: Service
