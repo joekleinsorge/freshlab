@@ -18,6 +18,16 @@ spec:
         app: romm
     spec:
       enableServiceLinks: false
+      initContainers:
+        - name: configure-platforms
+          image: rommapp/romm@sha256:03295f95a6290e752641f9553ac4198b0e5b71b879d57f7b2371b98f608feb54
+          command: ["/src/.venv/bin/python", "/bindings/configure.py"]
+          volumeMounts:
+            - name: config
+              mountPath: /romm/config
+            - name: platform-bindings
+              mountPath: /bindings
+              readOnly: true
       containers:
         - name: romm
           image: rommapp/romm@sha256:03295f95a6290e752641f9553ac4198b0e5b71b879d57f7b2371b98f608feb54
@@ -102,6 +112,9 @@ spec:
             - name: config
               mountPath: /romm/config
       volumes:
+        - name: platform-bindings
+          configMap:
+            name: romm-platform-bindings
         - name: romm-resources
           persistentVolumeClaim:
             claimName: romm-resources-pvc
