@@ -3,9 +3,9 @@ volsync:
   # digest. The controller passes this mover image to every
   # generated backup Job, satisfying the cluster's digest-only image policy.
   image:
-    image: quay.io/backube/volsync@sha256:758330413ac6ef0642dae4748dcad6c94146869d783b7cffd021f4808b8f77ac
+    image: quay.io/backube/volsync@sha256:543ee64b535a1293a58256d89999c57c216a5c1dfa5dfd0eb63256bd7f214970
   restic:
-    image: quay.io/backube/volsync@sha256:758330413ac6ef0642dae4748dcad6c94146869d783b7cffd021f4808b8f77ac
+    image: quay.io/backube/volsync@sha256:543ee64b535a1293a58256d89999c57c216a5c1dfa5dfd0eb63256bd7f214970
   metrics:
     # The chart's ServiceMonitor does not attach a bearer token, so its
     # kube-rbac-proxy endpoint otherwise returns 401 to Prometheus.
