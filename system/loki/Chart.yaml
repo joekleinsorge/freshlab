@@ -3,5 +3,5 @@ name: loki
 version: 0.0.0
 dependencies:
   - name: loki
-    version: 18.16.0
+    version: 18.17.0
     repository: https://grafana-community.github.io/helm-charts
