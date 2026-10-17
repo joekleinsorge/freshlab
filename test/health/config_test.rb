@@ -136,4 +136,29 @@ end
     check(YAML.load_stream(File.read(file)).compact.none? { |d| d["kind"] == "Ingress" }, "#{file} reintroduces obsolete Ingress")
   end
 end
+kindle_services = YAML.load_stream(File.read("apps/kindle-weather/svc.yaml")).compact
+kindle_active = kindle_services.find { |d| d.dig("metadata", "name") == "kindle-weather-service" }
+kindle_preview = kindle_services.find { |d| d.dig("metadata", "name") == "kindle-weather-preview" }
+check(kindle_active&.dig("spec", "type") == "NodePort" &&
+      kindle_active.dig("spec", "ports") == [{"name" => "http", "protocol" => "TCP", "port" => 80, "targetPort" => 8080, "nodePort" => 30080}],
+      "Legacy Kindle LAN HTTP must remain available on NodePort 30080")
+check(kindle_preview&.dig("spec", "type") == "ClusterIP",
+      "Kindle preview must remain private")
+[kindle_active, kindle_preview].each do |service|
+  check(service.dig("spec", "selector") == {"app" => "kindle-weather"},
+        "Kindle Service selectors must let Rollouts manage the active revision")
+end
+kindle_rollout = YAML.load_stream(File.read("apps/kindle-weather/deployment.yaml")).compact.first
+check(kindle_rollout.dig("spec", "strategy", "blueGreen", "activeService") == "kindle-weather-service" &&
+      kindle_rollout.dig("spec", "strategy", "blueGreen", "previewService") == "kindle-weather-preview",
+      "Kindle HTTP and HTTPS must follow the same blue-green active Service")
+kindle_lan = YAML.load_file("apps/kindle-weather/lan-http-policy.yaml")
+check(kindle_lan.dig("spec", "podSelector", "matchLabels") == {"app" => "kindle-weather"} &&
+      kindle_lan.dig("spec", "ingress") == [{"from" => [{"ipBlock" => {"cidr" => "192.168.1.0/24"}}], "ports" => [{"protocol" => "TCP", "port" => 8080}]}],
+      "Kindle plain HTTP policy must allow only the LAN subnet on the app port")
+kindle_route = routes.find { |d| d["kind"] == "HTTPRoute" && d.dig("metadata", "name") == "kindle-weather" }
+check(kindle_route&.dig("spec", "parentRefs")&.all? { |parent| parent["sectionName"] == "https" } &&
+      kindle_route.dig("spec", "rules", 0, "backendRefs", 0, "name") == "kindle-weather-service",
+      "Kindle public routing must retain HTTPS on the active Service")
+
 puts "Health configuration regression checks passed."
