@@ -265,7 +265,7 @@ backups:
       pvc: prowlarr-config
       sourcePVC: prowlarr-config-restore-20261005
       schedule: "32 3,9,15,21 * * *"
-      paused: true
+      paused: false
       moverSecurityContext:
         runAsUser: 3000
         runAsGroup: 3000
