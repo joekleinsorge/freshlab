@@ -22,7 +22,7 @@ Tracking issue: https://github.com/joekleinsorge/freshlab/issues/200
 - [x] Repair Helm dependency setup and verify rendered images against registries.
 - [x] Split infrastructure upgrade batches and document maintenance preflight.
 - [x] Establish host-level health checks and independent missing-run detection.
-- [ ] Complete a disposable restore and application-level verification.
+- [x] Complete a disposable restore and application-level verification.
 - [x] Publish a priced, compatible storage isolation and migration specification.
 
 ## Recovery controls
@@ -53,11 +53,12 @@ Hardware choices and current prices are recorded in the companion hardware spec.
 
 Hardware specification: https://github.com/joekleinsorge/freshlab/issues/201
 
-Validation: ten Python health tests, Ruby configuration regressions, four changed
+Validation: fourteen Python health tests, Ruby configuration regressions, four changed
 Helm chart lints/renders, server-side operations-manifest dry run, Ansible syntax,
 image pinning, rendered-image registry verification, and repository lint passed.
 The host runner was provisioned with Ansible and registered online as metal0-ops.
-GitOps controller/backup rollout and the actual restore remain pending.
+The first published manifest validation runs passed on GitHub. GitOps rollout
+is underway; remaining initial backups and storage reclamation are pending.
 
 ## Recovery progress
 
@@ -66,8 +67,8 @@ GitOps controller/backup rollout and the actual restore remain pending.
 - Metal2 was temporarily cordoned during snapshot coalescing to keep new backup
   movers off its busy disk. Uncordon it after purge/reservation verification.
 - The temporary VolSync application skip-reconcile annotation was removed by
-  ApplicationSet reconciliation; there is no lasting application hold. The old
-  missing image pin remains live until the publication approval is received.
+  ApplicationSet reconciliation; there is no lasting application hold. The verified
+  image pin is now published and reconciled; the controller is Healthy.
 - First backups for previously unmanaged sources can be bootstrapped serially
   with `initialize-backups.py --apply --repair-pod-images`. This recovery mode
   replaces only the known unavailable image on a never-started Restic mover Pod;
@@ -76,3 +77,16 @@ GitOps controller/backup rollout and the actual restore remain pending.
   controller fix before relying on future scheduled jobs.
 - The existing Frigate media backup metadata was located on the off-node NAS at
   `backupstore/volumes/cd/35/pvc-9c4ef657-d951-439b-8ca1-a29808406e36/backups/backup_engine-upgrade-20261015-a29808406e36.cfg`.
+
+- Workflow `freshlab-restore-drill-x4s2j` succeeded: Restic recovered a disposable
+  Mealie volume, SQLite integrity and required application tables passed, and
+  the temporary PVC, ReplicationDestination and validation Job were removed.
+- Serial activation now publishes one source at a time before Argo sync using
+  `initialize-backups.py --apply --publish-activations`. This mode requires
+  explicit operator approval to publish; that approval was received for this run.
+- Backups and restores use the application file owner, including PostgreSQL
+  UID 26/GID 999 and Mealie UID/GID 1001. Capability-free root could not read
+  PostgreSQL's private directory or restore Mealie ownership; using the actual
+  owner fixed both failures without changing live data permissions.
+- Aggregate N+1 memory headroom fails for loss of metal0 during backup activity;
+  the hardware spec includes a 16-to-32 GiB metal1 upgrade and current pricing.

@@ -83,6 +83,30 @@ including physical snapshot growth and temporary coalescing/rebuild space. The
 Frigate incident demonstrates that a 150 GiB PVC can occupy over 350 GiB per
 replica. Keep disposable recordings separate from important databases/configuration.
 
+## Memory headroom
+
+The live aggregate failure check, including active backup movers, found 33.7 GiB
+requested versus a 28.5 GiB budget after losing metal0 with 20% spare capacity.
+CPU passed. This is an aggregate check, not proof that affinity/GPU/storage
+constraints can be satisfied. Recheck when recovery jobs finish.
+
+Metal1 has both SO-DIMM slots occupied by 8 GB DDR4-2666 modules. Upgrade it to
+**32 GB with two matched 16 GB, 260-pin, 1.2 V, non-ECC unbuffered SO-DIMMs**.
+[Dell specifies two slots and up to 64 GB](https://www.dell.com/support/manuals/en-lv/optiplex-3080-micro/optiplex3080_micro_specs/memory?guid=guid-f806e6f5-3400-4366-90f0-4ca5c3361116&lang=en-us).
+A manufacturer-specified candidate is
+[Kingston KVR26S19D8/16](https://www.kingston.com/datasheets/kvr26s19d8_16.pdf).
+The [Newegg marketplace listing](https://www.newegg.com/kingston-technology-corp-16gb-ddr4-2666-cas-latency-cl19-memory/p/0RM-001W-004T8?Item=9SIACWTK4Y0974)
+showed $134.33 each from Prestige Technology, **$268.66 for two**, on October 19.
+Confirm exact part, new condition, warranty and delivered price; the listing also
+showed a lower alternate-seller offer that is not used in this budget.
+
+That makes the staged three-SATA-drive plus RAM budget **from $1,033.66**;
+the full eight-drive plus RAM budget is **from $2,072.62**, excluding mounting
+parts, tax and shipping. The Micron portion remains quote-only. The additional
+16 GiB would increase the aggregate surviving memory budget by about 12.8 GiB
+under the same 20% margin. Validate the actual installation and run a controlled
+failure drill before claiming N+1 operation. No RAM has been purchased.
+
 ## Migration and verification
 
 1. Confirm current backups and an off-node etcd snapshot. Complete the current
