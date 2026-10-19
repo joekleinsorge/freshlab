@@ -319,5 +319,5 @@ backups:
     - namespace: uptime-kuma
       pvc: uptime-kuma-data
       schedule: "47 4,10,16,22 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
