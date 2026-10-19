@@ -302,7 +302,7 @@ backups:
     - namespace: qbittorrent
       pvc: qbittorrent-config
       schedule: "17 4,10,16,22 * * *"
-      paused: true
+      paused: false
       moverSecurityContext:
         runAsUser: 3000
         runAsGroup: 3000
