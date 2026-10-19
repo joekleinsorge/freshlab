@@ -26,9 +26,40 @@ def active_in_git(source):
     path.write_text(''.join(blocks))
 
 
+def publish_activation(namespace, source):
+    """Explicitly authorized operator mode: publish one activation before sync."""
+    branch = subprocess.check_output(['git', 'branch', '--show-current'], cwd=ROOT, text=True).strip()
+    if branch != 'main':
+        raise SystemExit('Serial publication requires the main branch')
+    active_in_git(source)
+    path = 'system/volsync-system/values.yaml'
+    subprocess.check_call(['git', 'add', '--', path], cwd=ROOT)
+    if subprocess.run(['git', 'diff', '--cached', '--quiet', '--', path], cwd=ROOT).returncode:
+        staged = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], cwd=ROOT, text=True).splitlines()
+        if staged != [path]:
+            raise SystemExit('Refusing to include unrelated staged files in an activation commit')
+        subprocess.check_call(['git', 'commit', '-m', f'fix(backups): activate {namespace}/{source}'], cwd=ROOT)
+    subprocess.check_call(['git', 'push', 'origin', 'main'], cwd=ROOT)
+    revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    app = json.loads(kubectl('-n', 'argocd', 'get', 'application', 'volsync-system', '-o', 'json'))
+    if not app.get('operation'):
+        operation = {'operation': {'initiatedBy': {'username': 'serial-backup-initialization'}, 'sync': {
+            'revision': revision, 'prune': False, 'resources': [{
+                'group': 'volsync.backube', 'kind': 'ReplicationSource', 'namespace': namespace, 'name': source}]}}}
+        kubectl('-n', 'argocd', 'patch', 'application', 'volsync-system', '--type=merge', '-p', json.dumps(operation))
+    deadline = time.monotonic() + 600
+    while time.monotonic() < deadline:
+        current = json.loads(kubectl('-n', namespace, 'get', 'replicationsource', source, '-o', 'json'))
+        if not current['spec'].get('paused', False):
+            return current
+        time.sleep(5)
+    raise SystemExit('Published activation did not reconcile within ten minutes')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--apply', action='store_true')
+    parser.add_argument('--publish-activations', action='store_true', help='With explicit publishing approval, commit/push each activation before Argo sync')
     parser.add_argument('--include-bulk', action='store_true')
     parser.add_argument('--repair-pod-images', action='store_true', help='Emergency only: repair never-started movers using the known missing digest')
     parser.add_argument('--timeout-seconds', type=int, default=1800)
@@ -64,6 +95,8 @@ def main():
                 continue
         print(f'Initialize backup: {namespace}/{source}', flush=True)
         if not args.apply: continue
+        if args.publish_activations and current and current['spec'].get('paused'):
+            current = publish_activation(namespace, source)
         if args.repair_pod_images and current and current['metadata'].get('annotations', {}).get('argocd.argoproj.io/tracking-id'):
             raise SystemExit('Publish/sync the image fix before restarting an Argo-managed existing source')
         if current and current['metadata'].get('annotations', {}).get('argocd.argoproj.io/tracking-id') and current['spec'].get('paused'):
