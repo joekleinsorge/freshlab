@@ -162,3 +162,9 @@ check(kindle_route&.dig("spec", "parentRefs")&.all? { |parent| parent["sectionNa
       "Kindle public routing must retain HTTPS on the active Service")
 
 puts "Health configuration regression checks passed."
+
+manual_backup_ignore = root_applicationset.dig("spec", "template", "spec", "ignoreDifferences").find do |rule|
+  rule["group"] == "volsync.backube" && rule["kind"] == "ReplicationSource"
+end
+check(manual_backup_ignore && manual_backup_ignore["jsonPointers"] == ["/spec/trigger/manual"],
+      "Preserve only operational backup triggers; schedules and pause state must remain reconciled")

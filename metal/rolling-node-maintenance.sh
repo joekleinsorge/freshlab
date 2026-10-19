@@ -70,6 +70,8 @@ evacuate() {
     return 1
   fi
 
+  python3 "$(dirname "${BASH_SOURCE[0]}")/../scripts/check-failure-capacity.py" --exclude-node "$node"
+
   kubectl cordon "$node"
   kubectl -n longhorn patch node.longhorn.io "$node" --type=merge \
     -p '{"spec":{"allowScheduling":false,"evictionRequested":true}}'

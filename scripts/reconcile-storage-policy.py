@@ -40,18 +40,21 @@ def main():
         if not args.apply: continue
         if volume['status']['robustness'] != 'healthy':
             raise SystemExit('Existing source volume must be healthy before changing replica count')
-        # Require enough space for a full nominal replica and the 30% headroom
-        # target on at least the requested number of independent nodes. This is
+        # Require room for a full replica and the declared scheduling floor
+        # on independent nodes, including copies already present. This is
         # conservative; Longhorn still makes the final scheduling decision.
         required = max(int(volume['spec']['size']), int(volume['status'].get('actualSize', 0)))
-        eligible = 0
+        existing = get('replicas.longhorn.io', 'longhorn')['items']
+        eligible_nodes = {r['spec'].get('nodeID') for r in existing
+                          if r['spec'].get('volumeName') == name and r['spec'].get('healthyAt')
+                          and not r['spec'].get('failedAt') and r['spec'].get('nodeID')}
         for node in get('nodes.longhorn.io', 'longhorn')['items']:
             if not node['spec'].get('allowScheduling'): continue
-            if any(d.get('storageAvailable', 0) >= required + d.get('storageMaximum', 0) * 0.30
+            if any(d.get('storageAvailable', 0) >= required + d.get('storageMaximum', 0) * policy['min_node_free_fraction']
                    and all(c['status'] == 'True' for c in d.get('conditions', []) if c['type'] in ('Ready', 'Schedulable'))
                    for d in node['status'].get('diskStatus', {}).values()):
-                eligible += 1
-        if eligible < minimum:
+                eligible_nodes.add(node['metadata']['name'])
+        if len(eligible_nodes) < minimum:
             raise SystemExit('Insufficient independent disk headroom; no storage policy was weakened')
         subprocess.check_call(['kubectl', '-n', 'longhorn', 'patch', 'volumes.longhorn.io', name,
                                '--type=merge', '-p', json.dumps({'spec': {'numberOfReplicas': minimum}})])

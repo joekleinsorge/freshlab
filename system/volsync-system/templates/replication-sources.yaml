@@ -28,7 +28,7 @@ spec:
     {{- with .cacheCapacity }}
     cacheCapacity: {{ . | quote }}
     {{- end }}
-    {{- with .moverAffinity }}
+    {{- with (default $.Values.backups.moverAffinity .moverAffinity) }}
     moverAffinity:
 {{ toYaml . | indent 6 }}
     {{- end }}

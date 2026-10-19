@@ -17,6 +17,10 @@ spec:
       - name: capacity
       - name: storage-class
         value: longhorn
+      - name: mover-user
+        value: "0"
+      - name: mover-group
+        value: "0"
   templates:
     - name: restore
       steps:
@@ -66,3 +70,10 @@ spec:
               repository: {{ "{{workflow.parameters.source-pvc}}" }}-volsync-restic
               destinationPVC: {{ "{{workflow.parameters.restore-pvc}}" }}
               copyMethod: Direct
+              moverSecurityContext:
+                runAsUser: {{ "{{workflow.parameters.mover-user}}" }}
+                runAsGroup: {{ "{{workflow.parameters.mover-group}}" }}
+                fsGroup: {{ "{{workflow.parameters.mover-group}}" }}
+                fsGroupChangePolicy: OnRootMismatch
+                seccompProfile:
+                  type: RuntimeDefault

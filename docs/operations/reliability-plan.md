@@ -58,3 +58,21 @@ Helm chart lints/renders, server-side operations-manifest dry run, Ansible synta
 image pinning, rendered-image registry verification, and repository lint passed.
 The host runner was provisioned with Ansible and registered online as metal0-ops.
 GitOps controller/backup rollout and the actual restore remain pending.
+
+## Recovery progress
+
+- Immich PostgreSQL 18 now has two healthy replicas on metal1 and metal3, verified
+  after the new replica completed rebuilding. The desired count is in policy.
+- Metal2 was temporarily cordoned during snapshot coalescing to keep new backup
+  movers off its busy disk. Uncordon it after purge/reservation verification.
+- The temporary VolSync application skip-reconcile annotation was removed by
+  ApplicationSet reconciliation; there is no lasting application hold. The old
+  missing image pin remains live until the publication approval is received.
+- First backups for previously unmanaged sources can be bootstrapped serially
+  with `initialize-backups.py --apply --repair-pod-images`. This recovery mode
+  replaces only the known unavailable image on a never-started Restic mover Pod;
+  it does not restart running movers or modify existing Argo-managed sources.
+  Each verified success records the unpaused source in Git. Publish/sync the
+  controller fix before relying on future scheduled jobs.
+- The existing Frigate media backup metadata was located on the off-node NAS at
+  `backupstore/volumes/cd/35/pvc-9c4ef657-d951-439b-8ca1-a29808406e36/backups/backup_engine-upgrade-20261015-a29808406e36.cfg`.

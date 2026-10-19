@@ -28,6 +28,7 @@ def assess(state, policy, now):
     claims = {(p["metadata"]["namespace"], p["metadata"]["name"]): p for p in state["pvc"]}
     volumes = {v["metadata"]["name"]: v for v in state["volumes.longhorn.io"]}
     sources = {(s["metadata"]["namespace"], s["metadata"]["name"]): s for s in state["replicationsources.volsync.backube"]}
+    required_volumes = set()
     for item in policy["volumes"]:
         key = (item["namespace"], item["pvc"])
         label = "/".join(key)
@@ -36,6 +37,7 @@ def assess(state, policy, now):
             failures.append(f"Required PVC {label} is missing or unbound")
             continue
         volume_name = claim.get("spec", {}).get("volumeName")
+        required_volumes.add(volume_name)
         volume = volumes.get(volume_name, {})
         minimum = item["min_replicas"]
         if volume.get("spec", {}).get("numberOfReplicas", 0) < minimum:
@@ -69,7 +71,9 @@ def assess(state, policy, now):
             failures.append(f"PVC {label}: latest backup result is {result}")
     for snapshot in state["snapshots.longhorn.io"]:
         error = snapshot.get("status", {}).get("error")
-        if error:
+        volume_name = snapshot.get("spec", {}).get("volume")
+        active = volumes.get(volume_name, {}).get("status", {}).get("state") == "attached"
+        if error and (active or volume_name in required_volumes):
             failures.append(f"Snapshot {snapshot['metadata']['name']}: {error}")
     for engine in state["engines.longhorn.io"]:
         for purge in (engine.get("status", {}).get("purgeStatus") or {}).values():

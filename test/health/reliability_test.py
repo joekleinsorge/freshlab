@@ -60,8 +60,13 @@ class ReliabilityTest(unittest.TestCase):
             with self.subTest(mutation=mutation): self.assertTrue(self.assess())
 
     def test_snapshot_purge_error_is_reported(self):
-        self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'stuck'}, 'status': {'error': 'engine upgrade incomplete'}}]
+        self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'stuck'}, 'spec': {'volume': 'v'}, 'status': {'error': 'engine upgrade incomplete'}}]
         self.assertTrue(any('upgrade incomplete' in f for f in self.assess()))
+
+    def test_retired_detached_volume_does_not_block_active_health(self):
+        self.state['volumes.longhorn.io'].append({'metadata': {'name': 'retired'}, 'status': {'state': 'detached'}})
+        self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'old'}, 'spec': {'volume': 'retired'}, 'status': {'error': 'engine not running'}}]
+        self.assertEqual(self.assess(), [])
 
 
 if __name__ == '__main__':

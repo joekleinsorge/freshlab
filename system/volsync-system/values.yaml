@@ -26,6 +26,17 @@ backups:
   paused: true
   schedule: "17 */6 * * *"
   copyMethod: Snapshot
+  # Prefer the worker's spare CPU/RAM for snapshot export and Restic indexing.
+  # Serving workloads can still fail over; backup work should spare etcd hosts.
+  moverAffinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values: [metal0]
   # Mover Jobs are intentionally below serving workloads.  They previously
   # ran as BestEffort, allowing backup work to contend without bounds during
   # a storage recovery.
@@ -64,6 +75,15 @@ backups:
       # Initial snapshot export is complete. Direct Restic copies make recurring
       # media backups incremental without another Longhorn snapshot export.
       copyMethod: Direct
+      # A direct RWO copy must run beside the app using the source PVC.
+      moverAffinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: frigate
+                  app.kubernetes.io/name: frigate
+              topologyKey: kubernetes.io/hostname
       # The recovery mover left a stale repository lock; remove it once before
       # resuming recurring backups from the restored media claim.
       unlock: frigate-restic-lock-20261004
@@ -102,53 +122,111 @@ backups:
     - namespace: immich
       pvc: immich-postgres-data-v18
       schedule: "2 0,6,12,18 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      # PostgreSQL owns 0700 directories; a capability-free root mover cannot
+      # traverse them. Run as the database owner, with group access to its cache.
+      moverSecurityContext:
+        runAsUser: 26
+        runAsGroup: 999
+        runAsNonRoot: true
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: authelia
       pvc: authelia-data
       schedule: "17 0,6,12,18 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
     - namespace: mealie
       pvc: mealie-data
       schedule: "32 0,6,12,18 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: paperless
       pvc: paperless-data
       schedule: "47 0,6,12,18 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: kitchenowl
       pvc: kitchenowl-data
       schedule: "2 1,7,13,19 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
     - namespace: grocy
       pvc: grocy-data
       schedule: "17 1,7,13,19 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: freshrss
       pvc: freshrss-pvc
       schedule: "32 1,7,13,19 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: hermes
       pvc: hermes-data
       schedule: "47 1,7,13,19 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 10000
+        runAsGroup: 10000
+        runAsNonRoot: true
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: disney-alerts
       pvc: disney-alerts-data
       schedule: "2 2,8,14,20 * * *"
-      paused: true
-      moverSecurityContext: *uid0
+      paused: false
+      moverSecurityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: romm
       pvc: mysql-data-pvc
       schedule: "17 2,8,14,20 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        runAsNonRoot: true
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: romm
       pvc: romm-resources-pvc
       schedule: "32 2,8,14,20 * * *"
@@ -163,34 +241,76 @@ backups:
       pvc: radarr-config
       schedule: "2 3,9,15,21 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: sonarr
       pvc: sonarr-config
       schedule: "17 3,9,15,21 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: prowlarr
       pvc: prowlarr-config
       sourcePVC: prowlarr-config-restore-20261005
       schedule: "32 3,9,15,21 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: tautulli
       pvc: tautulli-config
       sourcePVC: tautulli-config-restore-20261005
       schedule: "47 3,9,15,21 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: seerr
       pvc: seerr-config
       schedule: "2 4,10,16,22 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: qbittorrent
       pvc: qbittorrent-config
       schedule: "17 4,10,16,22 * * *"
       paused: true
-      moverSecurityContext: *uid0
+      moverSecurityContext:
+        runAsUser: 3000
+        runAsGroup: 3000
+        runAsNonRoot: true
+        fsGroup: 3000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: autobrr
       pvc: autobrr-config
       schedule: "32 4,10,16,22 * * *"

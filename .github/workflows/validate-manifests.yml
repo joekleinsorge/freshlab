@@ -8,12 +8,43 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: validate-gitops-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  healthy-baseline:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require a recent healthy cluster before infrastructure updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh api "repos/${REPOSITORY}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename' > /tmp/changed-files
+          if ! grep -Eq '^(system/|metal/|freshlab-secrets/|platform/(arc|runners)/)' /tmp/changed-files; then
+            echo 'No infrastructure changes require a live baseline.'
+            exit 0
+          fi
+          gh api "repos/${REPOSITORY}/actions/workflows/cluster-smoke.yml/runs?status=success&per_page=1" \
+            --jq '.workflow_runs[0].updated_at // empty' > /tmp/last-success
+          python3 - <<'PY'
+          import datetime as dt
+          from pathlib import Path
+          value = Path('/tmp/last-success').read_text().strip()
+          if not value:
+              raise SystemExit('Infrastructure updates require a successful live smoke check.')
+          age = dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(value.replace('Z', '+00:00'))
+          if age.total_seconds() > 7200:
+              raise SystemExit(f'Infrastructure update blocked: healthy baseline is stale ({age}).')
+          print(f'Infrastructure healthy baseline: {value}')
+          PY
+
   validate:
     runs-on: ubuntu-latest
     steps:

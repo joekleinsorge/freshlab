@@ -174,5 +174,6 @@
       "min_replicas": 2,
       "max_backup_age_hours": 8
     }
-  ]
+  ],
+  "min_node_free_fraction": 0.25
 }

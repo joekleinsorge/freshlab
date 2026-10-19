@@ -35,9 +35,13 @@ backup-status:
 restore:
 	@test -n "$(NAMESPACE)" -a -n "$(SOURCE_PVC)" -a -n "$(RESTORE_PVC)" -a -n "$(CAPACITY)" || \
 		{ echo 'Usage: make restore NAMESPACE=... SOURCE_PVC=... RESTORE_PVC=... CAPACITY=...'; exit 2; }
+	@set -eu; \
+	mover_user=$$(kubectl -n "$(NAMESPACE)" get replicationsource "$(SOURCE_PVC)" -o jsonpath='{.spec.restic.moverSecurityContext.runAsUser}'); \
+	mover_group=$$(kubectl -n "$(NAMESPACE)" get replicationsource "$(SOURCE_PVC)" -o jsonpath='{.spec.restic.moverSecurityContext.runAsGroup}'); \
 	argo submit --namespace argocd --from clusterworkflowtemplate/freshlab-volsync-restore \
 		-p namespace="$(NAMESPACE)" -p source-pvc="$(SOURCE_PVC)" \
-		-p restore-pvc="$(RESTORE_PVC)" -p capacity="$(CAPACITY)" --watch
+		-p restore-pvc="$(RESTORE_PVC)" -p capacity="$(CAPACITY)" \
+		-p mover-user="$${mover_user:-0}" -p mover-group="$${mover_group:-0}" --watch
 
 paperless-password:
 	@SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -d --extract '["stringData"]["PAPERLESS_ADMIN_PASSWORD"]' freshlab-secrets/paperless.sops.yaml

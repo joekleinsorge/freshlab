@@ -77,16 +77,69 @@ spec:
           value: '{{ "{{workflow.name}}" }}-data'
         - {name: capacity, value: 5Gi}
         - {name: storage-class, value: longhorn}
+        # Match the application and backup owner. Root without CHOWN capability
+        # cannot restore another UID's files; unprivileged Restic skips chown.
+        - {name: mover-user, value: "1001"}
+        - {name: mover-group, value: "1001"}
     templates:
       - name: drill
         steps:
           - - name: restore
-              templateRef:
-                name: freshlab-volsync-restore
-                template: restore
-                clusterScope: true
+              template: restore
           - - name: inspect-database
               template: inspect-database
+      # Keep the drill self-contained and restricted to its disposable Mealie
+      # resources. Generic restores use the parameterized ClusterWorkflowTemplate.
+      - name: restore
+        steps:
+          - - name: create-empty-pvc
+              template: create-empty-pvc
+          - - name: restore-backup
+              template: restore-backup
+      - name: create-empty-pvc
+        resource:
+          action: create
+          manifest: |
+            apiVersion: v1
+            kind: PersistentVolumeClaim
+            metadata:
+              name: {{ "{{workflow.parameters.restore-pvc}}" }}
+              namespace: mealie
+              labels:
+                freshlab.kleinsorge.dev/restore: {{ "{{workflow.name}}" }}
+            spec:
+              storageClassName: longhorn
+              accessModes: [ReadWriteOnce]
+              resources:
+                requests:
+                  storage: 5Gi
+      - name: restore-backup
+        resource:
+          action: create
+          successCondition: status.lastManualSync == {{ "{{workflow.name}}" }}
+          failureCondition: status.latestMoverStatus.result == Failed
+          manifest: |
+            apiVersion: volsync.backube/v1alpha1
+            kind: ReplicationDestination
+            metadata:
+              name: {{ "{{workflow.name}}" }}
+              namespace: mealie
+              labels:
+                freshlab.kleinsorge.dev/restore: {{ "{{workflow.name}}" }}
+            spec:
+              trigger:
+                manual: {{ "{{workflow.name}}" }}
+              restic:
+                repository: mealie-data-volsync-restic
+                destinationPVC: {{ "{{workflow.parameters.restore-pvc}}" }}
+                copyMethod: Direct
+                moverSecurityContext:
+                  runAsUser: 1001
+                  runAsGroup: 1001
+                  fsGroup: 1001
+                  fsGroupChangePolicy: OnRootMismatch
+                  seccompProfile:
+                    type: RuntimeDefault
       - name: inspect-database
         resource:
           action: create

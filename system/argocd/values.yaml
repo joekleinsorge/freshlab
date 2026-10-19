@@ -386,6 +386,12 @@ argocd-apps:
               kind: Service
               jsonPointers:
                 - /spec/selector/rollouts-pod-template-hash
+            # Manual backup requests are operational actions. Preserve the
+            # trigger while reconciling schedules, repositories, and pause state.
+            - group: volsync.backube
+              kind: ReplicationSource
+              jsonPointers:
+                - /spec/trigger/manual
             # Ignore tracking annotations only. Namespace security and mesh
             # labels are desired configuration and must be reconciled.
             - group: ''
