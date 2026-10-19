@@ -235,7 +235,7 @@ backups:
     - namespace: romm
       pvc: romm-config-recovery-pvc
       schedule: "47 2,8,14,20 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
     - namespace: radarr
       pvc: radarr-config
