@@ -230,7 +230,7 @@ backups:
     - namespace: romm
       pvc: romm-resources-pvc
       schedule: "32 2,8,14,20 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
     - namespace: romm
       pvc: romm-config-recovery-pvc
