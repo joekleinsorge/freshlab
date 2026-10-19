@@ -240,7 +240,7 @@ backups:
     - namespace: radarr
       pvc: radarr-config
       schedule: "2 3,9,15,21 * * *"
-      paused: true
+      paused: false
       moverSecurityContext:
         runAsUser: 3000
         runAsGroup: 3000
