@@ -1,54 +1,36 @@
-name: Quarterly backup restore drill
+name: Verify monthly backup restore drill
 
 on:
   schedule:
-    - cron: "17 7 1 1,4,7,10 *"
+    - cron: "47 20 1 * *"
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: backup-restore-drill
-  cancel-in-progress: false
-
 jobs:
-  restore:
-    runs-on: self-hosted
-    timeout-minutes: 90
+  verify:
+    runs-on: [self-hosted, freshlab-ops]
+    timeout-minutes: 5
     env:
-      KUBECONFIG: ${{ github.workspace }}/metal/kubeconfig.yaml
-      NAMESPACE: mealie
-      SOURCE_PVC: mealie-data
-      CAPACITY: 5Gi
+      KUBECONFIG: /var/lib/freshlab-ops/.kube/config
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Restore and verify a disposable PVC
-        shell: bash
+      - name: Require a recent successful application-level restore
         run: |
-          set -euo pipefail
-          restore_pvc="${SOURCE_PVC}-restore-drill-${GITHUB_RUN_ID}"
-          workflow_name=""
-          cleanup() {
-            kubectl -n "${NAMESPACE}" delete replicationdestination \
-              -l "freshlab.kleinsorge.dev/restore=${workflow_name}" \
-              --ignore-not-found --wait=false || true
-            kubectl -n "${NAMESPACE}" delete pvc "${restore_pvc}" \
-              --ignore-not-found --wait=false || true
-          }
-          trap cleanup EXIT
-
-          workflow_name="$(argo submit --namespace argocd \
-            --from clusterworkflowtemplate/freshlab-volsync-restore \
-            -p "namespace=${NAMESPACE}" \
-            -p "source-pvc=${SOURCE_PVC}" \
-            -p "restore-pvc=${restore_pvc}" \
-            -p "capacity=${CAPACITY}" \
-            --output name)"
-          argo wait --namespace argocd "${workflow_name}" --timeout 75m
-          kubectl -n "${NAMESPACE}" wait "pvc/${restore_pvc}" \
-            --for=jsonpath='{.status.phase}'=Bound --timeout=5m
-          kubectl -n "${NAMESPACE}" get "pvc/${restore_pvc}" -o jsonpath='{.spec.volumeName}{"\\n"}' \
-            | grep -q .
+          kubectl --request-timeout=30s -n argocd get workflows \
+            -l workflows.argoproj.io/cron-workflow=freshlab-backup-restore-drill \
+            -o json > /tmp/freshlab-restore-results.json
+          python3 - <<'PY'
+          import datetime as dt, json
+          from pathlib import Path
+          workflows = json.loads(Path('/tmp/freshlab-restore-results.json').read_text())['items']
+          if not workflows:
+              raise SystemExit('No restore drill has run. Inspect the Argo CronWorkflow.')
+          latest = max(workflows, key=lambda w: w['metadata']['creationTimestamp'])
+          if latest.get('status', {}).get('phase') != 'Succeeded':
+              raise SystemExit('The latest restore drill did not succeed.')
+          finished = dt.datetime.fromisoformat(latest['status']['finishedAt'].replace('Z', '+00:00'))
+          if (dt.datetime.now(dt.timezone.utc) - finished).total_seconds() > 35 * 86400:
+              raise SystemExit('The latest successful restore drill is older than 35 days.')
+          print('Monthly restore, SQLite integrity, and application schema verification succeeded.')
+          PY

@@ -1,0 +1,21 @@
+[Unit]
+Description=Freshlab operations GitHub runner outside Kubernetes
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=freshlab-ops
+WorkingDirectory=/opt/freshlab-actions-runner
+ExecStart=/opt/freshlab-actions-runner/bin/runsvc.sh
+Environment=PATH=/opt/freshlab-actions-runner:/usr/local/bin:/usr/bin:/bin
+Environment=KUBECONFIG=/var/lib/freshlab-ops/.kube/config
+Restart=always
+RestartSec=15
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/opt/freshlab-actions-runner /var/lib/freshlab-ops
+
+[Install]
+WantedBy=multi-user.target

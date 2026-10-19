@@ -13,6 +13,8 @@ for tool in "${required_tools[@]}"; do
 done
 
 failures=0
+echo "Checking node pressure, required replicas, backup freshness, and snapshot cleanup..."
+python3 "${repo_root}/scripts/check-cluster-state.py" || failures=$((failures + 1))
 echo "Waiting for every node to report Ready..."
 kubectl wait --for=condition=Ready nodes --all --timeout=60s || failures=$((failures + 1))
 

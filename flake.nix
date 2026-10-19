@@ -16,6 +16,7 @@
               age
               ansible
               go
+              go-containerregistry
               jq
               kubeconform
               kubectl

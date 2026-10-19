@@ -1,11 +1,19 @@
 volsync:
-  # Pin both the controller and Restic mover to the current upstream image
+  # Pin the controller and generated movers to the verified VolSync v0.16.0 image
   # digest. The controller passes this mover image to every
   # generated backup Job, satisfying the cluster's digest-only image policy.
   image:
-    image: quay.io/backube/volsync@sha256:758330413ac6ef0642dae4748dcad6c94146869d783b7cffd021f4808b8f77ac
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
   restic:
-    image: quay.io/backube/volsync@sha256:758330413ac6ef0642dae4748dcad6c94146869d783b7cffd021f4808b8f77ac
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
+  rclone:
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
+  rsync:
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
+  rsync-tls:
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
+  syncthing:
+    image: quay.io/backube/volsync@sha256:0d03a6aad57569eba2c0eaa0848cf4a908d9744b372ff2224bb291a320f36d76
   metrics:
     # The chart's ServiceMonitor does not attach a bearer token, so its
     # kube-rbac-proxy endpoint otherwise returns 401 to Prometheus.
@@ -91,3 +99,105 @@ backups:
       # 2026-10-10 control-plane crash). Changing this value makes VolSync run
       # its safe Restic unlock workflow once before the next backup.
       unlock: plex-restic-lock-20261010
+    - namespace: immich
+      pvc: immich-postgres-data-v18
+      schedule: "2 0,6,12,18 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: authelia
+      pvc: authelia-data
+      schedule: "17 0,6,12,18 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: mealie
+      pvc: mealie-data
+      schedule: "32 0,6,12,18 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: paperless
+      pvc: paperless-data
+      schedule: "47 0,6,12,18 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: kitchenowl
+      pvc: kitchenowl-data
+      schedule: "2 1,7,13,19 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: grocy
+      pvc: grocy-data
+      schedule: "17 1,7,13,19 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: freshrss
+      pvc: freshrss-pvc
+      schedule: "32 1,7,13,19 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: hermes
+      pvc: hermes-data
+      schedule: "47 1,7,13,19 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: disney-alerts
+      pvc: disney-alerts-data
+      schedule: "2 2,8,14,20 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: romm
+      pvc: mysql-data-pvc
+      schedule: "17 2,8,14,20 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: romm
+      pvc: romm-resources-pvc
+      schedule: "32 2,8,14,20 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: romm
+      pvc: romm-config-recovery-pvc
+      schedule: "47 2,8,14,20 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: radarr
+      pvc: radarr-config
+      schedule: "2 3,9,15,21 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: sonarr
+      pvc: sonarr-config
+      schedule: "17 3,9,15,21 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: prowlarr
+      pvc: prowlarr-config
+      sourcePVC: prowlarr-config-restore-20261005
+      schedule: "32 3,9,15,21 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: tautulli
+      pvc: tautulli-config
+      sourcePVC: tautulli-config-restore-20261005
+      schedule: "47 3,9,15,21 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: seerr
+      pvc: seerr-config
+      schedule: "2 4,10,16,22 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: qbittorrent
+      pvc: qbittorrent-config
+      schedule: "17 4,10,16,22 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: autobrr
+      pvc: autobrr-config
+      schedule: "32 4,10,16,22 * * *"
+      paused: true
+      moverSecurityContext: *uid0
+    - namespace: uptime-kuma
+      pvc: uptime-kuma-data
+      schedule: "47 4,10,16,22 * * *"
+      paused: true
+      moverSecurityContext: *uid0

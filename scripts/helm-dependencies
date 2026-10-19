@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+chart="${1:?Usage: helm-dependencies CHART_DIRECTORY}"
+if helm dependency list "$chart" | awk 'NR > 1 && NF && $NF != "ok" { missing = 1 } END { exit !missing }'; then
+  # A changed dependency can need a repository absent from the runner cache.
+  # Register URLs declared by this chart, without relying on workstation state.
+  while IFS= read -r repository; do
+    [[ "$repository" == https://* ]] || continue
+    alias="freshlab-$(printf '%s' "$repository" | cksum | awk '{print $1}')"
+    helm repo add "$alias" "$repository" --force-update >/dev/null
+  done < <(ruby -ryaml -e 'd = YAML.load_file(ARGV[0]); puts (d["dependencies"] || []).map { |v| v["repository"] }.compact.uniq' "$chart/Chart.yaml")
+  helm dependency build "$chart"
+fi

@@ -22,3 +22,7 @@ kubeconfig.yaml
 Chart.lock
 .vscode
 .token
+
+# Python validation caches
+__pycache__/
+*.py[cod]

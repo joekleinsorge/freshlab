@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: uptime-kuma-data-volsync-restic
+    namespace: uptime-kuma
+type: Opaque
+stringData:
+    RESTIC_REPOSITORY: ENC[AES256_GCM,data:Z407MsU2OgFDhKp29CX+5Hwj4okkDGsMsmvpMFbGyC2KiuOvpmEQf9VpZaNL5WUKRDAszWd+SdY786nQnRK9QNOagJ/h/zhQOL5fsBJy9ZpWInySAXAMdbzavaIv80X26L8=,iv:PSaowtxdBhADj/6QJJJsS3TvKZ8i0RaT7Rlk9q4ZuQo=,tag:xUsFrV1FQKNelanTCJFJMw==,type:str]
+    RESTIC_PASSWORD: ENC[AES256_GCM,data:ACiGlAEr+BIPX2vAh6v1TG8cRJgfeMH5JDGOlIENjkPAc8i3D0h7rFpCOGNwaBWutQZZLG58qHZLFNbktbjV3Q==,iv:hLtJZZ5vduigP050wBJtHW32RVtHkbqdAtaMRr1cmPk=,tag:XW597bnv9YCytbYLdf+D9g==,type:str]
+    RESTIC_REST_USERNAME: ENC[AES256_GCM,data:B76sLQ4q0CM=,iv:4osT1+O1e1Xqe+RXa3ILIbTAQEaVUJyt5MT8BDNvZbo=,tag:mSXomq5c20Tu3OlqOUszrg==,type:str]
+    RESTIC_REST_PASSWORD: ENC[AES256_GCM,data:BMRt0bRgiUL/+dMMzHI6prD9taN/kfoB2rQU4TGFbKC2nJeJlDN8/OhiLlmicMMe,iv:dDQhYLhQU7/cC3Z+rgZTrr91fs0xwnUfbGFr+huWIDY=,tag:MO6AkKFKaxVe5c5CNGFsmQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNNzk2THhYaGxLckFsN0Qy
+            R3cybHFFLzBqTmpRL3Rhbm5GcnlBOHVhVUcwCkNIam1Va2RlY0J0SHg0Mmdxa21C
+            aXo1Rytzc285V2I0SmlIWmRWNHYwU00KLS0tICt1bzJqUG44QTFodTVycHE1Y2RC
+            QkJ6cFNlSWQybjlDUzZxdGRnUFM5aXMK9vmAUHTP7SOo7M9+LVzs1ICNKgiOg6E0
+            Hm/5OJnTwLG/9lytRFpM+Cc+1WmiHSxuSnDilUOjNrQaBuzH7OXxww==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-19T18:35:54Z"
+    mac: ENC[AES256_GCM,data:SaoLA2hUnmWgyljALWywsVIxZemprB/68ke/mKliCytec+2ObpArBjHY1GcAcnFZkIzd+uyD1PFHyX+Wm3Tj78HYyhfuVeHsE263h9rJ+tk4qGoQ6s+bfO7yiJAS4TLG6HVTAx7jH4akF9zG929SDeTchRZ8b9OexTE2qKQnHuw=,iv:n2PhEgwzfW2mcJElnhzw4Vj11vgtdQiqDE1l+iKIE7Q=,tag:Nr0cXCyOiZkSW1uQfarWYg==,type:str]
+    version: 3.13.3

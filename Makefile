@@ -23,7 +23,10 @@ lint:
 
 # Repository policy checks that need no cluster access.
 validate:
-	./scripts/check-image-pinning.sh
+	FAIL_ON_UNPINNED_IMAGES=true ./scripts/check-image-pinning.sh
+
+verify-images:
+	./scripts/check-rendered-images
 
 backup-status:
 	kubectl get replicationsources.volsync.backube -A \

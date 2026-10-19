@@ -20,7 +20,7 @@ ready_nodes() {
 volume_failures() {
   kubectl -n longhorn get volumes.longhorn.io -o json | jq -r '
     .items[]
-    | select(.status.robustness != "healthy" or .status.state != "attached")
+    | select(.status.robustness == "faulted" or (.status.state != "detached" and .status.robustness != "healthy"))
     | [.metadata.name, (.status.robustness // "-"), (.status.state // "-")] | @tsv'
 }
 
@@ -59,13 +59,29 @@ evacuate() {
     return 1
   fi
 
+  if kubectl get node "$node" -o json | jq -e '.metadata.labels | has("node-role.kubernetes.io/control-plane")' >/dev/null \
+    && [[ "$(control_plane_ready_count)" -lt 3 ]]; then
+    echo "STOP: evacuating this control-plane node would leave fewer than two Ready members." >&2
+    return 1
+  fi
+
+  if kubectl get nodes -o json | jq -e 'any(.items[].status.conditions[]; (.type == "DiskPressure" or .type == "MemoryPressure" or .type == "PIDPressure") and .status != "False")' >/dev/null; then
+    echo "STOP: resolve node pressure before planned maintenance." >&2
+    return 1
+  fi
+
   kubectl cordon "$node"
   kubectl -n longhorn patch node.longhorn.io "$node" --type=merge \
     -p '{"spec":{"allowScheduling":false,"evictionRequested":true}}'
 
   echo "Waiting for Longhorn replicas to leave $node..."
+  local deadline=$((SECONDS + 900))
   while kubectl -n longhorn get replicas.longhorn.io -o json \
-    | jq -e --arg node "$node" '[.items[] | select(.spec.nodeID == $node and .status.currentState != "stopped")] | length > 0' >/dev/null; do
+    | jq -e --arg node "$node" '[.items[] | select(.spec.nodeID == $node and (.spec.healthyAt // "") != "" and (.spec.failedAt // "") == "")] | length > 0' >/dev/null; do
+    if ((SECONDS >= deadline)); then
+      echo "STOP: healthy replicas remain on $node after 15 minutes. Keep it powered on and inspect capacity/rebuild health." >&2
+      return 1
+    fi
     sleep 10
   done
 

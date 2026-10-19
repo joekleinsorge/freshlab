@@ -1,0 +1,11 @@
+[Unit]
+Description=Check Freshlab health every five minutes outside Kubernetes
+
+[Timer]
+OnBootSec=3m
+OnUnitActiveSec=5m
+RandomizedDelaySec=30s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

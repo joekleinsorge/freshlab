@@ -53,14 +53,29 @@ replication for `/volume1/kube/restic`.
 
 ## Restore drills
 
-The `Quarterly backup restore drill` GitHub Actions workflow restores the
-non-production `mealie-data` backup to a unique temporary PVC, waits for the
-restore workflow and bound volume, then removes only that labeled restore
-destination and temporary claim. It never mounts, stops, or modifies the live
-Mealie volume. Run it manually after any VolSync upgrade as well as allowing
-the quarterly schedule to run.
+The `freshlab-backup-restore-drill` Argo CronWorkflow runs monthly, on the first
+at 14:17 America/New_York, using a dedicated ServiceAccount restricted to the
+Mealie restore namespace. It restores to a unique disposable PVC, mounts only
+that clone in a validation Job, runs SQLite integrity checks, and verifies the
+Mealie `recipes` and `users` tables. Its exit handler removes only its uniquely
+named Job, ReplicationDestination, and restored PVC. The live PVC is never mounted
+or altered by the drill. Failed/aborted workflows run the same cleanup handler.
 
-The drill proves that the encrypted repository, credentials, VolSync mover,
-storage class, and destination volume can complete a restore. It does not
-validate application-level data semantics; run an application-specific check
-when changing Mealie's schema or backup layout.
+The GitHub `Verify monthly backup restore drill` workflow independently checks
+that the latest drill succeeded and is less than 35 days old. It runs on the
+host operations runner with read-only Kubernetes credentials. Trigger an actual
+new drill with `scripts/run-restore-drill.py` from an authorized workstation.
+Run one after VolSync/storage changes as well as on the monthly schedule.
+
+Important PVCs, required replicas, and maximum backup ages are declared in
+`reliability-policy.json`. `scripts/check-cluster-state.py` detects missing,
+paused, stale, failed, or incorrectly targeted backup sources. New backup sources
+are initially paused until their first backup can be admitted serially during
+recovery; a paused required source deliberately fails the health policy. Complete
+initial synchronization and commit its unpaused state before claiming coverage.
+
+NAS filesystem snapshots and a second/off-site copy remain external requirements.
+Longhorn replicas and local snapshots do not replace those copies. Application
+configuration databases, photo libraries on NFS, and off-node etcd snapshots all
+need explicit coverage; disposable caches and reconstructible telemetry do not
+need the same retention or replica policy.

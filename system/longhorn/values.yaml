@@ -9,28 +9,27 @@ longhorn:
     # One rebuild per node: parallel rebuilds plus image pulls saturated metal2's
     # NVMe, which etcd shares, and knocked the node NotReady (2026-10-05).
     concurrentReplicaRebuildPerNodeLimit: 1
-    # Secondary applications use one local replica. Plex and Frigate retain
-    # explicitly managed multi-node replicas.
-    defaultReplicaCount: 1
+    # New volumes default to two copies; explicitly disposable volumes can
+    # opt out. Existing per-volume replica counts require separate migration.
+    defaultReplicaCount: 2
     replicaAutoBalance: best-effort
-    # Rebalance before a node approaches the minimal-available floor.  This is
-    # especially important while all Longhorn disks share their hosts' root
-    # filesystems with k3s and etcd.
+    # This threshold only balances between disks within one node. It does not
+    # evacuate a full single-disk node; free-space checks provide that warning.
     replicaAutoBalanceDiskPressurePercentage: 70
     # Replicas must live on different nodes; a node loss must not remove both
     # copies of a volume.
     replicaSoftAntiAffinity: false
-    # Reserve sufficient physical headroom while allowing Frigate's mostly
-    # sparse restored 150Gi volume to maintain two replicas on the remaining
-    # nodes during a worker outage.
-    storageOverProvisioningPercentage: 110
+    # Do not rely on thin provisioning to fit another recovery replica.
+    storageOverProvisioningPercentage: 100
     # Longhorn shares each root filesystem with the kubelet, which soft-evicts
     # at 15% free and holds DiskPressure until 17% (eviction-minimum-reclaim).
     # At 15% here, rebuilds during metal0's outage filled metal3 into that band
     # and the kubelet evicted longhorn-manager, faulting four volumes
     # (2026-10-10).  Stay above the band with room for logs and images.
-    storageMinimalAvailablePercentage: 20
-    storageReservedPercentageForDefaultDisk: 5
+    storageMinimalAvailablePercentage: 25
+    # Applies when creating a default disk. Existing disks require a reviewed
+    # reservation update; changing this value does not resize or delete data.
+    storageReservedPercentageForDefaultDisk: 30
     # A transient replica-path stall previously exhausted Frigate's two
     # replicas.  Give a replica 20 seconds to recover, then replenish a lost
     # replica immediately rather than leaving a volume degraded for 10 minutes.

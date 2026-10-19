@@ -49,17 +49,22 @@ jobs:
             # Dependencies are vendored under charts/, and build would need a
             # `helm repo add` for every HTTP repository (some now defunct).
             # Only fetch what is missing; un-vendored charts come from OCI.
-            if helm dependency list "$chart_dir" | awk 'NR > 1 && NF && $NF != "ok" { missing = 1 } END { exit !missing }'; then
-              helm dependency build "$chart_dir"
-            fi
+            ./scripts/helm-dependencies "$chart_dir"
             helm lint "$chart_dir"
             helm template validation "$chart_dir" --namespace validation >/dev/null
           done < <(find apps platform system -name Chart.yaml -not -path '*/charts/*' | sort)
 
+      - name: Verify rendered images and generated backup movers exist
+        run: |
+          go install github.com/google/go-containerregistry/cmd/crane@v0.20.6
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          FAIL_ON_UNPINNED_IMAGES=true ./scripts/check-image-pinning.sh
+          ./scripts/check-rendered-images
+
       - name: Check health configuration regressions
         run: |
           ruby test/health/config_test.rb
-          python3 test/health/smoke_test.py
+          python3 -m unittest discover -s test/health -p '*_test.py'
           bash -n scripts/cluster-smoke-test
 
       - name: Check Ansible syntax

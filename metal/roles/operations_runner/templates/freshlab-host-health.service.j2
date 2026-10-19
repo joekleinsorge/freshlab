@@ -1,0 +1,10 @@
+[Unit]
+Description=Read-only Freshlab health policy check outside Kubernetes
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/freshlab-host-health
+TimeoutStartSec=240
+Nice=10
+IOSchedulingClass=idle

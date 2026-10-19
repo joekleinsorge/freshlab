@@ -1,0 +1,6 @@
+---
+- name: Run Freshlab operational checks outside Kubernetes
+  hosts: metal0
+  become: true
+  roles:
+    - operations_runner

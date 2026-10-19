@@ -20,20 +20,20 @@ spec:
         - alert: FreshlabNodeFilesystemLow
           # NFS shares are mounted on every node. Aggregate those mounts so a
           # single full share produces one alert rather than one per node.
-          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.25) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.25)
+          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.30) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.30)
           for: 15m
           labels:
             severity: warning
           annotations:
-            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 25% free"
+            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 30% free"
             description: "Free space on {{ `{{ $labels.mountpoint }}` }} is approaching the Longhorn safety reserve."
         - alert: FreshlabNodeFilesystemCritical
-          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.15) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.15)
+          expr: (min by (device, mountpoint) (node_filesystem_avail_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype=~"nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"}) < 0.20) or (node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} / node_filesystem_size_bytes{fstype!~"tmpfs|overlay|squashfs|nfs|nfs4",mountpoint!~"/var/lib/kubelet/.+"} < 0.20)
           for: 5m
           labels:
             severity: critical
           annotations:
-            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 15% free"
+            summary: "Filesystem {{ `{{ $labels.mountpoint }}` }} on {{ `{{ $labels.device }}` }} is below 20% free"
             description: "Immediate cleanup or expansion is required before kubelet begins evicting workloads."
         - alert: FreshlabNodeFilesystemWillFill
           expr: predict_linear(node_filesystem_avail_bytes{fstype!~"tmpfs|overlay|squashfs"}[6h], 24 * 3600) < 0
@@ -218,3 +218,29 @@ spec:
           annotations:
             summary: "PVC {{ `{{ $labels.namespace }}` }}/{{ `{{ $labels.persistentvolumeclaim }}` }} may fill within three days"
             description: "Current data growth is projected to exhaust this application volume within three days."
+    - name: freshlab.operational-checks
+      rules:
+        - alert: FreshlabHostHealthFailed
+          expr: freshlab_host_health_failed == 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Host reliability checks are failing"
+            description: "Inspect journalctl -u freshlab-host-health on metal0 for node pressure, backup age, replica policy, or snapshot errors."
+        - alert: FreshlabHostHealthHeartbeatMissing
+          expr: absent(freshlab_host_health_last_run_seconds) or (time() - freshlab_host_health_last_run_seconds > 900)
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Host reliability checks have stopped reporting"
+            description: "Check metal0's host timer and node exporter. The independent GitHub watchdog also detects missing smoke results."
+        - alert: FreshlabLonghornSnapshotAmplification
+          expr: longhorn_volume_actual_size_bytes / longhorn_volume_capacity_bytes > 1.5
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Longhorn physical usage exceeds 150% of the nominal volume size"
+            description: "Review retained snapshots, purge progress, trim, and host headroom before increasing capacity."

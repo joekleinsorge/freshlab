@@ -1,0 +1,178 @@
+{
+  "expected_nodes": [
+    "metal0",
+    "metal1",
+    "metal2",
+    "metal3"
+  ],
+  "volumes": [
+    {
+      "namespace": "frigate",
+      "pvc": "frigate-config",
+      "backup_source": "frigate-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "frigate",
+      "pvc": "frigate-media-restore-20261003",
+      "backup_source": "frigate-media",
+      "min_replicas": 1,
+      "max_backup_age_hours": 26
+    },
+    {
+      "namespace": "plex",
+      "pvc": "pms-config-plex-0",
+      "backup_source": "pms-config-plex-0",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "openfi",
+      "pvc": "openfi-data",
+      "backup_source": "openfi-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "immich",
+      "pvc": "immich-postgres-data-v18",
+      "backup_source": "immich-postgres-data-v18",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "authelia",
+      "pvc": "authelia-data",
+      "backup_source": "authelia-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "mealie",
+      "pvc": "mealie-data",
+      "backup_source": "mealie-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "paperless",
+      "pvc": "paperless-data",
+      "backup_source": "paperless-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "kitchenowl",
+      "pvc": "kitchenowl-data",
+      "backup_source": "kitchenowl-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "grocy",
+      "pvc": "grocy-data",
+      "backup_source": "grocy-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "freshrss",
+      "pvc": "freshrss-pvc",
+      "backup_source": "freshrss-pvc",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "hermes",
+      "pvc": "hermes-data",
+      "backup_source": "hermes-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "disney-alerts",
+      "pvc": "disney-alerts-data",
+      "backup_source": "disney-alerts-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "romm",
+      "pvc": "mysql-data-pvc",
+      "backup_source": "mysql-data-pvc",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "romm",
+      "pvc": "romm-resources-pvc",
+      "backup_source": "romm-resources-pvc",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "romm",
+      "pvc": "romm-config-recovery-pvc",
+      "backup_source": "romm-config-recovery-pvc",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "radarr",
+      "pvc": "radarr-config",
+      "backup_source": "radarr-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "sonarr",
+      "pvc": "sonarr-config",
+      "backup_source": "sonarr-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "prowlarr",
+      "pvc": "prowlarr-config-restore-20261005",
+      "backup_source": "prowlarr-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "tautulli",
+      "pvc": "tautulli-config-restore-20261005",
+      "backup_source": "tautulli-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "seerr",
+      "pvc": "seerr-config",
+      "backup_source": "seerr-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "qbittorrent",
+      "pvc": "qbittorrent-config",
+      "backup_source": "qbittorrent-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "autobrr",
+      "pvc": "autobrr-config",
+      "backup_source": "autobrr-config",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
+      "namespace": "uptime-kuma",
+      "pvc": "uptime-kuma-data",
+      "backup_source": "uptime-kuma-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    }
+  ]
+}

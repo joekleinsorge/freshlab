@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -uo pipefail
+export PATH=/opt/freshlab-actions-runner:/usr/local/bin:/usr/bin:/bin
+export KUBECONFIG=/var/lib/freshlab-ops/.kube/config
+status=0
+python3 /opt/freshlab-health/scripts/check-cluster-state.py || status=$?
+output=/var/lib/node_exporter/textfile_collector/freshlab-health.prom
+temporary="$(mktemp "${output}.XXXXXX")"
+trap 'rm -f "$temporary"' EXIT
+printf 'freshlab_host_health_failed %s\nfreshlab_host_health_last_run_seconds %s\n' \
+  "$([[ "$status" == 0 ]] && echo 0 || echo 1)" "$(date +%s)" > "$temporary"
+chmod 0644 "$temporary"
+mv "$temporary" "$output"
+exit "$status"

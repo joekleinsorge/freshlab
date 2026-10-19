@@ -1,0 +1,25 @@
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: freshlab-snapshot-cleanup
+  namespace: {{ .Release.Namespace }}
+spec:
+  # Purge snapshots already removed and system snapshots. This task does not
+  # expire user/CSI snapshots that are still retained for a recovery point.
+  task: snapshot-cleanup
+  cron: "15 5 * * *"
+  groups: [default]
+  retain: 0
+  concurrency: 1
+---
+apiVersion: longhorn.io/v1beta2
+kind: RecurringJob
+metadata:
+  name: freshlab-filesystem-trim
+  namespace: {{ .Release.Namespace }}
+spec:
+  task: filesystem-trim
+  cron: "10 1 * * 6"
+  groups: [default]
+  retain: 0
+  concurrency: 1

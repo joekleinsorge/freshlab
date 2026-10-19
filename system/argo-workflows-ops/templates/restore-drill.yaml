@@ -1,0 +1,155 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: freshlab-restore-drill
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: freshlab-restore-drill
+  namespace: mealie
+rules:
+  - apiGroups: [""]
+    resources: [persistentvolumeclaims]
+    verbs: [create, get, list, watch, delete]
+  - apiGroups: [volsync.backube]
+    resources: [replicationdestinations]
+    verbs: [create, get, list, watch, delete]
+  - apiGroups: [batch]
+    resources: [jobs]
+    verbs: [create, get, list, watch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: freshlab-restore-drill
+  namespace: mealie
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: freshlab-restore-drill
+subjects:
+  - kind: ServiceAccount
+    name: freshlab-restore-drill
+    namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: freshlab-restore-drill-results
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: freshlab-workflow-executor
+subjects:
+  - kind: ServiceAccount
+    name: freshlab-restore-drill
+    namespace: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: freshlab-backup-restore-drill
+  namespace: argocd
+spec:
+  schedules: ["17 14 1 * *"]
+  timezone: America/New_York
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  workflowSpec:
+    entrypoint: drill
+    onExit: cleanup
+    serviceAccountName: freshlab-restore-drill
+    activeDeadlineSeconds: 5400
+    podGC:
+      strategy: OnWorkflowCompletion
+    ttlStrategy:
+      secondsAfterCompletion: 3888000
+    arguments:
+      parameters:
+        - {name: namespace, value: mealie}
+        - {name: source-pvc, value: mealie-data}
+        - name: restore-pvc
+          value: '{{ "{{workflow.name}}" }}-data'
+        - {name: capacity, value: 5Gi}
+        - {name: storage-class, value: longhorn}
+    templates:
+      - name: drill
+        steps:
+          - - name: restore
+              templateRef:
+                name: freshlab-volsync-restore
+                template: restore
+                clusterScope: true
+          - - name: inspect-database
+              template: inspect-database
+      - name: inspect-database
+        resource:
+          action: create
+          successCondition: status.succeeded > 0
+          failureCondition: status.failed > 0
+          manifest: |
+            apiVersion: batch/v1
+            kind: Job
+            metadata:
+              name: {{ "{{workflow.name}}" }}-check
+              namespace: mealie
+              labels:
+                freshlab.kleinsorge.dev/restore: {{ "{{workflow.name}}" }}
+            spec:
+              backoffLimit: 0
+              activeDeadlineSeconds: 300
+              template:
+                spec:
+                  restartPolicy: Never
+                  automountServiceAccountToken: false
+                  containers:
+                    - name: sqlite-integrity
+                      image: ghcr.io/mealie-recipes/mealie:v3.28.0@sha256:8b02290f4d1806f02acac6f25f6d48a3c965612fda1f8e914d5af533276f8688
+                      command: [python, -c]
+                      args:
+                        - |
+                          import pathlib, sqlite3
+                          paths = list(pathlib.Path('/restore').rglob('mealie.db'))
+                          assert len(paths) == 1, 'Expected one restored Mealie database'
+                          db = sqlite3.connect(paths[0])
+                          assert db.execute('PRAGMA integrity_check').fetchall() == [('ok',)]
+                          tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+                          assert {'recipes', 'users'} <= tables, 'Missing application tables'
+                          print('Restored Mealie database passes integrity and schema checks')
+                      resources:
+                        requests: {cpu: 50m, memory: 128Mi}
+                        limits: {cpu: 250m, memory: 512Mi}
+                      volumeMounts:
+                        - {name: restored, mountPath: /restore}
+                  volumes:
+                    - name: restored
+                      persistentVolumeClaim:
+                        claimName: {{ "{{workflow.parameters.restore-pvc}}" }}
+      - name: cleanup
+        resource:
+          action: delete
+          flags: ["--ignore-not-found=true", "--wait=false"]
+          manifest: |
+            apiVersion: v1
+            kind: List
+            items:
+              - apiVersion: batch/v1
+                kind: Job
+                metadata:
+                  name: {{ "{{workflow.name}}" }}-check
+                  namespace: mealie
+              - apiVersion: volsync.backube/v1alpha1
+                kind: ReplicationDestination
+                metadata:
+                  name: {{ "{{workflow.name}}" }}
+                  namespace: mealie
+              - apiVersion: v1
+                kind: PersistentVolumeClaim
+                metadata:
+                  name: {{ "{{workflow.parameters.restore-pvc}}" }}
+                  namespace: mealie

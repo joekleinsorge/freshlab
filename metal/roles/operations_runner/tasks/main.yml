@@ -1,0 +1,145 @@
+---
+- name: Require a separately provisioned read-only kubeconfig
+  ansible.builtin.assert:
+    that: operations_runner_kubeconfig | length > 0
+    fail_msg: Set operations_runner_kubeconfig to the protected local health-reader kubeconfig.
+
+- name: Install host health and runner dependencies
+  ansible.builtin.apt:
+    name: [acl, ca-certificates, curl, git, jq, libicu-dev, python3]
+    state: present
+
+- name: Create the unprivileged operations account
+  ansible.builtin.user:
+    name: freshlab-ops
+    home: /var/lib/freshlab-ops
+    shell: /usr/sbin/nologin
+    create_home: true
+
+- name: Create protected runner and health directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop:
+    - {path: /opt/freshlab-actions-runner, owner: freshlab-ops}
+    - {path: /var/lib/freshlab-ops/.kube, owner: freshlab-ops, mode: '0700'}
+    - {path: /opt/freshlab-health/scripts}
+    - {path: /opt/freshlab-health/docs/operations}
+    - {path: /var/lib/node_exporter/textfile_collector}
+
+- name: Install the read-only API credential
+  ansible.builtin.copy:
+    src: "{{ operations_runner_kubeconfig }}"
+    dest: /var/lib/freshlab-ops/.kube/config
+    owner: freshlab-ops
+    mode: '0600'
+  no_log: true
+
+- name: Install the matching kubectl version
+  ansible.builtin.get_url:
+    url: "https://dl.k8s.io/release/{{ operations_kubectl_version }}/bin/linux/amd64/kubectl"
+    checksum: "sha256:https://dl.k8s.io/release/{{ operations_kubectl_version }}/bin/linux/amd64/kubectl.sha256"
+    dest: /usr/local/bin/freshlab-kubectl
+    mode: '0755'
+
+- name: Give the runner its own kubectl path
+  ansible.builtin.file:
+    src: /usr/local/bin/freshlab-kubectl
+    dest: /opt/freshlab-actions-runner/kubectl
+    state: link
+
+- name: Install read-only host health code and policy
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../{{ item }}"
+    dest: "/opt/freshlab-health/{{ item }}"
+    owner: root
+    mode: '0644'
+  loop:
+    - scripts/check-cluster-state.py
+    - docs/operations/reliability-policy.json
+
+- name: Check whether the runner is installed
+  ansible.builtin.stat:
+    path: /opt/freshlab-actions-runner/bin/Runner.Listener
+  register: operations_runner_binary
+
+- name: Download the verified GitHub runner archive
+  ansible.builtin.get_url:
+    url: "https://github.com/actions/runner/releases/download/v{{ operations_runner_version }}/actions-runner-linux-x64-{{ operations_runner_version }}.tar.gz"
+    checksum: "{{ operations_runner_checksum }}"
+    dest: /var/cache/freshlab-actions-runner.tar.gz
+    mode: '0600'
+  when: not operations_runner_binary.stat.exists
+
+- name: Extract the runner
+  ansible.builtin.unarchive:
+    src: /var/cache/freshlab-actions-runner.tar.gz
+    dest: /opt/freshlab-actions-runner
+    remote_src: true
+    owner: freshlab-ops
+  when: not operations_runner_binary.stat.exists
+
+- name: Check runner registration
+  ansible.builtin.stat:
+    path: /opt/freshlab-actions-runner/.runner
+  register: operations_runner_registration
+
+- name: Obtain a short-lived registration token from the operator workstation
+  ansible.builtin.command:
+    argv: [gh, api, --method, POST, "repos/{{ operations_runner_repository }}/actions/runners/registration-token", --jq, .token]
+  delegate_to: localhost
+  become: false
+  register: operations_registration_token
+  changed_when: false
+  no_log: true
+  when: not operations_runner_registration.stat.exists
+
+- name: Register a runner restricted to operational workflows
+  ansible.builtin.command:
+    argv:
+      - ./config.sh
+      - --unattended
+      - --url
+      - "https://github.com/{{ operations_runner_repository }}"
+      - --token
+      - "{{ operations_registration_token.stdout }}"
+      - --name
+      - "{{ operations_runner_name }}"
+      - --labels
+      - freshlab-ops
+      - --work
+      - /var/lib/freshlab-ops/work
+    chdir: /opt/freshlab-actions-runner
+    creates: /opt/freshlab-actions-runner/.runner
+  become_user: freshlab-ops
+  no_log: true
+  when: not operations_runner_registration.stat.exists
+
+- name: Install host health wrapper
+  ansible.builtin.template:
+    src: freshlab-host-health.sh.j2
+    dest: /usr/local/bin/freshlab-host-health
+    mode: '0755'
+
+- name: Install operations systemd units
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    mode: '0644'
+  loop:
+    - freshlab-actions-runner.service
+    - freshlab-host-health.service
+    - freshlab-host-health.timer
+  register: operations_units
+
+- name: Enable host operations services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: "{{ 'restarted' if operations_units.changed else 'started' }}"
+    daemon_reload: true
+  loop:
+    - freshlab-actions-runner.service
+    - freshlab-host-health.timer

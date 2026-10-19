@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for tool in helm ruby crane; do
+  command -v "$tool" >/dev/null || { echo "Missing required tool: $tool" >&2; exit 1; }
+done
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+scratch="$(mktemp -d)"
+trap 'rm -rf "$scratch"' EXIT
+while IFS= read -r chart; do
+  helm template image-validation "$(dirname "$chart")" --namespace validation > "$scratch/rendered.yaml"
+  ruby -ryaml -e '
+    def images(value)
+      case value
+      when Hash
+        value.each do |key, child|
+          if ["containers", "initContainers", "ephemeralContainers"].include?(key) && child.is_a?(Array)
+            child.each { |container| puts container["image"] if container.is_a?(Hash) && container["image"] }
+          end
+          if key == "manifest" && child.is_a?(String)
+            child.scan(/^\s*image:\s*[\x22\x27]?([^\s\x22\x27]+)/) { |match| puts match[0] }
+          end
+          images(child)
+        end
+      when Array
+        value.each { |child| images(child) }
+      when String
+        puts $1 if value =~ /\A--[a-z-]+-container-image=(.+)\z/
+      end
+    end
+    YAML.load_stream(File.read(ARGV[0])).compact.each { |doc| images(doc) }
+  ' "$scratch/rendered.yaml" >> "$scratch/images"
+done < <(rg --files apps platform system -g Chart.yaml -g '!**/charts/**' | sort)
+
+failures=0
+while IFS= read -r reference; do
+  if [[ "$reference" == *'{{'* || "$reference" == *'${'* ]]; then
+    echo "Unresolved rendered image: $reference" >&2
+    failures=$((failures + 1))
+    continue
+  fi
+  if ! crane digest --platform linux/amd64 "$reference" >/dev/null; then
+    echo "Image unavailable for linux/amd64: $reference" >&2
+    failures=$((failures + 1))
+  fi
+done < <(sort -u "$scratch/images")
+((failures == 0)) || { echo "$failures rendered image(s) failed registry verification." >&2; exit 1; }
+echo "Every rendered workload and generated mover image is available for linux/amd64."

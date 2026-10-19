@@ -27,5 +27,5 @@ kured:
     prometheusUrl: http://kube-prometheus-stack-prometheus.kube-prometheus-stack.svc:9090
     alertFiringOnly: true
     alertFilterMatchOnly: true
-    alertFilterRegexp: "^(Freshlab(LonghornVolume(Faulted|Degraded)|PersistentVolumeDegraded|NodeDiskPressure|NodePCIERxErrors)|KubeNodeNotReady)$"
+    alertFilterRegexp: "^(Freshlab(LonghornVolume(Faulted|Degraded)|PersistentVolumeDegraded|NodeDiskPressure|NodePCIERxErrors|HostHealthFailed|HostHealthHeartbeatMissing)|KubeNodeNotReady)$"
     drainTimeout: 15m

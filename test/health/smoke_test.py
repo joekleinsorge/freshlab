@@ -17,7 +17,11 @@ class SmokeTest(unittest.TestCase):
 import json, os, sys
 args = sys.argv[1:]
 if args[0] == 'wait': sys.exit(0)
-if 'gateway.gateway.networking.k8s.io' in args:
+if 'nodes' in args:
+ data = [{'metadata':{'name':'metal1'},'status':{'conditions':[{'type':t,'status':'True' if t=='Ready' else 'False'} for t in ['Ready','DiskPressure','MemoryPressure','PIDPressure']]}}]
+elif any(r in args for r in ['volumes.longhorn.io','replicas.longhorn.io','replicationsources.volsync.backube','snapshots.longhorn.io','engines.longhorn.io']):
+ data = []
+elif 'gateway.gateway.networking.k8s.io' in args:
  data = {'status': {'conditions': [{'type': 'Accepted', 'status': 'True'}, {'type': 'Programmed', 'status': 'False' if os.getenv('GATEWAY_FAIL') else 'True'}]}}
 elif 'gateway.networking.k8s.io/gateway-name=freshlab' in args:
  data = [] if os.getenv('GATEWAY_FAIL') else [{'status': {'phase': 'Running', 'containerStatuses': [{'ready': True}]}}]
@@ -40,6 +44,9 @@ print('401' if url.endswith('/mcp') else '200', end='')
             kubectl.chmod(0o755)
             curl.chmod(0o755)
             env = dict(os.environ, PATH=str(root) + os.pathsep + os.environ["PATH"])
+            policy = root / "policy.json"
+            policy.write_text(json.dumps({"expected_nodes":["metal1"],"volumes":[]}))
+            env["FRESHLAB_HEALTH_POLICY"] = str(policy)
             if failing:
                 env["FAIL_CASE"] = "1"
             if gateway_failing:
