@@ -314,7 +314,7 @@ backups:
     - namespace: autobrr
       pvc: autobrr-config
       schedule: "32 4,10,16,22 * * *"
-      paused: true
+      paused: false
       moverSecurityContext: *uid0
     - namespace: uptime-kuma
       pvc: uptime-kuma-data
