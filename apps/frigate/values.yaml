@@ -22,6 +22,9 @@ frigate:
       client_id: frigate
     auth:
       enabled: false
+    detect:
+      # Frigate 0.18 defaults object detection to disabled.
+      enabled: true
     go2rtc:
       streams:
         # Match stream names to camera names so Frigate 0.14 uses the native

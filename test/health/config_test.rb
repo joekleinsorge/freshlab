@@ -12,6 +12,13 @@ def check(condition, message)
 end
 
 routes = render("system/istio-system")
+frigate_resources = render("apps/frigate")
+frigate_configmap = frigate_resources.find { |d| d["kind"] == "ConfigMap" && d.dig("data", "config.yml") }
+frigate_config = YAML.safe_load(frigate_configmap.fetch("data").fetch("config.yml"))
+frigate_config.fetch("cameras").each do |name, camera|
+  check(camera.fetch("detect", {}).fetch("enabled", frigate_config.dig("detect", "enabled")) == true,
+        "Frigate #{name} must explicitly enable object detection; Frigate 0.18 defaults it off")
+end
 values = YAML.load_file("system/istio-system/values.yaml")
 bootstrap_namespaces = YAML.load_stream(File.read("freshlab-secrets/namespaces.yaml")).compact
 gateway = routes.find { |d| d["kind"] == "Gateway" && d.dig("metadata", "name") == "freshlab" }
