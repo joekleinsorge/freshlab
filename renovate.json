@@ -53,6 +53,26 @@
       "groupName": null,
       "automerge": false,
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Keep internet-facing Plex current independently of unrelated updates",
+      "matchManagers": [
+        "kubernetes"
+      ],
+      "matchPackageNames": [
+        "lscr.io/linuxserver/plex"
+      ],
+      "groupName": null,
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false,
+      "dependencyDashboardApproval": false,
+      "pinDigests": true,
+      "schedule": [
+        "at any time"
+      ],
+      "prPriority": 10,
+      "groupSlug": null
     }
   ]
 }
