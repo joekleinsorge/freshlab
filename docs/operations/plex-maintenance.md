@@ -9,7 +9,11 @@ allows them at any time, and lets Renovate merge after required checks pass.
 GitHub's repository-wide automatic merge feature. Both the StatefulSet and GPU
 smoke test retain the same immutable image digest. Argo CD reconciles `main`.
 This runs on Renovate's service cadence; it is not an instantaneous update
-guarantee. A failed check blocks merging and must be investigated.
+guarantee. A failed check blocks merging and must be investigated. On October
+21 the existing Supply chain workflow was failing on pre-existing repository
+misconfiguration findings, including the prior Plex update commit. Automatic
+merging remains blocked until that validation baseline is repaired; do not
+disable the security checks to get updates through.
 
 Synology Plex is a Docker container, not a DSM Plex package. Its current Compose
 project is `/volume1/docker/git/docker-compose.yml`, with configuration under
@@ -65,15 +69,25 @@ indicators or executables running from temporary directories. Retained SSH
 authentication events checked since October 16 used the existing LAN client
 and key. The journal retained history only from October 9 onward.
 
-Synology's readable process command lines and accessible startup/temporary files
-were inspected for published malware-name indicators. Root-only executable
-links, authentication logs, scheduled tasks, and persistence locations could
-not be fully inspected without sudo. Its main Plex server logs rotated back
-only to October 20; older component logs do not replace missing access logs.
+A subsequent sudo review on Synology inspected all process command lines and
+Plex executable links, root cron files, startup scripts, service directories,
+and temporary directories. No published malware-name indicators or processes
+executing from temporary directories were found. Plex executables resolved to
+the expected image paths, and the container was not privileged. Seven service
+entries could not be read; the remaining checked service files had no indicator
+matches. The retained authentication log contained 93 lines from September 30
+onward but no SSH authentication events, so it does not establish login history.
+The administrator's two SSH keys predated the incident; no root authorized_keys
+file was present. Its main Plex server logs rotated back only to October 20;
+older component logs do not replace missing access logs.
+
+The root-owned updater and cron entry were installed on October 21. Its first
+run confirmed the NAS was already on the latest public Plex release. Failure
+notifications use DSM's existing administrator notification channel.
 
 No positive indicator was identified in the inspected evidence. These checks
 cannot establish that either host has never been compromised. In particular,
-the Synology host-level investigation remains incomplete until administrative
-access is available. Preserve evidence and follow Plex's recovery guidance if
+limited log retention and checks based on known indicators leave historical
+compromise uncertain. Preserve evidence and follow Plex's recovery guidance if
 any indicator appears; do not erase codec directories as a substitute for
 investigation.
