@@ -77,7 +77,7 @@ spec:
               mountPath: /dev/net/tun
       containers:
         - name: qbittorrent
-          image: ghcr.io/linuxserver/qbittorrent:5.2.4@sha256:97333cc1ccf903e0bbcd8eb67e3332e4970e9c1ecabe145e499e9c0847ebcaed
+          image: ghcr.io/linuxserver/qbittorrent:5.3.0@sha256:e887804fa9de4c60f5f0fb1f3a7e4febe40a8f69fe736f70c4e8589b1f868dab
           env:
             - name: PUID
               value: "3000"

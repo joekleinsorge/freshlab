@@ -33,7 +33,7 @@ spec:
               value: '1001'
             - name: TZ
               value: America/New_York
-          image: linuxserver/freshrss@sha256:d5a11c52ba6987702e899c2c3831946eb959b54af34db96b1fe41194286acfb2
+          image: linuxserver/freshrss@sha256:3bdf970c2baebb4e8c8753c84e44c87991888311a437466d669b0016bb7e89c5
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3

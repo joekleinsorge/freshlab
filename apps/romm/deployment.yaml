@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       initContainers:
         - name: configure-platforms
-          image: rommapp/romm@sha256:03295f95a6290e752641f9553ac4198b0e5b71b879d57f7b2371b98f608feb54
+          image: rommapp/romm@sha256:8677fb7b81b1d3db20b849e989a1dadc2a11159e51eb34a2acdcb01102274edf
           command: ["/src/.venv/bin/python", "/bindings/configure.py"]
           volumeMounts:
             - name: config
@@ -30,7 +30,7 @@ spec:
               readOnly: true
       containers:
         - name: romm
-          image: rommapp/romm@sha256:03295f95a6290e752641f9553ac4198b0e5b71b879d57f7b2371b98f608feb54
+          image: rommapp/romm@sha256:8677fb7b81b1d3db20b849e989a1dadc2a11159e51eb34a2acdcb01102274edf
           ports:
             - containerPort: 8080
           env:
@@ -153,7 +153,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: mariadb@sha256:f1bba652ba57bea3099ca2fe1af692af537c27d96e0bcde39dce29e2ba1ec4f3
+          image: mariadb@sha256:0e4bb0f339feba125d1154fbacd36c16ec8518f52e44e1f82ecec7d6771caf39
           env:
             - name: MARIADB_ROOT_PASSWORD
               valueFrom:
