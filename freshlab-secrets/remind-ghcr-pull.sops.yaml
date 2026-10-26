@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: ghcr-pull
+    namespace: remind
+type: kubernetes.io/dockerconfigjson
+data:
+    .dockerconfigjson: ENC[AES256_GCM,data:oawtA5mo+6QDYBbEUI+GFPUfXdfpKyGBbG/7qFlSzEYpvkReEVuHcsz5Ryq4dckAlyqo2J8LfymvAPld0aWfqLjVWz46pA2YyVlzvmd2PQ00AlQIRxJHTAbu2AVoahQcopymEfy8+kBhh7AQsegxGJx4klnPWUPVgH2rYB/nasZfDX73jJRtzu0QLDzJbBJll8vGr9BNRy0lXa/XQdIZhD0yw1AN4wz2ykaWLEQvsD+d6Mh7nuNj2yNghtOtDuU6RkwK8tzqvkWGdPD++vJFP6jPMYH0xwauQcueljkP+AKhTj25RSM3fkV1qvVL1aCjLtaQrvTXQLw=,iv:DB0fZVM4V5k95NxDnvLzpPp4izHUOktOBf5iIzpaam0=,tag:odRcxZAhINX/6eupwAMzhQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0UzhsV0VEYVRvMlFnaFFk
+            ZmQ3RXRGNk1pSGFzUy9oZWFJY1pKdlEzMGpZCm8xUjdIbWQ3UWFWeEdCb3VrUk5l
+            Wk4xU1Y1eVI1dDlCTE91WWpGUjhycEkKLS0tIHBDWlVxQXJxbG9zMG1NaDdkblF2
+            TGpUZTNPNjgwYVRyMWlsQUhSRDhHMTgKHGfsQ/1bnAZ1RFeRiztk7QJa1JMiBbPK
+            MXPUWYebzZwbPRKcIpf6gG93qRhcwne1c5PhmUMphYRQ8AMZ5VFPNw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-26T01:38:43Z"
+    mac: ENC[AES256_GCM,data:ZRRv0McHzVbDy1UDa3lgQHs1m8ErFzTuGhJ3Pp0KzHHcCGHpKCVc6HDnn1Q2SzPbsguftZ5OD6BfECOMeYMbgyqusRejCZM2eP72mVlOT5tKfDHjbztDXYmpFuzOPw8Jl81yR3hhhN66DfGnfWwGz91+YywIDQavTS636xpaeCk=,iv:0XYJusy98RpgzN3nKHSeUjFLZpxG/BMpR6rhBhaT40I=,tag:+2rWt2JjvLvpSDoM/YUuvA==,type:str]
+    version: 3.13.3

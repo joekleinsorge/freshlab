@@ -55,6 +55,19 @@ backups:
     monthly: 6
     yearly: 2
   volumes:
+    - namespace: remind
+      pvc: remind-data
+      schedule: "32 5,11,17,23 * * *"
+      paused: false
+      cacheCapacity: 1Gi
+      moverSecurityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
     - namespace: frigate
       pvc: frigate-config
       schedule: "7 1,7,13,19 * * *"

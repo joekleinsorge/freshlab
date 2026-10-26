@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - configmap.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - route.yaml
+  - networkpolicy.yaml
+
+images:
+  - name: ghcr.io/joekleinsorge/remind
+    digest: sha256:5799739b1747ce21973152974ab228152f50efed9546b20b91c99bc38eb5f0dc

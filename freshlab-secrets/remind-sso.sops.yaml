@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: remind-sso
+    namespace: remind
+type: Opaque
+stringData:
+    clientSecret: ENC[AES256_GCM,data:O4QVxmDvI61pmWYW8vrE4Ltg8LYRSrDrfxdskSOCgb/LhwpjsZF7G4zyFMH2iypmO5/xZHhmVysslO1xPX5deA==,iv:g3PrkeMI+zQ3prigAnoXFCKWilUQpj1Keh3la4+7LXA=,tag:o7l47QhrYd41RXHaiZDY6w==,type:str]
+    cookieSecret: ENC[AES256_GCM,data:TahnWShtUBISwfsIh9ikMaupSiJW6+ymRXlPZvld1NBSLOWRqk41ae2n5fk=,iv:V+Z5rk6WEEgdvFej+XKf7BsS9dW5GDMs6QMxLjmzU0A=,tag:h34AiQ4VLJqvqDDLKk104Q==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBrSjRQd1BNdjFNZ3ZYcTNV
+            cVdxSWpaS3ljK290cS93UzNrb1dNQmhVR3dNCkIrQUw0UTNZR0o4YVFIbjFHL0JN
+            T0hwUVVmek8rUXk2Rk51bThmUWI0VUEKLS0tIEtrMGdOL0RrL2JmOEwzV2hoTW8x
+            ZEFPenE1OFQ2T2lTdSt1SExveEJEWFUKbN6+H2PLQ2SWvazoAmhmxAmVvOpKUJdX
+            btSaj452WWXnea3CBmITfV0KrzoJNNl9xQn1xlEMtwB7HPVWaJafmQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age134a89q3pd6puefa83qu93t4l9dvh08ypq0p4svnfe48jrqu7ppmslc4rrm
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-26T01:37:29Z"
+    mac: ENC[AES256_GCM,data:uw9d2Sq3CyrS/5KhkgMxYECkGEBVvXW/10TOLCOVPUlQ1fgw51WnLkhJq+iflBgvk4ZbaQZf/PUXM4xMkYtHPRXqvBZHPaYZL0ru/tcx34dD2U0U+n0q7mM2DPTia/EY/XF/2MuNbw+4YSKimfP9o07T6IqSKa7eYEmvwFLKaXU=,iv:Q8RpQzLUIl/2mtPLAYmvMZLMjljcLC5DKphFMt0zo6s=,tag:dzTor7bhsLYR0YN+5KuOnQ==,type:str]
+    version: 3.13.3

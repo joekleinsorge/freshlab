@@ -83,6 +83,11 @@ dex:
         redirectURIs:
           - 'https://fi.kleinsorge.dev/oauth2/callback'
         secretEnv: OPENFI_SSO_CLIENT_SECRET
+      - id: remind-sso
+        name: Remind
+        redirectURIs:
+          - 'https://remind.kleinsorge.dev/oauth2/callback'
+        secretEnv: REMIND_SSO_CLIENT_SECRET
       - id: hermes-dashboard
         name: Hermes Dashboard
         public: true
