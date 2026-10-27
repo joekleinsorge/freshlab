@@ -30,3 +30,4 @@ backupNamespaces:
   - seerr
   - sonarr
   - tautulli
+  - uptime-kuma

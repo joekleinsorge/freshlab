@@ -17,6 +17,22 @@ policy.
 
 ## Check backup health
 
+A completed `spec.trigger.manual` overrides the cron schedule even when
+`spec.trigger.schedule` is still set. After a one-shot backup completes, remove
+only that manual trigger to restore recurring backups. The health policy reports
+completed overrides immediately. To recover a backlog without starting every
+snapshot export together:
+
+```shell
+python3 scripts/resume-backup-schedules.py
+python3 scripts/resume-backup-schedules.py --apply --limit 2
+```
+
+Wait for each batch to finish before repeating. The helper skips active,
+unfinished, paused, and unscheduled sources. Resource-version and trigger-value
+tests prevent it from removing a newer operator request. Do not remove restic
+locks while their owning mover is still running.
+
 ```shell
 make backup-status
 kubectl -n restic-rest-server logs deployment/restic-rest-server
