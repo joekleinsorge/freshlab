@@ -91,6 +91,9 @@ check(root_applicationset&.dig("spec", "syncPolicy", "applicationsSync") == "syn
       "ApplicationSet must synchronize the full application lifecycle")
 check(root_applicationset&.dig("spec", "syncPolicy", "preserveResourcesOnDeletion") == true,
       "Retired application resources must remain recoverable until explicitly removed")
+namespace_option = root_applicationset.dig("spec", "template", "spec", "syncPolicy", "syncOptions").first
+check(namespace_option.include?('eq .path.basename "remind"') && namespace_option.include?("CreateNamespace=false"),
+      "Remind must use its SOPS-owned namespace without requesting forbidden Namespace creation")
 
 values.fetch("appRoutes").each do |route|
   next if route["createNamespace"] == false

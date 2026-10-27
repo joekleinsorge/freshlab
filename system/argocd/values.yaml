@@ -461,7 +461,9 @@ argocd-apps:
                 factor: 2
                 maxDuration: 16m
             syncOptions:
-              - CreateNamespace=true
+              # Remind's restricted namespace is owned by freshlab-secrets.
+              # The apps project intentionally cannot create Namespace resources.
+              - '{{ if eq .path.basename "remind" }}CreateNamespace=false{{ else }}CreateNamespace=true{{ end }}'
               - ApplyOutOfSyncOnly=true
               - ServerSideApply=true
               - RespectIgnoreDifferences=true

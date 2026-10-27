@@ -3,6 +3,9 @@
 Remind serves the Kindle highlight library at https://remind.kleinsorge.dev.
 The application listens on pod loopback; the Service exposes only OAuth2 Proxy.
 Dex grants access to `freshlab-admins` and uses the `remind-sso` static client.
+The root ApplicationSet disables namespace creation for Remind: its restricted
+namespace is created by `freshlab-secrets`, and the apps project cannot create
+cluster-scoped Namespace resources.
 
 The application image is pinned in both the Deployment and Kustomization to the
 digest published by `joekleinsorge/remind`. Replace both pins from a new publishing
