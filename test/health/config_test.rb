@@ -173,6 +173,13 @@ check(kindle_route&.dig("spec", "parentRefs")&.all? { |parent| parent["sectionNa
 
 puts "Health configuration regression checks passed."
 
+remind = YAML.load_file("apps/remind/deployment.yaml")
+remind_app = remind.dig("spec", "template", "spec", "containers").find { |c| c["name"] == "remind" }
+%w[readinessProbe livenessProbe startupProbe].each do |probe|
+  check(remind_app.dig(probe, "httpGet", "port") == 4180,
+        "Remind probes must use the numeric proxy port; named ports are container-scoped")
+end
+
 manual_backup_ignore = root_applicationset.dig("spec", "template", "spec", "ignoreDifferences").find do |rule|
   rule["group"] == "volsync.backube" && rule["kind"] == "ReplicationSource"
 end
