@@ -26,6 +26,7 @@ backupNamespaces:
   - prowlarr
   - qbittorrent
   - radarr
+  - remind
   - romm
   - seerr
   - sonarr

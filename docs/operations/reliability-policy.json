@@ -7,6 +7,13 @@
   ],
   "volumes": [
     {
+      "namespace": "remind",
+      "pvc": "remind-data",
+      "backup_source": "remind-data",
+      "min_replicas": 2,
+      "max_backup_age_hours": 8
+    },
+    {
       "namespace": "frigate",
       "pvc": "frigate-config",
       "backup_source": "frigate-config",
