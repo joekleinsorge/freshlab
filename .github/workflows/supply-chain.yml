@@ -106,13 +106,11 @@ jobs:
           COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign sign-blob --yes \
-            --output-signature freshlab.spdx.json.sig \
-            --output-certificate freshlab.spdx.json.pem \
+            --bundle freshlab.spdx.sigstore.json \
             freshlab.spdx.json
           cosign verify-blob \
-            --certificate freshlab.spdx.json.pem \
-            --signature freshlab.spdx.json.sig \
-            --certificate-identity-regexp 'https://github.com/joekleinsorge/freshlab/.github/workflows/supply-chain.yml@refs/heads/main' \
+            --bundle freshlab.spdx.sigstore.json \
+            --certificate-identity 'https://github.com/joekleinsorge/freshlab/.github/workflows/supply-chain.yml@refs/heads/main' \
             --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
             freshlab.spdx.json
 
@@ -122,5 +120,4 @@ jobs:
           name: freshlab-signed-sbom
           path: |
             freshlab.spdx.json
-            freshlab.spdx.json.sig
-            freshlab.spdx.json.pem
+            freshlab.spdx.sigstore.json

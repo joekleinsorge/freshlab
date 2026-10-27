@@ -30,3 +30,4 @@ __pycache__/
 /config-findings.json
 /baseline-config-findings.json
 /freshlab.spdx.json*
+/freshlab.spdx.sigstore.json
