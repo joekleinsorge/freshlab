@@ -123,6 +123,16 @@
     dest: /usr/local/bin/freshlab-host-health
     mode: '0755'
 
+# The Actions worker restores its saved PATH instead of the systemd PATH.
+- name: Persist the kubectl path for Actions jobs
+  ansible.builtin.copy:
+    content: "{{ operations_runner_path }}\n"
+    dest: /opt/freshlab-actions-runner/.path
+    owner: freshlab-ops
+    mode: '0644'
+  notify: Restart operations runner
+  tags: [operations-runner-path]
+
 - name: Install operations systemd units
   ansible.builtin.template:
     src: "{{ item }}.j2"

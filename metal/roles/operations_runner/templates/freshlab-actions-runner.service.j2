@@ -7,7 +7,7 @@ After=network-online.target
 User=freshlab-ops
 WorkingDirectory=/opt/freshlab-actions-runner
 ExecStart=/opt/freshlab-actions-runner/bin/runsvc.sh
-Environment=PATH=/opt/freshlab-actions-runner:/usr/local/bin:/usr/bin:/bin
+Environment=PATH={{ operations_runner_path }}
 Environment=KUBECONFIG=/var/lib/freshlab-ops/.kube/config
 Restart=always
 RestartSec=15

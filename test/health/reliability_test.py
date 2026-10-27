@@ -63,6 +63,12 @@ class ReliabilityTest(unittest.TestCase):
         self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'stuck'}, 'spec': {'volume': 'v'}, 'status': {'error': 'engine upgrade incomplete'}}]
         self.assertTrue(any('upgrade incomplete' in f for f in self.assess()))
 
+    def test_completed_manual_trigger_blocks_the_schedule(self):
+        source = self.state['replicationsources.volsync.backube'][0]
+        source['spec']['trigger'] = {'manual': 'once', 'schedule': '0 */6 * * *'}
+        source['status']['lastManualSync'] = 'once'
+        self.assertTrue(any('manual trigger blocks' in f for f in self.assess()))
+
     def test_retired_detached_volume_does_not_block_active_health(self):
         self.state['volumes.longhorn.io'].append({'metadata': {'name': 'retired'}, 'status': {'state': 'detached'}})
         self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'old'}, 'spec': {'volume': 'retired'}, 'status': {'error': 'engine not running'}}]

@@ -59,6 +59,10 @@ def assess(state, policy, now):
         if source["spec"].get("paused", False):
             failures.append(f"PVC {label}: backups are paused")
         status = source.get("status", {})
+        trigger = source["spec"].get("trigger", {})
+        if (trigger.get("manual") and trigger.get("schedule")
+                and status.get("lastManualSync") == trigger["manual"]):
+            failures.append(f"PVC {label}: completed manual trigger blocks scheduled backups")
         last = status.get("lastSyncTime")
         try:
             age = (now - timestamp(last)).total_seconds() if last else float("inf")

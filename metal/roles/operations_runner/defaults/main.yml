@@ -5,3 +5,4 @@ operations_runner_repository: joekleinsorge/freshlab
 operations_runner_name: metal0-ops
 operations_runner_kubeconfig: ""
 operations_kubectl_version: v1.36.4
+operations_runner_path: /opt/freshlab-actions-runner:/usr/local/bin:/usr/bin:/bin

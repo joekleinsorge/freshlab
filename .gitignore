@@ -26,3 +26,7 @@ Chart.lock
 # Python validation caches
 __pycache__/
 *.py[cod]
+# Generated supply-chain reports stay in CI artifacts rather than Git.
+/config-findings.json
+/baseline-config-findings.json
+/freshlab.spdx.json*
