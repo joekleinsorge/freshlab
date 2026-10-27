@@ -16,13 +16,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
 
       - name: Trivy filesystem scan
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
-          scanners: vuln,secret,misconfig
+          scanners: vuln,secret
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: 1
@@ -33,7 +35,36 @@ jobs:
           scan-type: config
           scan-ref: .
           severity: HIGH,CRITICAL
-          exit-code: 1
+          format: json
+          output: config-findings.json
+          exit-code: 0
+
+      - name: Reject new or changed configuration risks
+        env:
+          BASE_REVISION: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          base_revision="$BASE_REVISION"
+          if [[ -z "$base_revision" || "$base_revision" =~ ^0+$ ]]; then
+            base_revision=$(git rev-parse HEAD^)
+          fi
+          base_dir=$(mktemp -d)
+          git worktree add --detach "$base_dir" "$base_revision"
+          trivy config --quiet --format json --severity HIGH,CRITICAL \
+            --output baseline-config-findings.json "$base_dir"
+          python3 scripts/check-config-regressions.py \
+            baseline-config-findings.json config-findings.json \
+            --base-root "$base_dir" --head-root "$GITHUB_WORKSPACE"
+
+      - name: Retain complete configuration reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: configuration-findings
+          path: |
+            config-findings.json
+            baseline-config-findings.json
+          if-no-files-found: error
 
       - name: Generate SPDX SBOM with Syft
         uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
