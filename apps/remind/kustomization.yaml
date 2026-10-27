@@ -10,4 +10,4 @@ resources:
 
 images:
   - name: ghcr.io/joekleinsorge/remind
-    digest: sha256:5799739b1747ce21973152974ab228152f50efed9546b20b91c99bc38eb5f0dc
+    digest: sha256:64abef222861ac7875b8f053d62ce1126460d9a303f28dd7d4b84b9d082f5862

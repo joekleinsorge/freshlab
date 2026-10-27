@@ -19,7 +19,9 @@ SOPS/KSOPS manages `remind-sso`, `ghcr-pull`, and
 secret is stored in `dex-secrets`; rotate both sides together. The optional
 `remind-sendgrid` secret enables email when it contains `SENDGRID_API_KEY`,
 `SENDER_EMAIL`, `RECIPIENT_EMAIL`, and `REMIND_EMAIL_TIME=05:00`.
-Email scheduling is disabled unless configured explicitly.
+Email scheduling is disabled unless configured explicitly. Provider acceptance
+records delivery separately from reviews; only explicit reviews advance the
+rediscovery schedule.
 
 ## Import
 
@@ -31,7 +33,8 @@ scripts/import-clippings.sh "My Clippings.txt"
 
 The importer streams to the running server's loopback API. It merges highlights
 without replacing review history. The web UI also supports imports and JSON
-export. Do not run an email CLI or a second writer against the active volume.
+export. The library also supports favorites, archive, and personal notes.
+Do not run an email CLI or a second writer against the active volume.
 
 ## Storage and Recovery
 
@@ -41,6 +44,12 @@ The storage class supplies two replicas. VolSync snapshots it every six hours
 at minute 32 (05:32, 11:32, 17:32, and 23:32 UTC) and stores an encrypted repository
 on the existing NAS-backed restic service. The reliability policy checks for a
 successful backup within eight hours.
+
+For a portable Remind JSON export, choose **Restore backup** in **Your library**.
+This merges missing highlights and reviews while preserving existing records.
+If a merge is interrupted, `restore-pending.json` journals the pending restore.
+Fix any storage failure and restart Remind to complete recovery before writes
+resume. Preserve this journal when recovering an interrupted restore.
 
 Use the shared restore workflow to restore to a new claim, inspect the JSON
 files, stop Remind, and change the Deployment's claim name before restarting.
