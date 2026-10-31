@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: grocy
-          image: lscr.io/linuxserver/grocy@sha256:1a8996206d1e0f5aa3aa85084dde2bae170a05b29b235de58c08b161873ce9a6
+          image: lscr.io/linuxserver/grocy@sha256:6282144f9a14d4a4dca2bc96801a2e43a2ff51116f001b13e5488eacad7b80e2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
