@@ -1,8 +1,11 @@
-# Pinned digest for the OpenFI planning integrity build (05e6d0d, engine 2.3.0; resilient indexed history).
-image: "ghcr.io/joekleinsorge/openfi@sha256:405b980883fbb619f5e9ffa0d1c68423a7541a6ced9489270509793ee3802d09"
+# Pinned digest for the OpenFI build b5b509d (FI milestones, spending review, dark theme, progress history).
+image: "ghcr.io/joekleinsorge/openfi@sha256:a1c0b59cf898c74a0613672591a1afec13538622cbd9236ff45ad5ec09653ebc"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
+# In-app daily SQLite copies stay off: the ~680 MB database leaves too little room on the
+# volume, and VolSync already backs up /data off-node.
+dailyBackups: 0
 # The private SQLite database is already installed on the retained PVC.
 replicas: 1
 route:

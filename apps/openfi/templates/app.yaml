@@ -78,6 +78,7 @@ spec:
             - {name: FIRE_HOST, value: "127.0.0.1"}
             - {name: FIRE_PORT, value: "8080"}
             - {name: FIRE_DB, value: /data/planner.sqlite3}
+            - {name: FIRE_BACKUP_KEEP, value: {{ .Values.dailyBackups | default 0 | quote }}}
             - {name: PYTHONDONTWRITEBYTECODE, value: "1"}
             - name: FIRE_OIDC_OWNER_EMAIL
               valueFrom:
