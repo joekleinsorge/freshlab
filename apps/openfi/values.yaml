@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 41470df (tax model switch in Plan inputs, plan at actual spending pace).
-image: "ghcr.io/joekleinsorge/openfi@sha256:71955cdb37298bd9d0a800adf65d42915a8e2c5884307ab194380c0c70f18d17"
+# Pinned digest for the OpenFI build ad7de80 (progress comparisons and scenarios kept across check-ins, birth months).
+image: "ghcr.io/joekleinsorge/openfi@sha256:8a620a1bbf30d1345b855b8d1c42e9123872143aa8a1c70f523eafe84eeb7291"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
