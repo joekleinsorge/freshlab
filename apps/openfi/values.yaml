@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build fbbb7ef (compressed run results, AA contrast, editable observations).
-image: "ghcr.io/joekleinsorge/openfi@sha256:6f271ef782db6a1dfb1edd0a0a43a2d82eb00fa0d74afb17c1e047606dd3e739"
+# Pinned digest for the OpenFI build 255761e (tax indexing after 2026, guardrails on yearly income, quick-mode reachability).
+image: "ghcr.io/joekleinsorge/openfi@sha256:b0aada28a915705a9c6511c8b95c5b068eda0e9ad486066f71c18d3d1eb2a5a6"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
