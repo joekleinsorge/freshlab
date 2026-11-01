@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 01cc4be (update balances with plan roll-forward, birth dates).
-image: "ghcr.io/joekleinsorge/openfi@sha256:c621347c52822063730a32d605ff3101a821b8956875d3a13a0b8ab7859d2503"
+# Pinned digest for the OpenFI build 41470df (tax model switch in Plan inputs, plan at actual spending pace).
+image: "ghcr.io/joekleinsorge/openfi@sha256:71955cdb37298bd9d0a800adf65d42915a8e2c5884307ab194380c0c70f18d17"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
