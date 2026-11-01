@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 255761e (tax indexing after 2026, guardrails on yearly income, quick-mode reachability).
-image: "ghcr.io/joekleinsorge/openfi@sha256:b0aada28a915705a9c6511c8b95c5b068eda0e9ad486066f71c18d3d1eb2a5a6"
+# Pinned digest for the OpenFI build d7d6cdd (tax-safe account edits, scheduled deposits, taxes by year).
+image: "ghcr.io/joekleinsorge/openfi@sha256:53d10835964ff0a4feb3a9bc773689c85b3384207d66ad40e13150d18e63d5fd"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
