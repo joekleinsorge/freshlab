@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build b5b509d (FI milestones, spending review, dark theme, progress history).
-image: "ghcr.io/joekleinsorge/openfi@sha256:a1c0b59cf898c74a0613672591a1afec13538622cbd9236ff45ad5ec09653ebc"
+# Pinned digest for the OpenFI build fbbb7ef (compressed run results, AA contrast, editable observations).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6f271ef782db6a1dfb1edd0a0a43a2d82eb00fa0d74afb17c1e047606dd3e739"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
