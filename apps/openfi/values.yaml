@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ad7de80 (progress comparisons and scenarios kept across check-ins, birth months).
-image: "ghcr.io/joekleinsorge/openfi@sha256:8a620a1bbf30d1345b855b8d1c42e9123872143aa8a1c70f523eafe84eeb7291"
+# Pinned digest for the OpenFI build 60c7a55 (bridge-to-59½ check, later-in-year bills, phone layout).
+image: "ghcr.io/joekleinsorge/openfi@sha256:b38e5a9f1c4a2ef5eb093d3a786fb9abe60eddc7be2a544023f61260170860e7"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
