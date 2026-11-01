@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build d7d6cdd (tax-safe account edits, scheduled deposits, taxes by year).
-image: "ghcr.io/joekleinsorge/openfi@sha256:53d10835964ff0a4feb3a9bc773689c85b3384207d66ad40e13150d18e63d5fd"
+# Pinned digest for the OpenFI build 01cc4be (update balances with plan roll-forward, birth dates).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c621347c52822063730a32d605ff3101a821b8956875d3a13a0b8ab7859d2503"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
