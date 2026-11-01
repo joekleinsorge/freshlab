@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build b9899d0 (engine 2.5.0: income that ends at retirement, birth-month retirement timing).
-image: "ghcr.io/joekleinsorge/openfi@sha256:1f69f8b996060636fc5acd8057a662bb7b5fbfd0d3eefcb2f92c9374ccaaead7"
+# Pinned digest for the OpenFI build 8e7d3b8 (wage tax contexts follow their pay stream).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6443a96d342c8139a30deec8599034594cbc205c74dcb61d9202e226e61b7a48"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
