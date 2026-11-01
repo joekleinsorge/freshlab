@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 60c7a55 (bridge-to-59½ check, later-in-year bills, phone layout).
-image: "ghcr.io/joekleinsorge/openfi@sha256:b38e5a9f1c4a2ef5eb093d3a786fb9abe60eddc7be2a544023f61260170860e7"
+# Pinned digest for the OpenFI build b9899d0 (engine 2.5.0: income that ends at retirement, birth-month retirement timing).
+image: "ghcr.io/joekleinsorge/openfi@sha256:1f69f8b996060636fc5acd8057a662bb7b5fbfd0d3eefcb2f92c9374ccaaead7"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
