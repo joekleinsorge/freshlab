@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 8e7d3b8 (wage tax contexts follow their pay stream).
-image: "ghcr.io/joekleinsorge/openfi@sha256:6443a96d342c8139a30deec8599034594cbc205c74dcb61d9202e226e61b7a48"
+# Pinned digest for the OpenFI build 3971873 (earliest full retirement on the overview).
+image: "ghcr.io/joekleinsorge/openfi@sha256:048da99553918964b2047b4ccc7c5dc4143d4d6bb8779afe0e141e0008c483ff"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
