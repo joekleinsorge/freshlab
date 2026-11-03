@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 3971873 (earliest full retirement on the overview).
-image: "ghcr.io/joekleinsorge/openfi@sha256:048da99553918964b2047b4ccc7c5dc4143d4d6bb8779afe0e141e0008c483ff"
+# Pinned digest for the OpenFI build 26bc60c (checkup moves ranked by earlier full retirement).
+image: "ghcr.io/joekleinsorge/openfi@sha256:d12f4f51a35a2d0a89ed3d5624be5bd115a13d5440fdc83602c574f77775ad65"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
