@@ -27,8 +27,6 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        fsGroup: 999
-        fsGroupChangePolicy: OnRootMismatch
         seccompProfile:
           type: RuntimeDefault
       initContainers:
@@ -45,10 +43,14 @@ spec:
           command:
             - sh
             - -c
-            - mkdir -p /var/lib/postgresql/data/pgdata && chown -R 26:999 /var/lib/postgresql/data
+            - mkdir -p /var/lib/postgresql/data/pgdata && chown -R 26:999 /var/lib/postgresql/data && chown 26:999 /tmp /var/run/postgresql
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+            - name: tmp
+              mountPath: /tmp
+            - name: run
+              mountPath: /var/run/postgresql
       containers:
         - name: postgres
           image: ghcr.io/tensorchord/cloudnative-vectorchord:18.6-1.1.1@sha256:c7672bc011351a587cc292a94aac7eeebb593ed2e120077bd9c9944c9467db93
@@ -68,6 +70,8 @@ spec:
                 initdb -D "$PGDATA" --username="$POSTGRES_USER" --pwfile=/tmp/postgres-password --auth-local=trust --auth-host=scram-sha-256
                 rm -f /tmp/postgres-password
               fi
+              # PostgreSQL rejects group-writable PGDATA after CSI permission updates.
+              chmod 0700 "$PGDATA"
               if ! grep -qF 'host immich immich 10.0.0.0/8 scram-sha-256' "$PGDATA/pg_hba.conf"; then
                 printf '%s\n' 'host immich immich 10.0.0.0/8 scram-sha-256' >> "$PGDATA/pg_hba.conf"
               fi
