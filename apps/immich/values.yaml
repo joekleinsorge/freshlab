@@ -49,6 +49,15 @@ immich:
     persistence:
       library:
         existingClaim: immich-library
+    # Managed here instead of the admin UI; a config file makes UI settings read-only.
+    configuration:
+      storageTemplate:
+        enabled: true
+      machineLearning:
+        duplicateDetection:
+          enabled: true
+          # Default 0.01 misses re-encoded copies (jpeg/webp pairs measure 0.010-0.09).
+          maxDistance: 0.02
 
   server:
     controllers:
