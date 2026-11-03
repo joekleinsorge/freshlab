@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 50ff5b3 (engine 2.6.0; retirement costs follow the retirement age).
-image: "ghcr.io/joekleinsorge/openfi@sha256:5251f94bed48ed6c27b1e6d3f61d92b17fbdb220b6b4e10bd8c860a14775cf28"
+# Pinned digest for the OpenFI build 8b9ad68 (checkup links cash flows to retirement).
+image: "ghcr.io/joekleinsorge/openfi@sha256:3f5ec86818f3eaa9240aa6ead21c9a1423bdfe0b466469d931ffebd28c808c9a"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
