@@ -38,6 +38,8 @@ PostgreSQL probes allow ten seconds per check and a minute of failed liveness
 checks before restarting. A startup probe allows recovery after an interrupted
 import. The first Memories scan exposed the previous one-second probe timeout
 under bulk-import load; increasing this avoids restarting a busy database.
+The database uses a read-only container filesystem with ephemeral writable
+mounts for temporary files and its Unix socket. Its existing data PVC is retained.
 
 Verify reconciliation with:
 
