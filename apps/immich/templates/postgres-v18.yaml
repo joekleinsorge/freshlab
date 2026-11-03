@@ -43,7 +43,7 @@ spec:
           command:
             - sh
             - -c
-            - mkdir -p /var/lib/postgresql/data/pgdata && chown -R 26:999 /var/lib/postgresql/data && chown 26:999 /tmp /var/run/postgresql
+            - mkdir -p /var/lib/postgresql/data/pgdata && chown 26:999 /var/lib/postgresql/data /var/lib/postgresql/data/pgdata /tmp /var/run/postgresql
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
