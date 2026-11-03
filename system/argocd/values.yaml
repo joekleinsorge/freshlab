@@ -76,7 +76,9 @@ argo-cd:
     resources:
       requests:
         cpu: 250m
-        memory: 4Gi
+        # The active shard uses about 1Gi; retain headroom without reserving
+        # 4Gi on each node and starving colocated direct backup movers.
+        memory: 2Gi
       limits:
         cpu: "1"
         memory: 8Gi

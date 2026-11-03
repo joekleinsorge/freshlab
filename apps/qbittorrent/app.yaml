@@ -72,6 +72,21 @@ spec:
               command: [/gluetun-entrypoint, healthcheck]
             initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 5
+          # Tunnel reconnects do not restart a wedged local DNS resolver.
+          # Restart the sidecar after sustained failure, allowing VPN startup.
+          startupProbe:
+            exec:
+              command: [/gluetun-entrypoint, healthcheck]
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            exec:
+              command: [/gluetun-entrypoint, healthcheck]
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 12
           volumeMounts:
             - name: tun-device
               mountPath: /dev/net/tun
