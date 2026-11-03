@@ -85,11 +85,21 @@ spec:
               command: ["pg_isready", "-U", "immich", "-d", "immich"]
             initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 10
+          startupProbe:
+            exec:
+              command: ["pg_isready", "-U", "immich", "-d", "immich"]
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 60
           livenessProbe:
             exec:
               command: ["pg_isready", "-U", "immich", "-d", "immich"]
             initialDelaySeconds: 30
             periodSeconds: 10
+            # Large external-library imports can briefly saturate the node.
+            timeoutSeconds: 10
+            failureThreshold: 6
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data

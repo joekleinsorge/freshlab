@@ -34,6 +34,11 @@ generated files need Synology backup coverage separately. After a database
 restore, syncing Immich recreates/reconciles the library and queues a scan;
 restoring into a new installation also requires setting the correct admin ID.
 
+PostgreSQL probes allow ten seconds per check and a minute of failed liveness
+checks before restarting. A startup probe allows recovery after an interrupted
+import. The first Memories scan exposed the previous one-second probe timeout
+under bulk-import load; increasing this avoids restarting a busy database.
+
 Verify reconciliation with:
 
 ```sh
