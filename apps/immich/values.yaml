@@ -1,3 +1,14 @@
+externalLibrary:
+  name: Synology Memories
+  ownerId: b30335ee-0c83-4ea5-a9df-a3c21ecb9544
+  importPaths:
+    - /media/Memories
+  exclusionPatterns:
+    - '**/@eaDir/**'
+    - '**/#recycle/**'
+    - '**/.DS_Store'
+    - '**/Thumbs.db'
+
 immich:
   controllers:
     main:
