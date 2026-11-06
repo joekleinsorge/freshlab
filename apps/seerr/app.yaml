@@ -6,7 +6,8 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
+  # Turned off with the arr stack 2026-11-06; set to 1 to re-enable.
+  replicas: 0
   strategy:
     type: Recreate
   selector:
