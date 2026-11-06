@@ -29,6 +29,8 @@ metadata:
   namespace: recyclarr
 spec:
   schedule: "0 4 * * *"
+  # Arr stack turned off 2026-11-06; set to false to re-enable.
+  suspend: true
   concurrencyPolicy: Forbid
   # Do not replay a daily sync after a lengthy control-plane outage: the media
   # services may still be starting, and a replay would fail unnecessarily.
