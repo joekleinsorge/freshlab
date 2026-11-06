@@ -18,14 +18,24 @@ spec:
         app.kubernetes.io/name: tautulli
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 3000
+        runAsGroup: 3000
+        fsGroup: 3000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: tautulli
           image: ghcr.io/tautulli/tautulli:v2.18.2@sha256:1b5875fe3193d450a62e7b438eb6701195c841f14f3dcb962e545eda42d3696f
+          # Run as the config owner directly: the image entrypoint's gosu
+          # step spun forever before exec, crash-looping the pod.
+          command: ["python", "Tautulli.py", "--datadir", "/config"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
           env:
-            - name: PUID
-              value: "3000"
-            - name: PGID
-              value: "3000"
             - name: TZ
               value: America/New_York
           ports:
