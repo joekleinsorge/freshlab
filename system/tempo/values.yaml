@@ -54,3 +54,6 @@ tempo:
     runAsUser: 10001
     runAsGroup: 10001
     fsGroup: 10001
+    # A recursive chown of the trace volume on every start took over 20
+    # minutes on metal0's HDD; only fix ownership when the root is wrong.
+    fsGroupChangePolicy: OnRootMismatch
