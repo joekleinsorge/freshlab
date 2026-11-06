@@ -20,7 +20,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: prowlarr
-          image: ghcr.io/linuxserver/prowlarr:2.5.2.5491-ls158@sha256:91844fa2c927ad6ede5630127183cc7868b175f6223e83e6a5da1fffea2aa782
+          image: ghcr.io/linuxserver/prowlarr:2.7.0.5723-ls167@sha256:431d7efebcef466e56adaa40a7a2fa2b0e85159a037b8bf465eaadbf0cf5bedf
           env:
             - name: PUID
               value: "3000"
