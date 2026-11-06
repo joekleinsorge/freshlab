@@ -272,13 +272,46 @@
   when: not (disable_pcie_aspm | default(false) | bool)
   tags: ['kernel', 'storage', 'pcie-aspm']
 
-- name: Regenerate GRUB configuration after a PCIe ASPM change
+- name: Keep the pinned kernel installed
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - "linux-image-{{ kernel_pin_version }}"
+    - "linux-modules-{{ kernel_pin_version }}"
+  when: kernel_pin_version | default('') | length > 0
+  tags: ['kernel', 'kernel-pin']
+
+- name: Boot the pinned kernel by default
+  ansible.builtin.copy:
+    dest: /etc/default/grub.d/98-freshlab-kernel-pin.cfg
+    content: |
+      # Managed by Freshlab. See hardware-and-cluster-issues.md OS-001.
+      GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux {{ kernel_pin_version }}"
+    owner: root
+    group: root
+    mode: '0644'
+  register: kernel_pin_grub_config
+  when: kernel_pin_version | default('') | length > 0
+  tags: ['kernel', 'kernel-pin']
+
+- name: Remove the kernel pin when none is configured
+  ansible.builtin.file:
+    path: /etc/default/grub.d/98-freshlab-kernel-pin.cfg
+    state: absent
+  register: kernel_pin_grub_config_removed
+  when: kernel_pin_version | default('') | length == 0
+  tags: ['kernel', 'kernel-pin']
+
+- name: Regenerate GRUB configuration after a kernel command line or default change
   ansible.builtin.command: update-grub
   when: >-
     (pcie_aspm_grub_config is defined and pcie_aspm_grub_config.changed) or
-    (pcie_aspm_grub_config_removed is defined and pcie_aspm_grub_config_removed.changed)
+    (pcie_aspm_grub_config_removed is defined and pcie_aspm_grub_config_removed.changed) or
+    (kernel_pin_grub_config is defined and kernel_pin_grub_config.changed) or
+    (kernel_pin_grub_config_removed is defined and kernel_pin_grub_config_removed.changed)
   changed_when: true
-  tags: ['kernel', 'storage', 'pcie-aspm']
+  tags: ['kernel', 'storage', 'pcie-aspm', 'kernel-pin']
 
 - name: Configure sysctl for Kubernetes
   ansible.builtin.sysctl:

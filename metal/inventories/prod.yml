@@ -9,6 +9,9 @@ all:
     ingress_load_balancer_ip: 192.168.1.228
     load_balancer_ip_pool:
       - 192.168.1.224/27
+    # 7.0.0-42 denies signals inside containers under the containerd AppArmor
+    # profile, hanging gosu, MariaDB and Mosquitto (OS-001).  Clear to unpin.
+    kernel_pin_version: 7.0.0-38-generic
   hosts:
     localhost:
       ansible_connection: local
