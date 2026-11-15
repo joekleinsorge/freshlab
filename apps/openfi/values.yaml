@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 316a334 (checkup flags missing pre-Medicare health cost).
-image: "ghcr.io/joekleinsorge/openfi@sha256:dd11cc47be85dc0ab0e1d6e2eab823cec64d4d73876559e9f6eee5523ee0d430"
+# Pinned digest for the OpenFI build 49be1dc (engine 2.8.0; early access to Roth contributions).
+image: "ghcr.io/joekleinsorge/openfi@sha256:336a26c5fed0d3882fdb2149531d39c6de5dcd52ccb606bda8edd840367a5137"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
