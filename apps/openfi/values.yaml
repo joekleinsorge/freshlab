@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 33ba4cb (Roth conversion ladder checkup move).
-image: "ghcr.io/joekleinsorge/openfi@sha256:4dab62ef1954efd6b62bc5e66f2c8d3306b58da3212dae49bc0030e0f7290a3a"
+# Pinned digest for the OpenFI build e75ecc1 (engine 2.12.0; optional early withdrawals with penalty).
+image: "ghcr.io/joekleinsorge/openfi@sha256:cf82a0f4b1bc0522327a9cc5cca17acc41521b4bfba013be77b8a4e9d98149cb"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
