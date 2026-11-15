@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 67e4b42 (engine 2.10.0; partner retirement age).
-image: "ghcr.io/joekleinsorge/openfi@sha256:3969db0aa2fb821d49a82468d76b4369964c2d80ecf107c925917f18837f945c"
+# Pinned digest for the OpenFI build 265fc7d (random-market odds per retirement age).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c8a4858ee06588eb786872800dc7dcf907875715d8b216ef5f9a0e04a5e6a4a1"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
