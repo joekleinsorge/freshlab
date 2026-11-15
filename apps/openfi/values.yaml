@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 49be1dc (engine 2.8.0; early access to Roth contributions).
-image: "ghcr.io/joekleinsorge/openfi@sha256:336a26c5fed0d3882fdb2149531d39c6de5dcd52ccb606bda8edd840367a5137"
+# Pinned digest for the OpenFI build 9c77718 (earliest retirement that survives a poor start).
+image: "ghcr.io/joekleinsorge/openfi@sha256:4d5528a278a39fc3dd9c0de2b582ef402b3f6e7be5727132392b08fa79d1e797"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
