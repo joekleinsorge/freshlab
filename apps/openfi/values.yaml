@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build cc1ef12 (engine 2.7.0; deposits end at retirement).
-image: "ghcr.io/joekleinsorge/openfi@sha256:cd92d2d86e744b673c74ea89d1de5efdb39ae23b1a43df24a71fca6e2c2bb6b9"
+# Pinned digest for the OpenFI build 316a334 (checkup flags missing pre-Medicare health cost).
+image: "ghcr.io/joekleinsorge/openfi@sha256:dd11cc47be85dc0ab0e1d6e2eab823cec64d4d73876559e9f6eee5523ee0d430"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
