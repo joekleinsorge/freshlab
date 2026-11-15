@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 8efc721 (engine 2.13.0; health coverage priced from income).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d342ecf141a21e310477281a63922319c929bb844addc9118299098e001273c8"
+# Pinned digest for the OpenFI build eddb6f5 (10% bracket ladder option; Secure session cookie).
+image: "ghcr.io/joekleinsorge/openfi@sha256:cb1fb32aad2e43694b8c831c710a90bf14d155806eef831de734003295d5bc4d"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
