@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 36b57c3 (headline retirement age survives a poor start).
-image: "ghcr.io/joekleinsorge/openfi@sha256:df535ecfa6486250de7ffcc2359137de6bba147125e2a257c2d66b8e5df875d6"
+# Pinned digest for the OpenFI build 493e884 (engine 2.11.0; Roth conversion ladder).
+image: "ghcr.io/joekleinsorge/openfi@sha256:00a2180855cdee3c2c595cf7e2fd39f6b19ad63e3e9087622d142c1533bac350"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
