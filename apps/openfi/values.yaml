@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build c328be2 (savings by kind chart).
-image: "ghcr.io/joekleinsorge/openfi@sha256:decbcd1c6f0db73db5cf4684913f09e06a316d12c81470946f3d9d79705c4f7d"
+# Pinned digest for the OpenFI build 38ee015 (yearly sources chart).
+image: "ghcr.io/joekleinsorge/openfi@sha256:0932add5c573e80cd7ec5cfb7bfea3599184eec22fc38b36ab05ababc61674d5"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
