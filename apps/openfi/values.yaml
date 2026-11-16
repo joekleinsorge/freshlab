@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build dc20afe (five times faster taxed projections).
-image: "ghcr.io/joekleinsorge/openfi@sha256:befac8bfca6a6b823d019c1d7eae1a324098dd97a43ddbc246bb566e21017b18"
+# Pinned digest for the OpenFI build 24154c8 (browser calculation cache).
+image: "ghcr.io/joekleinsorge/openfi@sha256:095666a227b820f81d701e86a3f958a63d30a80750220d8c6991628d244e946a"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
