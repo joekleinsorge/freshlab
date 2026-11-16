@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 24154c8 (browser calculation cache).
-image: "ghcr.io/joekleinsorge/openfi@sha256:095666a227b820f81d701e86a3f958a63d30a80750220d8c6991628d244e946a"
+# Pinned digest for the OpenFI build 6f5edd2 (Plan inputs conversions, form errors in the form).
+image: "ghcr.io/joekleinsorge/openfi@sha256:a5d96e8a01cc654532a02bcb5253166f7966dfc068a611362717735677d6533e"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
