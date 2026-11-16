@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 12113af (API schema, retirement-age assistant tool, image test fix).
-image: "ghcr.io/joekleinsorge/openfi@sha256:ee0406d8065f3b45f37bbb7ff512c0211acfb10116712c67e2c40c27ea8ea21c"
+# Pinned digest for the OpenFI build dbe5557 (grouped checkup with dismissal).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6bba95f65c5e1c9287c6965e0cce4bb1a09636bf8a60fc2f2addec518aabd5bc"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
