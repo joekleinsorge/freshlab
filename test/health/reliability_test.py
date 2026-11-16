@@ -63,6 +63,43 @@ class ReliabilityTest(unittest.TestCase):
         self.state['snapshots.longhorn.io'] = [{'metadata': {'name': 'stuck'}, 'spec': {'volume': 'v'}, 'status': {'error': 'engine upgrade incomplete'}}]
         self.assertTrue(any('upgrade incomplete' in f for f in self.assess()))
 
+    def head_parent(self, running=True):
+        image = 'longhorn-engine:v1.13.0'
+        volume = self.state['volumes.longhorn.io'][0]
+        volume['spec']['image'] = image
+        volume['status'] = {'state': 'attached' if running else 'detached',
+                            'robustness': 'healthy', 'currentImage': image}
+        self.state['snapshots.longhorn.io'] = [{
+            'metadata': {'name': 'parent', 'deletionTimestamp': '2026-10-19T17:00:00Z'},
+            'spec': {'volume': 'v'}, 'status': {'markRemoved': True,
+                'children': {'volume-head': True},
+                'error': f'snapshot deletion delayed: volume engine e is upgrading from image  to {image}'}}]
+        self.state['engines.longhorn.io'] = [{'metadata': {'name': 'e'},
+            'spec': {'volumeName': 'v', 'image': image},
+            'status': {'currentState': 'running' if running else 'stopped',
+                       'currentImage': image if running else '',
+                       'snapshots': {'parent': {'removed': True, 'children': {'volume-head': True}}}}}]
+
+    def test_retained_head_parent_with_obsolete_upgrade_message(self):
+        for running in [True, False]:
+            with self.subTest(running=running):
+                self.head_parent(running)
+                self.assertEqual(self.assess(), [])
+
+    def test_real_snapshot_failures_are_not_hidden_by_retained_parent(self):
+        for mutation in ['upgrade', 'volume_upgrade', 'purge', 'not_removed', 'not_head_parent', 'unhealthy', 'different_error']:
+            with self.subTest(mutation=mutation):
+                self.head_parent()
+                engine = self.state['engines.longhorn.io'][0]
+                if mutation == 'upgrade': engine['status']['currentImage'] = 'old-engine'
+                if mutation == 'volume_upgrade': self.state['volumes.longhorn.io'][0]['status']['currentImage'] = 'old-engine'
+                if mutation == 'purge': engine['status']['purgeStatus'] = {'replica': {'error': 'I/O error'}}
+                if mutation == 'not_removed': engine['status']['snapshots']['parent']['removed'] = False
+                if mutation == 'not_head_parent': engine['status']['snapshots']['parent']['children'] = {'other': True}
+                if mutation == 'unhealthy': self.state['volumes.longhorn.io'][0]['status']['robustness'] = 'degraded'
+                if mutation == 'different_error': self.state['snapshots.longhorn.io'][0]['status']['error'] = 'I/O error'
+                self.assertTrue(self.assess())
+
     def test_completed_manual_trigger_blocks_the_schedule(self):
         source = self.state['replicationsources.volsync.backube'][0]
         source['spec']['trigger'] = {'manual': 'once', 'schedule': '0 */6 * * *'}

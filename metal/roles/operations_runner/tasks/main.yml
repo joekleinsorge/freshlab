@@ -51,6 +51,7 @@
     state: link
 
 - name: Install read-only host health code and policy
+  tags: [host-health-code]
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/../{{ item }}"
     dest: "/opt/freshlab-health/{{ item }}"

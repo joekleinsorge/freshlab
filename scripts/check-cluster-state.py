@@ -15,6 +15,37 @@ def timestamp(value):
     return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def retained_head_parent(snapshot, volume, engines):
+    """Recognize Longhorn 1.13's stale upgrade error on a retained head parent."""
+    status = snapshot.get("status", {})
+    if not (snapshot.get("metadata", {}).get("deletionTimestamp")
+            and status.get("markRemoved")
+            and status.get("children", {}).get("volume-head")):
+        return False
+    for engine in engines:
+        spec, current = engine.get("spec", {}), engine.get("status", {})
+        if spec.get("volumeName") != snapshot.get("spec", {}).get("volume"):
+            continue
+        image = spec.get("image")
+        if (not image or image != volume.get("spec", {}).get("image")
+                or image != volume.get("status", {}).get("currentImage")):
+            continue
+        expected = (f"snapshot deletion delayed: volume engine {engine['metadata']['name']} "
+                    f"is upgrading from image  to {image}")
+        parent = current.get("snapshots", {}).get(snapshot["metadata"]["name"], {})
+        if (status.get("error") != expected or not parent.get("removed")
+                or not parent.get("children", {}).get("volume-head")):
+            continue
+        # Longhorn deliberately retains a removed snapshot directly below the
+        # live head, and this return path leaves an earlier upgrade error set:
+        # longhorn-manager v1.13.0 controller/snapshot_controller.go:476-480.
+        if current.get("currentState") == "running" and current.get("currentImage") == image:
+            return volume.get("status", {}).get("robustness") == "healthy"
+        if current.get("currentState") == "stopped":
+            return volume.get("status", {}).get("state") == "detached"
+    return False
+
+
 def assess(state, policy, now):
     failures = []
     nodes = {n["metadata"]["name"]: n for n in state["nodes"]}
@@ -77,7 +108,8 @@ def assess(state, policy, now):
         error = snapshot.get("status", {}).get("error")
         volume_name = snapshot.get("spec", {}).get("volume")
         active = volumes.get(volume_name, {}).get("status", {}).get("state") == "attached"
-        if error and (active or volume_name in required_volumes):
+        if (error and (active or volume_name in required_volumes)
+                and not retained_head_parent(snapshot, volumes.get(volume_name, {}), state["engines.longhorn.io"])):
             failures.append(f"Snapshot {snapshot['metadata']['name']}: {error}")
     for engine in state["engines.longhorn.io"]:
         for purge in (engine.get("status", {}).get("purgeStatus") or {}).values():

@@ -128,7 +128,7 @@ appRoutes:
   - {namespace: qbittorrent, name: qbittorrent, hostname: qbittorrent.kleinsorge.dev, service: qbittorrent, port: 8080, dataplaneMode: none, protected: true}
   - {namespace: radarr, name: radarr, hostname: radarr.kleinsorge.dev, service: radarr, port: 7878, dataplaneMode: none, protected: true}
   - {namespace: romm, name: romm, hostname: romm.kleinsorge.dev, service: romm, port: 80}
-  - {namespace: seerr, name: seerr, hostname: seerr.kleinsorge.dev, service: seerr, port: 5055, dataplaneMode: none}
+  # Seerr is scaled to zero. Restore its route here when re-enabling the app.
   - {namespace: sonarr, name: sonarr, hostname: sonarr.kleinsorge.dev, service: sonarr, port: 8989, dataplaneMode: none, protected: true}
   - {namespace: tautulli, name: tautulli, hostname: tautulli.kleinsorge.dev, service: tautulli, port: 8181, dataplaneMode: none, protected: true}
   - {namespace: tools, name: tools, hostname: tools.kleinsorge.dev, service: tools-service, port: 80}

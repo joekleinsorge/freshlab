@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pms-config-plex-0
+  namespace: plex
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  accessModes:
+    - ReadWriteOnce
+  # Adopt the existing claim for online expansion. Its original class is
+  # immutable; the StatefulSet template's longhorn-critical applies to new PVCs.
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 15Gi
