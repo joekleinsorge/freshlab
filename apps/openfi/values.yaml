@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 8d972b7 (tax-inclusive spending target).
-image: "ghcr.io/joekleinsorge/openfi@sha256:dd805c8564b2872e04edca8de6935045aee9e4f00a8997ac059f8126af9e8e8e"
+# Pinned digest for the OpenFI build 961ef04 (checkup questions returns and long retirements).
+image: "ghcr.io/joekleinsorge/openfi@sha256:92440d7847081601f12bc0c2def38ac692bff2cd380bb784e3d68640c6397dda"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
