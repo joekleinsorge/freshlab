@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 431dddb (retirement spending solver).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d2a3947956dcd69dadc75b6617d1f6fce6775fbc2e076650a500e0b165c97a6c"
+# Pinned digest for the OpenFI build ec3501e (projection split, first steps).
+image: "ghcr.io/joekleinsorge/openfi@sha256:82199940b51b59f62a87e41ecfc02ae708220867d299245faacfef73acdca8c5"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
