@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build eddb6f5 (10% bracket ladder option; Secure session cookie).
-image: "ghcr.io/joekleinsorge/openfi@sha256:cb1fb32aad2e43694b8c831c710a90bf14d155806eef831de734003295d5bc4d"
+# Pinned digest for the OpenFI build 32e3747 (engine 2.14.0; Social Security scaled to when work stops).
+image: "ghcr.io/joekleinsorge/openfi@sha256:98dfd500cc642b6825e9a90ad2a25813915886c5f7aa76519ae8bb0636214027"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
