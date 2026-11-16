@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 38ee015 (yearly sources chart).
-image: "ghcr.io/joekleinsorge/openfi@sha256:0932add5c573e80cd7ec5cfb7bfea3599184eec22fc38b36ab05ababc61674d5"
+# Pinned digest for the OpenFI build dc20afe (five times faster taxed projections).
+image: "ghcr.io/joekleinsorge/openfi@sha256:befac8bfca6a6b823d019c1d7eae1a324098dd97a43ddbc246bb566e21017b18"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
