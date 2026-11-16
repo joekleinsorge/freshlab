@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 961ef04 (checkup questions returns and long retirements).
-image: "ghcr.io/joekleinsorge/openfi@sha256:92440d7847081601f12bc0c2def38ac692bff2cd380bb784e3d68640c6397dda"
+# Pinned digest for the OpenFI build 6cb2616 (bridge check points at the modelled ladder).
+image: "ghcr.io/joekleinsorge/openfi@sha256:2ca6a30750ce1379ad15c9f9ee661d632417342f0cb32035ca07d796c9b2c3c4"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
