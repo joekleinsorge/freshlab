@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 6f5edd2 (Plan inputs conversions, form errors in the form).
-image: "ghcr.io/joekleinsorge/openfi@sha256:a5d96e8a01cc654532a02bcb5253166f7966dfc068a611362717735677d6533e"
+# Pinned digest for the OpenFI build 431dddb (retirement spending solver).
+image: "ghcr.io/joekleinsorge/openfi@sha256:d2a3947956dcd69dadc75b6617d1f6fce6775fbc2e076650a500e0b165c97a6c"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
