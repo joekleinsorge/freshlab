@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build dbe5557 (grouped checkup with dismissal).
-image: "ghcr.io/joekleinsorge/openfi@sha256:6bba95f65c5e1c9287c6965e0cce4bb1a09636bf8a60fc2f2addec518aabd5bc"
+# Pinned digest for the OpenFI build c328be2 (savings by kind chart).
+image: "ghcr.io/joekleinsorge/openfi@sha256:decbcd1c6f0db73db5cf4684913f09e06a316d12c81470946f3d9d79705c4f7d"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
