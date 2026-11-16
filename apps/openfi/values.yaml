@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 32e3747 (engine 2.14.0; Social Security scaled to when work stops).
-image: "ghcr.io/joekleinsorge/openfi@sha256:98dfd500cc642b6825e9a90ad2a25813915886c5f7aa76519ae8bb0636214027"
+# Pinned digest for the OpenFI build fdefc1c (health premiums and credits in the year table).
+image: "ghcr.io/joekleinsorge/openfi@sha256:3676614444ea3b67ae0748279ad449a571be5ed3670a5bba00d2fda8af7d74f4"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
