@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 5a83629 (engine 2.15.0; Roth basis and conversion clocks survive check-ins).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d26597270c2d48be93d523e3d257974704964621ef1db7dc59c247a4b60c9b31"
+# Pinned digest for the OpenFI build 8d972b7 (tax-inclusive spending target).
+image: "ghcr.io/joekleinsorge/openfi@sha256:dd805c8564b2872e04edca8de6935045aee9e4f00a8997ac059f8126af9e8e8e"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
