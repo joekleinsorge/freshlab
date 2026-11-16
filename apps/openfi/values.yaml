@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build fdefc1c (health premiums and credits in the year table).
-image: "ghcr.io/joekleinsorge/openfi@sha256:3676614444ea3b67ae0748279ad449a571be5ed3670a5bba00d2fda8af7d74f4"
+# Pinned digest for the OpenFI build 5a83629 (engine 2.15.0; Roth basis and conversion clocks survive check-ins).
+image: "ghcr.io/joekleinsorge/openfi@sha256:d26597270c2d48be93d523e3d257974704964621ef1db7dc59c247a4b60c9b31"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
