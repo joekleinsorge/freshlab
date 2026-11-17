@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ef1dd97 (projection split, second step).
-image: "ghcr.io/joekleinsorge/openfi@sha256:ec444b312fd35ce0572c227496b0bee5cf2fcde4d538e31180bb24a2b4e0c331"
+# Pinned digest for the OpenFI build 870dfd8 (phone headings, model description).
+image: "ghcr.io/joekleinsorge/openfi@sha256:a29229c09278571445c085cf5e1d330f23e34b1996c29da48accb5fd5b881743"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
