@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 870dfd8 (phone headings, model description).
-image: "ghcr.io/joekleinsorge/openfi@sha256:a29229c09278571445c085cf5e1d330f23e34b1996c29da48accb5fd5b881743"
+# Pinned digest for the OpenFI build 39fe4d2 (scenario life events).
+image: "ghcr.io/joekleinsorge/openfi@sha256:a4c8af9988665cbae91addf08c73b61b5b22be3d20cdbaee5f70ba3a6a05bb10"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
