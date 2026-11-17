@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 871f955 (engine 2.16.0; 2027 tax tables).
-image: "ghcr.io/joekleinsorge/openfi@sha256:fff1bf2b0c05c6e85529ff5a333bc134e03713a8b31ab488bc246b3a45d89ff3"
+# Pinned digest for the OpenFI build aa4b0a2 (check-in explanation).
+image: "ghcr.io/joekleinsorge/openfi@sha256:3c482eca93f4de025630b1f0042a8ec3872b85b982c74eca0c30c8104d0077e8"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
