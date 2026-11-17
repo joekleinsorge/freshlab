@@ -115,9 +115,11 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 10
             failureThreshold: 12
-          # /healthz stays 200 while the check loop is wedged, so liveness also
-          # requires a watch to have been checked within 90 minutes (longest
-          # poll is 30m, max error backoff 60m + jitter). Needs >=1 enabled watch.
+          # /healthz stays 200 while checks are wedged or failing, so liveness also
+          # requires a successful Disney search (available/unavailable) within 120
+          # minutes. Errors don't count: on 2026-11-16 Chrome failed every check for
+          # 18 hours until the pod was replaced, and a fresh pod fixed it. Polls are
+          # 5-30m. Needs >=1 enabled watch; a Disney outage over 2h restarts the pod.
           startupProbe:
             exec:
               command: &check-fresh
@@ -126,8 +128,8 @@ spec:
                 - >-
                   wget -q -T 3 -O /dev/null http://127.0.0.1:8080/healthz &&
                   python3 -c 'import sqlite3, sys, datetime as d;
-                  t = sqlite3.connect("file:/data/state.db?mode=ro", uri=True).execute("select max(last_checked_at) from watch_status").fetchone()[0];
-                  sys.exit(0 if t and d.datetime.now(d.timezone.utc) - d.datetime.fromisoformat(t) < d.timedelta(minutes=90) else 1)'
+                  t = sqlite3.connect("file:/data/state.db?mode=ro", uri=True).execute("select max(checked_at) from check_history where state in (?, ?)", ("available", "unavailable")).fetchone()[0];
+                  sys.exit(0 if t and d.datetime.now(d.timezone.utc) - d.datetime.fromisoformat(t) < d.timedelta(minutes=120) else 1)'
             periodSeconds: 60
             timeoutSeconds: 15
             # Up to 30 minutes for the first check after a restart.
