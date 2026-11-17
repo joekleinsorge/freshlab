@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ec3501e (projection split, first steps).
-image: "ghcr.io/joekleinsorge/openfi@sha256:82199940b51b59f62a87e41ecfc02ae708220867d299245faacfef73acdca8c5"
+# Pinned digest for the OpenFI build 871f955 (engine 2.16.0; 2027 tax tables).
+image: "ghcr.io/joekleinsorge/openfi@sha256:fff1bf2b0c05c6e85529ff5a333bc134e03713a8b31ab488bc246b3a45d89ff3"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
