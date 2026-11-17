@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 7a49408 (engine 2.17.0; asset mix and glide path).
-image: "ghcr.io/joekleinsorge/openfi@sha256:1021f0eff6abfe894015591b739771f64539c6e835f5344f2448d05b922fb50d"
+# Pinned digest for the OpenFI build 7c8fbfc (tax by year chart; conversion tax counted once).
+image: "ghcr.io/joekleinsorge/openfi@sha256:85c248f25b77f828f9256684e82b2d9f5802f0cf00a8a6b368241e5bbf73096d"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
