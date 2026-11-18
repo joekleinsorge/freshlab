@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 631462f (summary projections for searches).
-image: "ghcr.io/joekleinsorge/openfi@sha256:61712d9e8e6982cfcdd079a9e950352564b13a9fa2484717be1ab18e1a3ef324"
+# Pinned digest for the OpenFI build 6a1b9aa (compressed responses).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c887e73d07047c7668b3ddf90503970450323ce3ef6c63bdd83976546b89bb8c"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
