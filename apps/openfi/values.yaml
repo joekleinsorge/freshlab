@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build d922f52 (odds curve).
-image: "ghcr.io/joekleinsorge/openfi@sha256:73ad9e243f4148e0397e79ef98165c11a547e4ed405cb5b48575c05882243a28"
+# Pinned digest for the OpenFI build 75d72ca (handoff status (docs only)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:753a355ee846b4656625f2e7d30aafdd19fb0b0dbf7fc72a2f34d55422305694"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
