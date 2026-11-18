@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build d555a29 (engine 2.19.0; tax-free gains harvesting).
-image: "ghcr.io/joekleinsorge/openfi@sha256:0a85bd6f79f10af43a2fa0a36d9b9b8f76cce2781beed2a83af2f0e38cb33178"
+# Pinned digest for the OpenFI build 002557f (health coverage choice in Plan inputs).
+image: "ghcr.io/joekleinsorge/openfi@sha256:b846f41d990da6257091b4a19295f06eb451d832a096fdf0d6dd4e167bbd6a21"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
