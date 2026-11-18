@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 8d71f2c (one-off conversions in Plan inputs).
-image: "ghcr.io/joekleinsorge/openfi@sha256:c75e77988e836d2abe7f660fb62c5ed63bcd687b22f27200845f44be2425f274"
+# Pinned digest for the OpenFI build 424968a (HSA treatment offer).
+image: "ghcr.io/joekleinsorge/openfi@sha256:302a2f885353a7fa8b74087135979fba66fcc1ca4c11421ae4f3dc473abdeff9"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
