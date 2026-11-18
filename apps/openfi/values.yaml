@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 0938c29 (engine 2.20.0; conversions stop at the credit cliff).
-image: "ghcr.io/joekleinsorge/openfi@sha256:e3204f219f6a8d0d1602128c84585cf27ef3450ff006e912de05883f1c5c8a2f"
+# Pinned digest for the OpenFI build 631462f (summary projections for searches).
+image: "ghcr.io/joekleinsorge/openfi@sha256:61712d9e8e6982cfcdd079a9e950352564b13a9fa2484717be1ab18e1a3ef324"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
