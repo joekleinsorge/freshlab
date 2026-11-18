@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 9547e40 (shared retirement linking).
-image: "ghcr.io/joekleinsorge/openfi@sha256:6836e575286d51214a384aa7c06f472c929b119b226855d96ba67ff6806effa7"
+# Pinned digest for the OpenFI build 8d71f2c (one-off conversions in Plan inputs).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c75e77988e836d2abe7f660fb62c5ed63bcd687b22f27200845f44be2425f274"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
