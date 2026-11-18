@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 002557f (health coverage choice in Plan inputs).
-image: "ghcr.io/joekleinsorge/openfi@sha256:b846f41d990da6257091b4a19295f06eb451d832a096fdf0d6dd4e167bbd6a21"
+# Pinned digest for the OpenFI build 8ead6a3 (browser test coverage (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6d0bbf5931d2e6009fe70231c05070327ce2bc9c4027bb0b8c7d1f623c337e9c"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
