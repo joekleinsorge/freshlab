@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build be95c10 (engine 2.18.0; health savings accounts).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d2a9b9412bcc61b27804e0933ab5ded98de43b017d5567590f8e35de3cf6c2c6"
+# Pinned digest for the OpenFI build e72296e (fewer calculations per edit).
+image: "ghcr.io/joekleinsorge/openfi@sha256:854d62f42b7ef210f866f5b9268249b1c43d571f697c2087c595f7ec0816a3e6"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
