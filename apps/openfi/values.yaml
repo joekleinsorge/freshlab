@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build fb5d651 (static ETag revalidation).
-image: "ghcr.io/joekleinsorge/openfi@sha256:da350725cd2106fadbb497dd37546a0fa17ca434a124dd04c047c9b0d175574e"
+# Pinned digest for the OpenFI build 792ada9 (checkup action map).
+image: "ghcr.io/joekleinsorge/openfi@sha256:810e1737f1bfd82db71c3fb47f2c130d6658f0fe6b5e9dc2e13e220709d046b4"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
