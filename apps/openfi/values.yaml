@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 2e9e2d2 (engine 2.31.0; qualifying surviving spouse).
-image: "ghcr.io/joekleinsorge/openfi@sha256:910fba071d3097f3311384b565e2fedc825dd7a06528e8b93d0190a698075a57"
+# Pinned digest for the OpenFI build 20d491c (hidden checkbox fix).
+image: "ghcr.io/joekleinsorge/openfi@sha256:938469dd1ca9ff27b2aec49c3f7f36fb0a94a069f5c2123df9ce89c55b67a54b"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
