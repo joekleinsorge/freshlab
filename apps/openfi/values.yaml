@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ca6b1cd (periodic payments checkup move).
-image: "ghcr.io/joekleinsorge/openfi@sha256:21c4fe93b2f308d393152dabe7e48b88cb4485ccd39f48520f609c1525d222cc"
+# Pinned digest for the OpenFI build 5ec2ac9 (account form fields).
+image: "ghcr.io/joekleinsorge/openfi@sha256:52cabcb1be34c597c9c2c71df810e71ffc06336090d592777fc7ace9560088ac"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
