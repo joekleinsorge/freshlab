@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build b4d1e84 (cash-flow form fields).
-image: "ghcr.io/joekleinsorge/openfi@sha256:912c2b0dedfacfde9708a4a454289dd96226a3aec6f342e6768e1977a1b6d772"
+# Pinned digest for the OpenFI build be46028 (model notes).
+image: "ghcr.io/joekleinsorge/openfi@sha256:e0e69a3cf22f8e4c11994f8e829f03b52e66664b55da183866cbae27f4758f14"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
