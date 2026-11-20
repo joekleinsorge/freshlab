@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build eb087ae (engine 2.27.0; survivor files single).
-image: "ghcr.io/joekleinsorge/openfi@sha256:2403e848dfb5bb0036816c24bec9ee5e43bf5c166aaffddb98bbcced45da27f6"
+# Pinned digest for the OpenFI build 214b667 (projection split (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:091208999c25e8acbe2c5d3e057dd9c57be4831119d9c3359d92da61eece33d2"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
