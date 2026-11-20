@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build af5e776 (engine 2.22.0; uncertain inflation).
-image: "ghcr.io/joekleinsorge/openfi@sha256:dfcae3041fef30a758cfa88185a46c65607a6848b9c115cadb658299af5c33cc"
+# Pinned digest for the OpenFI build 78a1a6f (Roth vs pre-tax move).
+image: "ghcr.io/joekleinsorge/openfi@sha256:006437451aa6af3a0c7080e41d768fd83b4322812f72779f4bded2e9791757aa"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
