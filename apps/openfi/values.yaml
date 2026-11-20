@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build be46028 (model notes).
-image: "ghcr.io/joekleinsorge/openfi@sha256:e0e69a3cf22f8e4c11994f8e829f03b52e66664b55da183866cbae27f4758f14"
+# Pinned digest for the OpenFI build a5b064b (engine speedups).
+image: "ghcr.io/joekleinsorge/openfi@sha256:4d8549c052a608dea20015b6fdd44e2773c01439ba588ac1784bce5495fe12d1"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
