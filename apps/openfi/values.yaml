@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build e7adab9 (engine 2.21.0; after-tax ending assets).
-image: "ghcr.io/joekleinsorge/openfi@sha256:f0355fcecc3f9eceb25a7da93ae82e8b7685c49b9834e79fd243a8d3068e77b7"
+# Pinned digest for the OpenFI build af5e776 (engine 2.22.0; uncertain inflation).
+image: "ghcr.io/joekleinsorge/openfi@sha256:dfcae3041fef30a758cfa88185a46c65607a6848b9c115cadb658299af5c33cc"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
