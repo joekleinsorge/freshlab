@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build cae6232 (engine 2.32.0; prior income for Medicare surcharge).
-image: "ghcr.io/joekleinsorge/openfi@sha256:3be6051eab1a9cc8ea2efc029afdc35f369bad6c04e67c390c2ea240fc665921"
+# Pinned digest for the OpenFI build 1e41d57 (retirement-age table in the engine).
+image: "ghcr.io/joekleinsorge/openfi@sha256:d664af29ab70bcb5c21a3d46f906fd89595b29fffde4665e02dbce1cb8780e20"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
