@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ffb7c29 (engine 2.25.0; periodic payment safeguards).
-image: "ghcr.io/joekleinsorge/openfi@sha256:4dc579fa1dd77822d9a503e33d3ba1d23805f43cb04d79e3516ca2d6505566b9"
+# Pinned digest for the OpenFI build 5498386 (format (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:62e9c827ac51b249c3a5a23d2a215729f4df13185998ff024de01fffc55b8c7e"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
