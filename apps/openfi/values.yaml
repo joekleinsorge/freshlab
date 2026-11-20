@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 18078b0 (earliest retirement on the server).
-image: "ghcr.io/joekleinsorge/openfi@sha256:fbf81b0b31503352c72899136ca65ea6e54e354e0e5adf1c0e36063abf4ee080"
+# Pinned digest for the OpenFI build dd1fe6b (onRender registry (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6a40015455307bd71832e6eb9e5e11f5b580ff3202c551bf853ec658f354eeda"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
