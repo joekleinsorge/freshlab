@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 5ec2ac9 (account form fields).
-image: "ghcr.io/joekleinsorge/openfi@sha256:52cabcb1be34c597c9c2c71df810e71ffc06336090d592777fc7ace9560088ac"
+# Pinned digest for the OpenFI build 7b0f337 (overview headline).
+image: "ghcr.io/joekleinsorge/openfi@sha256:403a409c6fafc19bcaf1f89629f436f48300ae3213c9579094ad4e372dce1b2a"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
