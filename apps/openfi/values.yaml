@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build ebb5398 (review log (no app change)).
-image: "ghcr.io/joekleinsorge/openfi@sha256:bf597c6bab4f5c85639219a391926181c34222b96a4543498eb6c7dc92360129"
+# Pinned digest for the OpenFI build 0fdf226 (assistant uses the engine's age table).
+image: "ghcr.io/joekleinsorge/openfi@sha256:69b3fcd3fb612fc6d5201040f81d66463afcff60a14e02ce43679b42ae5ba240"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
