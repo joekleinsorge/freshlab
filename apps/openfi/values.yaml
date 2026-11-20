@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 5c387cc (search validation).
-image: "ghcr.io/joekleinsorge/openfi@sha256:ae8886e6dbcf3d5d288470d19bd0e65266e359c7c0d3b13e3ffaaaf760d42b56"
+# Pinned digest for the OpenFI build def940c (handoff (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:8c65e21cf7fe38ee243a9284c4818a8ebcf4970600e527079bbdfd9a1bd665eb"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
