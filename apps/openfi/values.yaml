@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build f2231a1 (accessibility check (no app change)).
-image: "ghcr.io/joekleinsorge/openfi@sha256:2e5f2741b7247bb72b730157c08e4d7c72e521d94c78e3ae3c2a416c6681aa44"
+# Pinned digest for the OpenFI build 25f945b (projection split, third step).
+image: "ghcr.io/joekleinsorge/openfi@sha256:f90e53a74957c3da3cfcc8d2abc03094f71b4ec44df95097ef60ac484c742b92"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
