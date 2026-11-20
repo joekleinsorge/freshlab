@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 753fb89 (review log (no app change)).
-image: "ghcr.io/joekleinsorge/openfi@sha256:31f98140bcc4f6a0d40e7bec6bc3ac133263371344879bb94a672b278844cd44"
+# Pinned digest for the OpenFI build 0976978 (plan schema and validation).
+image: "ghcr.io/joekleinsorge/openfi@sha256:e585a33fb2a41c4aa891791a623a3322ad251ab7bd04288852700c4664852f05"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
