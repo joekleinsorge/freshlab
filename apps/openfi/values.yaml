@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build b012062 (projection split (no app change)).
-image: "ghcr.io/joekleinsorge/openfi@sha256:8a4c8d5cd5f3ef37a79c0dafb93a4916f35ecc37348aac689f12fe324ee79e5a"
+# Pinned digest for the OpenFI build 18078b0 (earliest retirement on the server).
+image: "ghcr.io/joekleinsorge/openfi@sha256:fbf81b0b31503352c72899136ca65ea6e54e354e0e5adf1c0e36063abf4ee080"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
