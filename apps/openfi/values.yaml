@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 25f945b (projection split, third step).
-image: "ghcr.io/joekleinsorge/openfi@sha256:f90e53a74957c3da3cfcc8d2abc03094f71b4ec44df95097ef60ac484c742b92"
+# Pinned digest for the OpenFI build 87b4d4a (roll-forward validation).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c96306b458eb1b5bafb18cc52cb6b11f98b8780801c68565159164da6193cf30"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
