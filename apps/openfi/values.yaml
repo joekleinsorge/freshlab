@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build bd8b7d9 (engine 2.33.0; partner-owned accounts).
-image: "ghcr.io/joekleinsorge/openfi@sha256:3632760807201a8f480e54268e0bcfd7aff2548f752e10513898026036db5f4e"
+# Pinned digest for the OpenFI build cbc8569 (engine 2.34.0; conversion brackets by year).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6e08dab5a9765b8a7d5c615b97ff38c12087fe3a6d468447511a8e062602c83e"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
