@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 1e41d57 (retirement-age table in the engine).
-image: "ghcr.io/joekleinsorge/openfi@sha256:d664af29ab70bcb5c21a3d46f906fd89595b29fffde4665e02dbce1cb8780e20"
+# Pinned digest for the OpenFI build bd8b7d9 (engine 2.33.0; partner-owned accounts).
+image: "ghcr.io/joekleinsorge/openfi@sha256:3632760807201a8f480e54268e0bcfd7aff2548f752e10513898026036db5f4e"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
