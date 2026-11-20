@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build def940c (handoff (no app change)).
-image: "ghcr.io/joekleinsorge/openfi@sha256:8c65e21cf7fe38ee243a9284c4818a8ebcf4970600e527079bbdfd9a1bd665eb"
+# Pinned digest for the OpenFI build cae6232 (engine 2.32.0; prior income for Medicare surcharge).
+image: "ghcr.io/joekleinsorge/openfi@sha256:3be6051eab1a9cc8ea2efc029afdc35f369bad6c04e67c390c2ea240fc665921"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
