@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 20d491c (hidden checkbox fix).
-image: "ghcr.io/joekleinsorge/openfi@sha256:938469dd1ca9ff27b2aec49c3f7f36fb0a94a069f5c2123df9ce89c55b67a54b"
+# Pinned digest for the OpenFI build 5c387cc (search validation).
+image: "ghcr.io/joekleinsorge/openfi@sha256:ae8886e6dbcf3d5d288470d19bd0e65266e359c7c0d3b13e3ffaaaf760d42b56"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
