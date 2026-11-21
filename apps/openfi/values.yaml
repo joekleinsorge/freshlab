@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build b222e88 (spending CSV import).
-image: "ghcr.io/joekleinsorge/openfi@sha256:b248bcc4a2fc3cc73dcbcc676b6b148f7bb770cbde454122b8e6cf1c88ac808d"
+# Pinned digest for the OpenFI build fd1f678 (rich-plan fuzzing).
+image: "ghcr.io/joekleinsorge/openfi@sha256:b863d08b54af82c3d79662e6c9375e60d3a612d109fe554e50b9b580f8603fb7"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
