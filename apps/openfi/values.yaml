@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 40d6814 (engine 2.36.0; home sale funds its month).
-image: "ghcr.io/joekleinsorge/openfi@sha256:fb6e54e7f31c7c0fae16175ee61f92657d69b91dff00fcc751b9286d09bb2387"
+# Pinned digest for the OpenFI build 6abdea1 (review log (no app change)).
+image: "ghcr.io/joekleinsorge/openfi@sha256:32cbd23307a90723336c4ff7cb479eb2eabebff0e2dcb739a2165d6f8a4c3c78"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
