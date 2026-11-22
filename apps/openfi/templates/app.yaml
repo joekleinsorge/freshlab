@@ -138,6 +138,8 @@ spec:
             - --pass-user-headers=true
             - --skip-provider-button=true
             - --skip-auth-route=GET=^/api/health$
+            # Assistant tokens: the planner checks the token itself on every /token-api/ request.
+            - --skip-auth-route=^/token-api/
           env:
             - name: OAUTH2_PROXY_CLIENT_ID
               value: openfi-sso
