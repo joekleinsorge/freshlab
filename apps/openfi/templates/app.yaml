@@ -83,6 +83,8 @@ spec:
             - name: FIRE_OIDC_OWNER_EMAIL
               valueFrom:
                 secretKeyRef: {name: openfi-auth, key: ownerEmail}
+            # Other identities that sign in as the owner (Dex's local admin account).
+            - {name: FIRE_OIDC_OWNER_ALIASES, value: "admin@kleinsorge.dev"}
           ports:
             - {name: app, containerPort: 8080}
           resources:
