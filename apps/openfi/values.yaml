@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 1fd50ae (scenario summaries and comparison).
-image: "ghcr.io/joekleinsorge/openfi@sha256:e0baeea6bb83abbe07088a8d8be61683ca726aebbdb3072ecf2977acb87ad03b"
+# Pinned digest for the OpenFI build 95408c0 (guided setup).
+image: "ghcr.io/joekleinsorge/openfi@sha256:35fd3c4707f16b550b3fcac24747c2d4134d18b97b5f1478e6b5ac121b079730"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
