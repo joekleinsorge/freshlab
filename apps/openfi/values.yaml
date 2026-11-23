@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 4cd4698 (round chart axes).
-image: "ghcr.io/joekleinsorge/openfi@sha256:1c579007f010795a87b7f626f384fb5adeebcace74e32a40c4bdb50c298884f8"
+# Pinned digest for the OpenFI build b43488a (try it at rest).
+image: "ghcr.io/joekleinsorge/openfi@sha256:14cc108a67942706d671d2ddf1a5d58c949b4bcba9f1c4ab2fbf6c910209bf80"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
