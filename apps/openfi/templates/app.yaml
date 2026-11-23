@@ -85,6 +85,8 @@ spec:
                 secretKeyRef: {name: openfi-auth, key: ownerEmail}
             # Other identities that sign in as the owner (Dex's local admin account).
             - {name: FIRE_OIDC_OWNER_ALIASES, value: "admin@kleinsorge.dev"}
+            # One privacy-safe JSON line per request: route template, status, timing, auth kind, refusal reason.
+            - {name: FIRE_ACCESS_LOG, value: "1"}
           ports:
             - {name: app, containerPort: 8080}
           resources:
