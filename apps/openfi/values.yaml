@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build a3afb4a (who changed what).
-image: "ghcr.io/joekleinsorge/openfi@sha256:3486b32fb28a925c45c8a0affb1d38e7e260231accf38ff341dfca9a6df3aba2"
+# Pinned digest for the OpenFI build e002122 (remote MCP endpoint).
+image: "ghcr.io/joekleinsorge/openfi@sha256:6e059341f9c9798814cd5fe4c5779aea2c15f2365bf8773df4b17ecb0d33d177"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
