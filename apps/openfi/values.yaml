@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build d3a83ce (engine split).
-image: "ghcr.io/joekleinsorge/openfi@sha256:ca83e8b1bbac06c6c5dba975edd58cdd37f2c08164ffc1cda5449bca3c2494ff"
+# Pinned digest for the OpenFI build 4cd4698 (round chart axes).
+image: "ghcr.io/joekleinsorge/openfi@sha256:1c579007f010795a87b7f626f384fb5adeebcace74e32a40c4bdb50c298884f8"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
