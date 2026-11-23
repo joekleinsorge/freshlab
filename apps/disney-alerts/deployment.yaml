@@ -31,6 +31,17 @@ spec:
         - name: ghcr-pull
       nodeSelector:
         kubernetes.io/arch: amd64
+      # Since 2026-11-22 16:22 UTC every Chrome launch on metal0 dies with SIGILL
+      # (illegal instruction) in a shared library, on images that ran fine there
+      # before. Keep this pod off metal0 until the node is checked; then remove this.
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values: ["metal0"]
       securityContext:
         fsGroup: 65532
         runAsNonRoot: true
