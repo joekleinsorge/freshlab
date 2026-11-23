@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 912b6eb (sample households).
-image: "ghcr.io/joekleinsorge/openfi@sha256:1b796a75d1fb3dbb0c9076fa58d0eae2427afc2026719ec181584a3580d56dd9"
+# Pinned digest for the OpenFI build 2afa888 (follows retirement).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c8c2c440ab1418e2c32d79c06f93504dc152d05736113604a3075ccdca85e362"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
