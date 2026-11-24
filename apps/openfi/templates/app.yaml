@@ -128,6 +128,8 @@ spec:
             - --skip-claims-from-profile-url=true
             - --http-address=0.0.0.0:4180
             - --upstream=http://127.0.0.1:8080/
+            # Long calculations (random-market odds, age tables) can take more than the 30 s default.
+            - --upstream-timeout=120s
             - --redirect-url=https://fi.kleinsorge.dev/oauth2/callback
             - --email-domain=*
             - --allowed-group=freshlab-admins
