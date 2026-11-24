@@ -1,0 +1,4 @@
+# k3s ships CoreDNS with one replica and re-applies its manifest on server
+# restarts, so the replica count is held by an HPA rather than edited in place.
+coredns:
+  replicas: 2

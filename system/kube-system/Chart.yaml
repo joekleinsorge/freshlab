@@ -1,0 +1,4 @@
+apiVersion: v2
+name: kube-system
+version: 0.0.0
+description: High availability for k3s's bundled kube-system addons (CoreDNS)

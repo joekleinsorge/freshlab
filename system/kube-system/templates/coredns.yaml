@@ -1,0 +1,34 @@
+# On 2026-11-23 metal3 went NotReady with the only CoreDNS pod on it. Cluster DNS
+# failed, Argo CD could not sync, and Kyverno's webhook rejected new pods until
+# CoreDNS was rescheduled. Two replicas, spread by CoreDNS's own topology spread
+# constraint (one per node), keep DNS up through a single node failure.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: coredns
+  namespace: kube-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coredns
+  minReplicas: {{ .Values.coredns.replicas }}
+  maxReplicas: {{ .Values.coredns.replicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: coredns
+  namespace: kube-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
