@@ -1,5 +1,5 @@
-# Pinned digest for the OpenFI build 1395b0a (live MCP fixes).
-image: "ghcr.io/joekleinsorge/openfi@sha256:be89aa31a4e2052f3db744c290aabc1b8bd6cde83ab1b874c900791d8f0022a5"
+# Pinned digest for the OpenFI build 9ae9c39 (faster odds).
+image: "ghcr.io/joekleinsorge/openfi@sha256:c23981e6869d9fc8af034e8b3ea8c0afcaae3ef4ebc0e277dc44b11c3c7972f9"
 imagePullSecrets: []
 storageClass: longhorn
 storageSize: 2Gi
