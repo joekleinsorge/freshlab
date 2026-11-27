@@ -179,6 +179,10 @@ metadata:
   name: freshlab-alert-remediation
 spec:
   entrypoint: remediate
+  # A remediation that cannot start must fail rather than hold a pod for days.
+  activeDeadlineSeconds: 600
+  podGC:
+    strategy: OnPodCompletion
   ttlStrategy:
     secondsAfterCompletion: 86400
   arguments:
@@ -242,5 +246,8 @@ spec:
             drop: [ALL]
           readOnlyRootFilesystem: true
           runAsNonRoot: true
+          # The kubectl image defaults to root, which runAsNonRoot rejects.
+          runAsUser: 65532
+          runAsGroup: 65532
           seccompProfile:
             type: RuntimeDefault
