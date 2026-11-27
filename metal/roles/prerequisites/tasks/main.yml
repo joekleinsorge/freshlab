@@ -50,6 +50,30 @@
   notify: Apply Netplan DNS configuration
   tags: ['network', 'dns']
 
+- name: Load the Intel TCO hardware watchdog at boot
+  # Ubuntu blacklists watchdog drivers from automatic loading; naming the
+  # module in modules-load.d still loads it explicitly.
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/freshlab-watchdog.conf
+    content: "{{ freshlab_watchdog_module }}\n"
+    owner: root
+    group: root
+    mode: '0644'
+  when: freshlab_hardware_watchdog | bool
+  notify: Load hardware watchdog module
+  tags: ['watchdog']
+
+- name: Let systemd reset a hung node through the hardware watchdog
+  ansible.builtin.template:
+    src: freshlab-watchdog.conf.j2
+    dest: /etc/systemd/system.conf.d/freshlab-watchdog.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: freshlab_hardware_watchdog | bool
+  notify: Reexecute systemd
+  tags: ['watchdog']
+
 - name: Enable iSCSI for Longhorn volumes
   ansible.builtin.systemd_service:
     name: iscsid

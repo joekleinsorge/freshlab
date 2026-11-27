@@ -7,3 +7,11 @@
   ansible.builtin.systemd_service:
     name: rsyslog
     state: restarted
+
+- name: Load hardware watchdog module
+  ansible.builtin.command: modprobe {{ freshlab_watchdog_module }}
+  changed_when: true
+
+- name: Reexecute systemd
+  ansible.builtin.systemd_service:
+    daemon_reexec: true

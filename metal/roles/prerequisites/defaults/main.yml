@@ -1,0 +1,8 @@
+---
+# Hardware watchdog (NODE-002).  The i3-10100T nodes expose Intel TCO
+# (iTCO_wdt).  Three minutes rides out a slow fsync burst; a node hung longer
+# than that is reset instead of sitting unreachable for hours.
+freshlab_hardware_watchdog: true
+freshlab_watchdog_module: iTCO_wdt
+freshlab_runtime_watchdog_sec: 3min
+freshlab_reboot_watchdog_sec: 10min

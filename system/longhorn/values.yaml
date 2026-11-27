@@ -31,12 +31,16 @@ longhorn:
     # reservation update; changing this value does not resize or delete data.
     storageReservedPercentageForDefaultDisk: 30
     # A transient replica-path stall previously exhausted Frigate's two
-    # replicas.  Give a replica 20 seconds to recover, then replenish a lost
-    # replica immediately rather than leaving a volume degraded for 10 minutes.
+    # replicas.  Give a replica 20 seconds to recover before it is failed.
     engineReplicaTimeout:
       v1: "20"
       v2: "20"
-    replicaReplenishmentWaitInterval: 0
+    # Wait 10 minutes for a failed replica's node to return and reuse that
+    # replica, instead of rebuilding every replica of a missing node at once.
+    # With 0, a hung metal1 (2026-11-27) set off rebuilds onto the other
+    # control-plane disks; the writes held metal2's NVMe at 79 C with 30 s write
+    # timeouts, etcd lost quorum and the cluster went down (NODE-002).
+    replicaReplenishmentWaitInterval: 600
     # Do not admit new stateful workloads without their requested redundancy.
     # This trades a pending pod for a recoverable volume instead of silently
     # running it with a single copy.

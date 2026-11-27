@@ -1,0 +1,7 @@
+# Managed by Ansible (prerequisites role).  A node whose userspace hangs on I/O
+# keeps answering ping but serves nothing; the hardware watchdog reboots it.
+# systemd pets the watchdog; if PID 1 is stuck for RuntimeWatchdogSec the board
+# resets, and RebootWatchdogSec bounds a reboot that itself hangs (NODE-002).
+[Manager]
+RuntimeWatchdogSec={{ freshlab_runtime_watchdog_sec }}
+RebootWatchdogSec={{ freshlab_reboot_watchdog_sec }}
