@@ -2,6 +2,36 @@ kube-prometheus-stack:
   # k3s runs these control-plane components inside the server process rather
   # than as separately scrapeable pods. Disable the upstream alerts that
   # would otherwise report them as down even while the cluster is healthy.
+  # Cardinality (NODE-002, 2026-11-27).  k3s serves the API server, etcd,
+  # scheduler and controller metrics from every server's kubelet endpoint, so
+  # their latency histograms were stored per bucket for each control-plane node:
+  # ~740k series, a WAL bigger than retentionSize (every block was deleted as
+  # soon as it was written) and ~115 GB/day of writes onto the control-plane
+  # NVMe disks, which helped starve etcd.  Keep their _sum and _count (rates
+  # and averages still work) and drop the buckets.
+  defaultRules:
+    rules:
+      # These upstream rule groups are built on the dropped buckets.
+      kubeApiserverAvailability: false
+      kubeApiserverBurnrate: false
+      kubeApiserverHistogram: false
+      kubeApiserverSlos: false
+  kubelet:
+    serviceMonitor:
+      metricRelabelings:
+        # Chart default: reduce bucket cardinality of kubelet storage operations.
+        - action: drop
+          sourceLabels: [__name__, le]
+          regex: (csi_operations|storage_operation_duration)_seconds_bucket;(0.25|2.5|15|25|120|600)(\.0)?
+        - action: drop
+          sourceLabels: [__name__]
+          regex: (apiserver_request_duration_seconds|apiserver_request_sli_duration_seconds|apiserver_request_slo_duration_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_cache_read_wait_seconds|apiserver_response_sizes|apiserver_request_body_size_bytes|apiserver_watch_events_sizes|etcd_request_duration_seconds|workqueue_queue_duration_seconds|workqueue_work_duration_seconds|scheduler_plugin_execution_duration_seconds|prober_probe_duration_seconds|longhorn_rest_client_request_latency_seconds|longhorn_rest_client_rate_limiter_latency_seconds)_bucket
+  kubeApiServer:
+    serviceMonitor:
+      metricRelabelings:
+        - action: drop
+          sourceLabels: [__name__]
+          regex: (apiserver_request_duration_seconds|apiserver_request_sli_duration_seconds|apiserver_request_slo_duration_seconds|apiserver_watch_list_duration_seconds|apiserver_watch_cache_read_wait_seconds|apiserver_response_sizes|apiserver_request_body_size_bytes|apiserver_watch_events_sizes|etcd_request_duration_seconds|workqueue_queue_duration_seconds|workqueue_work_duration_seconds|scheduler_plugin_execution_duration_seconds|prober_probe_duration_seconds|longhorn_rest_client_request_latency_seconds|longhorn_rest_client_rate_limiter_latency_seconds)_bucket
   kubeProxy:
     enabled: false
   kubeControllerManager:
@@ -269,8 +299,11 @@ kube-prometheus-stack:
       serviceMonitorNamespaceSelector: {}
       podMonitorNamespaceSelector: {}
       probeNamespaceSelector: {}
+      # A minute is plenty for a lab and halves samples written.
+      scrapeInterval: 60s
       retention: 15d
-      retentionSize: "10GB"
+      # Room for history on the 50Gi volume; at 10GB the WAL alone filled it.
+      retentionSize: "20GB"
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
