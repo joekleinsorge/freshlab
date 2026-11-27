@@ -106,6 +106,15 @@ spec:
                 namespace: {{ .Release.Namespace }}
               spec:
                 serviceAccountName: freshlab-alert-remediation
+                # Clean up after each run.  Without this, 59 failed runs and
+                # their dead pods piled up during the 2026-11-27 outage and k3s
+                # retried them endlessly, flooding the journal on metal2's
+                # already-stalled disk (NODE-002).
+                podGC:
+                  strategy: OnPodCompletion
+                ttlStrategy:
+                  secondsAfterSuccess: 3600
+                  secondsAfterFailure: 86400
                 workflowTemplateRef:
                   name: freshlab-alert-remediation
                   clusterScope: true
@@ -146,6 +155,15 @@ spec:
                 namespace: {{ .Release.Namespace }}
               spec:
                 serviceAccountName: freshlab-alert-remediation
+                # Clean up after each run.  Without this, 59 failed runs and
+                # their dead pods piled up during the 2026-11-27 outage and k3s
+                # retried them endlessly, flooding the journal on metal2's
+                # already-stalled disk (NODE-002).
+                podGC:
+                  strategy: OnPodCompletion
+                ttlStrategy:
+                  secondsAfterSuccess: 3600
+                  secondsAfterFailure: 86400
                 workflowTemplateRef:
                   name: freshlab-alert-remediation
                   clusterScope: true
