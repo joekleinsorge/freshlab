@@ -63,6 +63,16 @@
   notify: Load hardware watchdog module
   tags: ['watchdog']
 
+- name: Ensure the systemd manager drop-in directory exists
+  ansible.builtin.file:
+    path: /etc/systemd/system.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: freshlab_hardware_watchdog | bool
+  tags: ['watchdog']
+
 - name: Let systemd reset a hung node through the hardware watchdog
   ansible.builtin.template:
     src: freshlab-watchdog.conf.j2
