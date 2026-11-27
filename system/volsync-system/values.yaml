@@ -84,7 +84,12 @@ backups:
       # independently restored claim now used by Frigate.
       sourcePVC: frigate-media-restore-20261003
       schedule: "22 1,7,13,19 * * *"
-      paused: false
+      # Paused 2026-11-27: this 150 GiB Direct copy runs beside Frigate on metal2,
+      # where the volume's only replica and etcd share one NVMe. It held metal2's
+      # I/O pressure near 70%, etcd requests took over a minute and k3s lost etcd
+      # leadership while metal1 was down. Resume once the volume has a replica off
+      # the etcd nodes (or Frigate runs on metal0) and all three etcd members are up.
+      paused: true
       # Initial snapshot export is complete. Direct Restic copies make recurring
       # media backups incremental without another Longhorn snapshot export.
       copyMethod: Direct
