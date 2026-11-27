@@ -49,6 +49,13 @@ longhorn:
     # compact cluster, a retained media snapshot can consume enough space to
     # prevent replica rebuilds even though the backup itself has completed.
     autoCleanupSnapshotAfterOnDemandBackupCompleted: true
+    # Delete replica data and instances that no volume references once they have
+    # been orphaned for a day.  On 2026-11-27, 243 GB of stale replica directories
+    # (including 101 GB from a deleted volume) pushed metal0 into kubelet
+    # DiskPressure; it evicted the instance manager and faulted the volumes on
+    # it (NODE-002).  Orphans on failed or unknown nodes are never auto-deleted.
+    orphanResourceAutoDeletion: "replica-data;instance"
+    orphanResourceAutoDeletionGracePeriod: 86400
     autoSalvage: true
     autoDeletePodWhenVolumeDetachedUnexpectedly: true
     disableSchedulingOnCordonedNode: true
