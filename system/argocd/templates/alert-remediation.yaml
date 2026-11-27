@@ -35,6 +35,32 @@ subjects:
     name: freshlab-alert-remediation
     namespace: {{ .Release.Namespace }}
 ---
+# The Argo executor reports step results through WorkflowTaskResults in the
+# workflow's own namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: freshlab-alert-remediation-executor
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["workflowtaskresults"]
+    verbs: ["create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: freshlab-alert-remediation-executor
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: freshlab-alert-remediation-executor
+subjects:
+  - kind: ServiceAccount
+    name: freshlab-alert-remediation
+    namespace: {{ .Release.Namespace }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: EventBus
 metadata:
