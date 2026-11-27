@@ -200,7 +200,8 @@ spec:
           - name: pod
           - name: pvc
       container:
-        image: registry.k8s.io/kubectl:v1.36.4@sha256:b8d523e7b8cdc5e3caa0f8891ee9f504abf137dec786e6e0ddd33e4f272c2f13
+        # The script needs a shell; the upstream kubectl image is distroless.
+        image: docker.io/alpine/k8s:1.36.4@sha256:358ddfc2d6ff3f00dd461dbd79aaa6d6738709f225b8da0945bb63bd4dbc304e
         command: [/bin/sh, -ec]
         args:
           - |
